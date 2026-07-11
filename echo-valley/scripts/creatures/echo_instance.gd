@@ -115,6 +115,7 @@ func try_evolve() -> Dictionary:
 	if EchoDatabase.instance == null or not EchoDatabase.instance.has_echo(d.evolve_to):
 		return {}
 	var old := display_name()
+	var old_id := definition_id
 	var ratio := 1.0 if max_hp() <= 0 else float(current_hp) / float(max_hp())
 	definition_id = d.evolve_to
 	current_hp = clampi(int(round(max_hp() * ratio)), 1, max_hp())
@@ -124,7 +125,7 @@ func try_evolve() -> Dictionary:
 		for cid in nd.moves_at_level(level):
 			if moves.size() < EchoDefinition.MAX_MOVES and cid not in moves:
 				_learn_move(cid)
-	return { "type": "evolve", "from": old, "to": display_name() }
+	return { "type": "evolve", "from": old, "to": display_name(), "from_id": old_id, "to_id": definition_id }
 
 
 func to_dict() -> Dictionary:

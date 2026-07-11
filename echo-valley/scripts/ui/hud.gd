@@ -11,8 +11,8 @@ var _toast_timer: float = 0.0
 var _box: Panel
 var _text: Label
 var _arrow: Label
-var _bag_btn: Button
-var _menu_btn: Button
+var _bag_btn: Control
+var _menu_btn: Control
 var _lines: Array = []
 var _index: int = 0
 var _open: bool = false

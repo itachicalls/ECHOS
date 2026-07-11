@@ -145,10 +145,12 @@ func _build_ui() -> void:
 	_home[player_sprite.get_instance_id()] = player_sprite.position
 
 
-# ---- battle menu layout (GBA-style 2x2 grids, fixed cell sizes) ----
+# ---- battle menu layout (manual pixel positions — grids break on web) ----
 const _MENU_GAP := 2
-const _CMD_CELL := Vector2i(58, 22)
-const _MOVE_CELL := Vector2i(58, 20)
+const _CMD_BTN := Vector2(56, 20)
+const _SUB_BTN := Vector2(76, 15)
+const _SUB_ROW_H := 17
+const _SUB_COLS := 3
 const _ACTION_W := 120
 
 
@@ -600,69 +602,90 @@ func _clear_menu() -> void:
 		c.free()
 
 
-func _menu_cell(w: int, h: int) -> Control:
-	var cell := Control.new()
-	cell.custom_minimum_size = Vector2(w, h)
-	cell.size = Vector2(w, h)
-	cell.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	cell.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	return cell
+func _pin_menu(node: Control, pos: Vector2, sz: Vector2) -> void:
+	node.position = pos
+	node.size = sz
+	node.custom_minimum_size = sz
 
 
-func _fill_btn(cell: Control, text: String, cb: Callable, font_size: int = 7, enabled: bool = true) -> Button:
-	var b := Button.new()
-	b.text = text
-	b.position = Vector2.ZERO
-	b.size = cell.size
-	b.custom_minimum_size = cell.size
-	b.clip_text = true
-	b.focus_mode = Control.FOCUS_NONE
-	b.add_theme_font_size_override("font_size", font_size)
-	b.add_theme_stylebox_override("normal", _btn_style(Color("2b3f56"), Color("cfe8ff")))
-	b.add_theme_stylebox_override("hover", _btn_style(Color("3d597a"), Color("ffffff")))
-	b.add_theme_stylebox_override("pressed", _btn_style(Color("1d2b3a"), Color("ffd166")))
-	b.add_theme_stylebox_override("disabled", _btn_style(Color("263140"), Color("55637a")))
-	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	b.add_theme_color_override("font_color", Color("f2f7ff"))
-	b.add_theme_color_override("font_disabled_color", Color("6b7890"))
-	if enabled:
-		b.pressed.connect(cb)
-	else:
-		b.disabled = true
-	cell.add_child(b)
-	return b
+func _menu_btn(pos: Vector2, sz: Vector2, text: String, cb: Callable, font_size: int = 6, enabled: bool = true) -> Panel:
+	var slot := Panel.new()
+	_pin_menu(slot, pos, sz)
+	slot.clip_contents = true
+	var bg := Color("2b3f56") if enabled else Color("263140")
+	var border := Color("cfe8ff") if enabled else Color("55637a")
+	slot.add_theme_stylebox_override("panel", _btn_style(bg, border))
 
+	# Clickable layer first (drawn underneath) so its hover/pressed background
+	# never paints over the label above it.
+	if enabled and cb.is_valid():
+		var hit := Button.new()
+		_pin_menu(hit, Vector2.ZERO, sz)
+		hit.focus_mode = Control.FOCUS_NONE
+		hit.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+		hit.add_theme_stylebox_override("hover", _btn_style(Color("3d597a"), Color("ffffff")))
+		hit.add_theme_stylebox_override("pressed", _btn_style(Color("1d2b3a"), Color("ffd166")))
+		hit.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+		hit.pressed.connect(cb)
+		slot.add_child(hit)
 
-func _grid_size(cols: int, rows: int, cell: Vector2i) -> Vector2:
-	return Vector2(
-		cols * cell.x + maxi(0, cols - 1) * _MENU_GAP,
-		rows * cell.y + maxi(0, rows - 1) * _MENU_GAP
-	)
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.position = Vector2(2, 0)
+	lbl.size = Vector2(sz.x - 4, sz.y)
+	lbl.custom_minimum_size = Vector2(sz.x - 4, sz.y)
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.add_theme_font_size_override("font_size", font_size)
+	lbl.add_theme_color_override("font_color", Color("f2f7ff") if enabled else Color("6b7890"))
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lbl.clip_text = true
+	lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	slot.add_child(lbl)
 
-
-func _spawn_grid(pos: Vector2, cols: int, rows: int, cell: Vector2i) -> GridContainer:
-	var grid := GridContainer.new()
-	grid.columns = cols
-	grid.position = pos
-	grid.size = _grid_size(cols, rows, cell)
-	grid.custom_minimum_size = grid.size
-	grid.add_theme_constant_override("h_separation", _MENU_GAP)
-	grid.add_theme_constant_override("v_separation", _MENU_GAP)
-	menu_root.add_child(grid)
-	return grid
-
-
-func _grid_add(grid: GridContainer, text: String, cb: Callable, cell: Vector2i, font_size: int = 7, enabled: bool = true) -> void:
-	var slot := _menu_cell(cell.x, cell.y)
-	_fill_btn(slot, text, cb, font_size, enabled)
-	grid.add_child(slot)
-
-
-func _spawn_back(cb: Callable) -> void:
-	var slot := _menu_cell(58, 20)
-	slot.position = Vector2(60, 24)
-	_fill_btn(slot, "Back", cb, 6)
 	menu_root.add_child(slot)
+	return slot
+
+
+func _layout_cmd_2x2(items: Array) -> void:
+	var x0 := 2
+	var y0 := 3
+	var dx := _CMD_BTN.x + _MENU_GAP
+	var row_h := 22
+	for i in mini(items.size(), 4):
+		var it: Dictionary = items[i]
+		var col := i % 2
+		var row := i / 2
+		_menu_btn(
+			Vector2(x0 + col * dx, y0 + row * row_h),
+			_CMD_BTN,
+			String(it.get("text", "")),
+			it.get("cb", Callable()),
+			int(it.get("font", 6)),
+			bool(it.get("enabled", true))
+		)
+
+
+func _layout_submenu(items: Array, back_cb: Callable = Callable()) -> void:
+	var x0 := 2
+	var y0 := 1
+	var dx := _SUB_BTN.x + _MENU_GAP
+	for i in items.size():
+		var it: Dictionary = items[i]
+		var col := i % _SUB_COLS
+		var row := i / _SUB_COLS
+		if row >= 2:
+			break
+		_menu_btn(
+			Vector2(x0 + col * dx, y0 + row * _SUB_ROW_H),
+			_SUB_BTN,
+			String(it.get("text", "")),
+			it.get("cb", Callable()),
+			int(it.get("font", 6)),
+			bool(it.get("enabled", true))
+		)
+	if back_cb.is_valid():
+		_menu_btn(Vector2(2, y0 + 2 * _SUB_ROW_H), Vector2(230, 14), "Back", back_cb, 6)
 
 
 func _open_main_menu() -> void:
@@ -674,43 +697,43 @@ func _open_main_menu() -> void:
 	msg.size = Vector2(108, 42)
 	msg.text = "What will you do?"
 	_clear_menu()
-	var grid := _spawn_grid(Vector2(2, 4), 2, 2, _CMD_CELL)
 	var show_bag := String(request.get("kind", "wild")) != "versus"
-	_grid_add(grid, "Fight", _on_fight, _CMD_CELL, 7)
-	_grid_add(grid, "Bag", _on_bag, _CMD_CELL, 7, show_bag)
-	_grid_add(grid, "Echoes", _on_switch_menu, _CMD_CELL, 7)
-	_grid_add(grid, "Run" if can_flee else "—", _on_run, _CMD_CELL, 7, can_flee)
+	_layout_cmd_2x2([
+		{ "text": "Fight", "cb": _on_fight },
+		{ "text": "Bag", "cb": _on_bag, "enabled": show_bag },
+		{ "text": "Echoes", "cb": _on_switch_menu },
+		{ "text": "Run" if can_flee else "—", "cb": _on_run, "enabled": can_flee },
+	])
 
 
-func _spawn_move_grid() -> GridContainer:
+func _open_submenu(items: Array, back_cb: Callable = Callable()) -> void:
 	menu_root.position = Vector2(2, 106)
 	menu_root.size = Vector2(234, 52)
-	return _spawn_grid(Vector2(2, 4), 2, 2, _MOVE_CELL)
+	_clear_menu()
+	_layout_submenu(items, back_cb)
 
 
 func _on_fight() -> void:
-	_clear_menu()
 	msg.visible = false
-	var grid := _spawn_move_grid()
+	var items: Array = []
 	var u := _active("player")
 	for i in u.chimes.size():
 		if i >= 4:
 			break
 		var c: Dictionary = u.chimes[i]
-		_grid_add(grid, String(c.name), _use_chime.bind(String(c.id)), _MOVE_CELL, 8)
-	_spawn_back(_open_main_menu)
+		items.append({ "text": String(c.name), "cb": _use_chime.bind(String(c.id)), "font": 6 })
+	_open_submenu(items, _open_main_menu)
 
 
 func _on_bag() -> void:
-	_clear_menu()
 	msg.visible = false
-	var grid := _spawn_move_grid()
+	var items: Array = []
 	var salves := int(GameState.inventory.get("heart_salve", 0))
-	_grid_add(grid, "Heart Salve x%d" % salves, _use_salve, _MOVE_CELL, 7, salves > 0)
+	items.append({ "text": "Salve x%d" % salves, "cb": _use_salve, "enabled": salves > 0 })
 	if can_catch:
 		var cap := int(GameState.inventory.get("echo_capsule", 0))
-		_grid_add(grid, "Echo Capsule x%d" % cap, _on_catch, _MOVE_CELL, 7, cap > 0)
-	_spawn_back(_open_main_menu)
+		items.append({ "text": "Capsule x%d" % cap, "cb": _on_catch, "enabled": cap > 0 })
+	_open_submenu(items, _open_main_menu)
 
 
 func _use_salve() -> void:
@@ -735,13 +758,12 @@ func _use_salve() -> void:
 
 
 func _on_switch_menu() -> void:
-	_clear_menu()
 	msg.visible = false
-	var grid := _spawn_move_grid()
+	var items: Array = []
 	var sd: Dictionary = state["player"]
 	var units: Array = sd.units
 	for i in units.size():
-		if i >= 4:
+		if i >= 6:
 			break
 		var u: Dictionary = units[i]
 		var ko: bool = int(u.current_hp) <= 0
@@ -749,8 +771,8 @@ func _on_switch_menu() -> void:
 		if ko:
 			label += " KO"
 		var can_pick: bool = (not ko) and (i != int(sd.active))
-		_grid_add(grid, label, _do_switch.bind(i), _MOVE_CELL, 7, can_pick)
-	_spawn_back(_open_main_menu)
+		items.append({ "text": label, "cb": _do_switch.bind(i), "enabled": can_pick })
+	_open_submenu(items, _open_main_menu)
 
 
 func _use_chime(chime_id: String) -> void:
@@ -872,7 +894,8 @@ func _animate_attack(
 	actor_side: String, actor_index: int, target_side: String, target_index: int,
 	resonance: int, dmg: int, mult: float,
 	target_hp_before: int, target_hp: int, target_max: int,
-	actor_hp_before: int, actor_max: int
+	actor_hp_before: int, actor_max: int,
+	chime_name: String = "", lifesteal: float = 0.0, power: int = 0
 ) -> void:
 	_pin_stage(actor_side, actor_index, actor_hp_before)
 	_pin_stage(target_side, target_index, target_hp_before)
@@ -885,17 +908,32 @@ func _animate_attack(
 	var home_t := _home_pos(target)
 	var toward := (home_t - home_a).normalized()
 	var col := _res_color(resonance)
+	var style := _attack_style(chime_name.to_lower(), lifesteal, power)
 
-	# Step 1: wind-up (squash back) then lunge forward
+	# Step 1: wind-up (squash back)
 	var lunge := create_tween()
 	lunge.tween_property(attacker, "position", home_a - toward * 4.0, 0.08).set_trans(Tween.TRANS_SINE)
-	lunge.tween_property(attacker, "position", home_a + toward * 8.0, 0.07).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	lunge.tween_property(attacker, "position", home_a, 0.06).set_trans(Tween.TRANS_SINE)
 	await lunge.finished
 
-	# Step 2: elemental projectile with trail
-	await _fire_projectile(_sprite_center(attacker), _sprite_center(target), col, resonance)
+	# Step 2: deliver the hit with a move-appropriate animation
+	match style:
+		"melee", "slash", "bite":
+			await _atk_melee(attacker, home_a, target, col, style)
+		"dive":
+			await _atk_dive(attacker, home_a, target, col)
+		"beam":
+			await _atk_beam(attacker, target, col)
+		"eruption":
+			await _atk_eruption(target, col)
+		"wave":
+			await _atk_wave(attacker, target, col)
+		"drain":
+			await _atk_drain(attacker, target, col, resonance)
+		_:
+			await _fire_projectile(_sprite_center(attacker), _sprite_center(target), col, resonance)
 
-	# snap attacker home
+	# snap attacker home (melee/dive helpers already return, this is a safety)
 	var back_tw := create_tween()
 	back_tw.tween_property(attacker, "position", home_a, 0.10).set_trans(Tween.TRANS_SINE)
 
@@ -917,6 +955,204 @@ func _animate_attack(
 	target.modulate = Color.WHITE
 	_start_idle_bob(attacker)
 	_start_idle_bob(target)
+
+
+func _attack_style(name_lc: String, lifesteal: float, power: int) -> String:
+	# Pick a move-appropriate motion. Keyword-first so each attack reads uniquely.
+	if lifesteal > 0.0 or _has_any(name_lc, ["drain", "leech", "hug", "nuzzle", "bubble"]):
+		return "drain"
+	if _has_any(name_lc, ["dive", "sky"]):
+		return "dive"
+	if _has_any(name_lc, ["edge", "boulder", "canopy", "quake", "eruption"]):
+		return "eruption"
+	if _has_any(name_lc, ["pulse", "inferno", "eclipse", "solar", "tsunami", "cyclone"]) or power >= 80:
+		return "beam"
+	if _has_any(name_lc, ["fang", "nip", "bite"]):
+		return "bite"
+	if _has_any(name_lc, ["slash", "claw"]):
+		return "slash"
+	if _has_any(name_lc, ["wave", "surge", "tide", "gust", "gale", "flame wave"]):
+		return "wave"
+	if _has_any(name_lc, ["tackle", "scratch", "jab", "slap", "tail", "tug", "whip", "lash", "bash", "frond", "vine", "root"]):
+		return "melee"
+	return "projectile"
+
+
+func _has_any(s: String, keys: Array) -> bool:
+	for k in keys:
+		if s.find(String(k)) != -1:
+			return true
+	return false
+
+
+func _atk_melee(attacker: TextureRect, home_a: Vector2, target: TextureRect, col: Color, style: String) -> void:
+	var home_t := _home_pos(target)
+	var landing := home_t - (home_t - home_a).normalized() * 12.0
+	var t := create_tween()
+	t.tween_property(attacker, "position", landing, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	await t.finished
+	var center := _sprite_center(target)
+	match style:
+		"slash":
+			_slash_marks(center, col)
+		"bite":
+			_bite_marks(center, col)
+		_:
+			_impact_lines(center, col)
+	await get_tree().create_timer(0.08).timeout
+	var back := create_tween()
+	back.tween_property(attacker, "position", home_a, 0.14).set_trans(Tween.TRANS_SINE)
+	await back.finished
+
+
+func _atk_dive(attacker: TextureRect, home_a: Vector2, target: TextureRect, col: Color) -> void:
+	# Leap up out of view, then swoop down onto the target.
+	var up := create_tween()
+	up.tween_property(attacker, "position:y", home_a.y - 60.0, 0.16).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	up.parallel().tween_property(attacker, "modulate:a", 0.15, 0.16)
+	await up.finished
+	var over := _sprite_center(target) - attacker.size * 0.5 - Vector2(0, 46)
+	attacker.position = over
+	var down := create_tween()
+	down.tween_property(attacker, "modulate:a", 1.0, 0.05)
+	down.parallel().tween_property(attacker, "position", _sprite_center(target) - attacker.size * 0.5, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await down.finished
+	_impact_lines(_sprite_center(target), col)
+	_stage_shake()
+	await get_tree().create_timer(0.06).timeout
+	var back := create_tween()
+	back.tween_property(attacker, "position", home_a, 0.16).set_trans(Tween.TRANS_SINE)
+	await back.finished
+
+
+func _atk_beam(attacker: TextureRect, target: TextureRect, col: Color) -> void:
+	var from := _sprite_center(attacker)
+	var to := _sprite_center(target)
+	var dir := to - from
+	var beam := ColorRect.new()
+	beam.color = Color(col.r, col.g, col.b, 0.0)
+	beam.size = Vector2(dir.length(), 3)
+	beam.pivot_offset = Vector2(0, 1.5)
+	beam.position = from - Vector2(0, 1.5)
+	beam.rotation = dir.angle()
+	beam.z_index = 22
+	_stage.add_child(beam)
+	var t := create_tween()
+	t.tween_property(beam, "color:a", 0.95, 0.08)
+	t.parallel().tween_property(beam, "size", Vector2(dir.length(), 9), 0.08)
+	t.tween_interval(0.07)
+	t.tween_property(beam, "color:a", 0.0, 0.14)
+	t.parallel().tween_property(beam, "size", Vector2(dir.length(), 2), 0.14)
+	_flash_ring(to, col)
+	await t.finished
+	beam.queue_free()
+
+
+func _atk_eruption(target: TextureRect, col: Color) -> void:
+	var c := _sprite_center(target)
+	for i in 5:
+		var spike := ColorRect.new()
+		spike.color = col
+		spike.size = Vector2(4, 3)
+		var x := c.x + float(i - 2) * 7.0
+		spike.position = Vector2(x - 2.0, c.y + 16.0)
+		spike.z_index = 23
+		_stage.add_child(spike)
+		var t := create_tween()
+		t.tween_interval(float(i) * 0.03)
+		t.tween_property(spike, "size", Vector2(4, 20), 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(spike, "position:y", c.y - 6.0, 0.10)
+		t.tween_interval(0.06)
+		t.tween_property(spike, "modulate:a", 0.0, 0.12)
+		t.chain().tween_callback(spike.queue_free)
+	_stage_shake()
+	await get_tree().create_timer(0.32).timeout
+
+
+func _atk_wave(attacker: TextureRect, target: TextureRect, col: Color) -> void:
+	var from := _sprite_center(attacker)
+	var to := _sprite_center(target)
+	var wave := ColorRect.new()
+	wave.color = Color(col.r, col.g, col.b, 0.55)
+	wave.size = Vector2(10, 40)
+	wave.pivot_offset = wave.size * 0.5
+	wave.position = from - wave.size * 0.5
+	wave.z_index = 22
+	_stage.add_child(wave)
+	var t := create_tween()
+	t.tween_property(wave, "position", to - wave.size * 0.5, 0.22).set_trans(Tween.TRANS_SINE)
+	t.parallel().tween_property(wave, "size", Vector2(20, 46), 0.22)
+	t.tween_property(wave, "modulate:a", 0.0, 0.12)
+	await t.finished
+	wave.queue_free()
+
+
+func _atk_drain(attacker: TextureRect, target: TextureRect, col: Color, resonance: int) -> void:
+	await _fire_projectile(_sprite_center(attacker), _sprite_center(target), col, resonance)
+	var dest := _sprite_center(attacker)
+	for i in 7:
+		var s := ColorRect.new()
+		s.color = Color("9dffa8")
+		s.size = Vector2(2, 2)
+		s.position = _sprite_center(target) + Vector2(randf_range(-8, 8), randf_range(-8, 8))
+		s.z_index = 24
+		_stage.add_child(s)
+		var t := create_tween()
+		t.tween_interval(float(i) * 0.02)
+		t.tween_property(s, "position", dest, 0.3).set_trans(Tween.TRANS_SINE)
+		t.parallel().tween_property(s, "modulate:a", 0.0, 0.3)
+		t.chain().tween_callback(s.queue_free)
+	await get_tree().create_timer(0.16).timeout
+
+
+func _slash_marks(center: Vector2, _col: Color) -> void:
+	for j in 2:
+		var m := ColorRect.new()
+		m.color = Color(1, 1, 1, 0.92)
+		m.size = Vector2(2, 24)
+		m.pivot_offset = Vector2(1, 12)
+		m.position = center - Vector2(1, 12) + Vector2(float(j) * 7.0 - 3.0, 0)
+		m.rotation_degrees = 35.0
+		m.z_index = 26
+		_stage.add_child(m)
+		var t := create_tween()
+		t.tween_interval(float(j) * 0.05)
+		t.tween_property(m, "modulate:a", 0.0, 0.22)
+		t.parallel().tween_property(m, "scale", Vector2(1, 1.3), 0.22)
+		t.chain().tween_callback(m.queue_free)
+
+
+func _bite_marks(center: Vector2, col: Color) -> void:
+	for j in 2:
+		var fang := ColorRect.new()
+		fang.color = Color(1, 1, 1, 0.95)
+		fang.size = Vector2(4, 8)
+		var dir := 1.0 if j == 0 else -1.0
+		fang.position = center + Vector2(dir * 8.0 - 2.0, -4.0)
+		fang.z_index = 26
+		_stage.add_child(fang)
+		var t := create_tween()
+		t.tween_property(fang, "position:x", center.x - 2.0, 0.10).set_trans(Tween.TRANS_BACK)
+		t.tween_property(fang, "modulate:a", 0.0, 0.14)
+		t.chain().tween_callback(fang.queue_free)
+	_flash_ring(center, col)
+
+
+func _impact_lines(center: Vector2, col: Color) -> void:
+	_flash_ring(center, col)
+	for i in 4:
+		var m := ColorRect.new()
+		m.color = Color(1, 1, 1, 0.85)
+		m.size = Vector2(2, 10)
+		m.pivot_offset = Vector2(1, 5)
+		m.position = center - Vector2(1, 5)
+		m.rotation = i * TAU / 4.0 + 0.4
+		m.z_index = 26
+		_stage.add_child(m)
+		var t := create_tween()
+		t.tween_property(m, "modulate:a", 0.0, 0.2)
+		t.parallel().tween_property(m, "scale", Vector2(1, 1.6), 0.2)
+		t.chain().tween_callback(m.queue_free)
 
 
 func _fire_projectile(from: Vector2, to: Vector2, col: Color, resonance: int) -> void:
@@ -1120,8 +1356,7 @@ func _prompt_switch() -> void:
 	msg.visible = true
 	msg.size = Vector2(226, 42)
 	msg.text = "Choose your next Echo!"
-	_clear_menu()
-	var grid := _spawn_move_grid()
+	var items: Array = []
 	var sd: Dictionary = state["player"]
 	for i in sd.units.size():
 		var u: Dictionary = sd.units[i]
@@ -1129,7 +1364,8 @@ func _prompt_switch() -> void:
 			continue
 		if i == int(sd.active):
 			continue
-		_grid_add(grid, "%s L%d" % [u.name, int(u.level)], _pick_forced_switch.bind(i), _MOVE_CELL, 8)
+		items.append({ "text": "%s L%d" % [u.name, int(u.level)], "cb": _pick_forced_switch.bind(i), "font": 6 })
+	_open_submenu(items)
 	var index: int = await _forced_switch_picked
 	_clear_menu()
 	phase = Phase.RESOLVING
@@ -1155,6 +1391,112 @@ func _flash(dur: float) -> void:
 	t.tween_property(f, "color", Color(1, 1, 1, 0.0), dur * 0.6)
 	await t.finished
 	f.queue_free()
+
+
+func _front_tex(id: String) -> Texture2D:
+	var def := EchoCatalog.get_echo(id)
+	if def == null:
+		return null
+	var path := def.sprite_path
+	if path != "" and ResourceLoader.exists(path):
+		return load(path)
+	return null
+
+
+func _play_evolution(from_id: String, to_id: String, from_name: String, to_name: String) -> void:
+	var tex_old := _front_tex(from_id)
+	var tex_new := _front_tex(to_id)
+	menu_root.visible = false
+	msg.visible = false
+	if _msg_panel:
+		_msg_panel.visible = false
+
+	# Full-screen cutscene overlay above everything.
+	var overlay := Control.new()
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 60
+	add_child(overlay)
+
+	var backdrop := ColorRect.new()
+	backdrop.color = Color(0.02, 0.03, 0.06, 0.0)
+	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(backdrop)
+
+	# soft radial "spotlight" behind the creature
+	var halo := ColorRect.new()
+	halo.color = Color(0.35, 0.55, 0.85, 0.0)
+	halo.size = Vector2(96, 96)
+	halo.position = Vector2(VIEW_W * 0.5 - 48, 22)
+	overlay.add_child(halo)
+
+	const SPR := 72
+	var spr := TextureRect.new()
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	spr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	spr.size = Vector2(SPR, SPR)
+	spr.position = Vector2(VIEW_W * 0.5 - SPR * 0.5, 24)
+	spr.pivot_offset = Vector2(SPR * 0.5, SPR * 0.5)
+	spr.texture = tex_old
+	overlay.add_child(spr)
+
+	var cap := Label.new()
+	cap.add_theme_font_size_override("font_size", 8)
+	cap.add_theme_color_override("font_color", Color("f2f7ff"))
+	cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cap.position = Vector2(8, 112)
+	cap.size = Vector2(VIEW_W - 16, 20)
+	cap.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	overlay.add_child(cap)
+
+	var fin := create_tween()
+	fin.set_parallel(true)
+	fin.tween_property(backdrop, "color:a", 1.0, 0.35)
+	fin.tween_property(halo, "color:a", 0.5, 0.35)
+	await fin.finished
+
+	cap.text = "%s is evolving!" % from_name
+	# gentle breathing while the message reads
+	var breathe := create_tween()
+	breathe.set_loops(2)
+	breathe.tween_property(spr, "scale", Vector2(1.06, 1.06), 0.4).set_trans(Tween.TRANS_SINE)
+	breathe.tween_property(spr, "scale", Vector2(1.0, 1.0), 0.4).set_trans(Tween.TRANS_SINE)
+	await get_tree().create_timer(1.2).timeout
+	cap.text = ""
+
+	# accelerating flicker between the two forms with a white overexposure pop
+	var dt := 0.20
+	var show_new := false
+	for i in 13:
+		show_new = not show_new
+		spr.texture = tex_new if show_new else tex_old
+		spr.modulate = Color(2.6, 2.6, 3.0, 1.0)
+		var gt := create_tween()
+		gt.tween_property(spr, "modulate", Color(1, 1, 1, 1), dt).set_trans(Tween.TRANS_SINE)
+		await get_tree().create_timer(dt).timeout
+		dt = maxf(0.05, dt - 0.013)
+
+	# burst: reveal the new form
+	spr.texture = tex_new
+	spr.modulate = Color(1, 1, 1, 1)
+	_flash(0.6)
+	_sparkle(spr.position + Vector2(SPR * 0.5, SPR * 0.5))
+	var pop := create_tween()
+	pop.tween_property(spr, "scale", Vector2(1.25, 1.25), 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	pop.tween_property(spr, "scale", Vector2(1.0, 1.0), 0.22).set_trans(Tween.TRANS_BOUNCE)
+	await pop.finished
+
+	cap.text = "%s evolved into %s!" % [from_name, to_name]
+	await get_tree().create_timer(1.6).timeout
+
+	var out := create_tween()
+	out.set_parallel(true)
+	out.tween_property(backdrop, "color:a", 0.0, 0.35)
+	out.tween_property(halo, "color:a", 0.0, 0.35)
+	out.tween_property(spr, "modulate:a", 0.0, 0.35)
+	out.tween_property(cap, "modulate:a", 0.0, 0.35)
+	await out.finished
+	overlay.queue_free()
 
 
 func _sparkle(center: Vector2) -> void:
@@ -1269,7 +1611,8 @@ func _play_log(log: Array) -> void:
 					int(ev.get("target_hp_before", int(ev.get("target_hp", 0)) + int(ev.get("damage", 0)))),
 					int(ev.get("target_hp", 0)), int(ev.get("target_max_hp", 1)),
 					int(ev.get("actor_hp_before", int(ev.get("actor_hp", 0)))),
-					int(ev.get("actor_max_hp", 1))
+					int(ev.get("actor_max_hp", 1)),
+					String(ev.get("chime", "")), float(ev.get("lifesteal", 0.0)), int(ev.get("power", 0))
 				)
 				await _say("%s took %d damage!" % [String(ev.get("target", "Foe")), int(ev.get("damage", 0))])
 			"heal":
@@ -1382,7 +1725,7 @@ func _victory() -> void:
 			"learn":
 				await _say("%s learned %s!" % [g.name, g.move])
 			"evolve":
-				await _say("What? %s evolved into %s!" % [g.from, g.to])
+				await _play_evolution(String(g.get("from_id", "")), String(g.get("to_id", "")), String(g.from), String(g.to))
 
 	if kind == "trainer":
 		var tid := String(request.get("trainer_id", ""))

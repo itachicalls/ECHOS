@@ -6,7 +6,9 @@ const VIEW_W := 240
 const VIEW_H := 160
 const RIVAL_NAMES := ["Rival Sabo", "Ace Nova", "Champion Wren", "Duelist Kai", "Mystic Lune", "Brawler Rex"]
 const RES_FILTER := [-1, EchoTypes.Resonance.FIRE, EchoTypes.Resonance.WATER, EchoTypes.Resonance.GRASS, EchoTypes.Resonance.ROCK, EchoTypes.Resonance.AIR, EchoTypes.Resonance.SHADOW]
-const ECHO_BOX := Vector2i(54, 50)
+const ECHO_BOX := Vector2i(56, 40)
+const ECHO_COLS := 4
+const ECHO_GAP := 2
 const PAD := 4
 const W := VIEW_W - PAD * 2
 const HDR_Y := 2
@@ -164,14 +166,20 @@ func _build_draft(parent: Control, title: String) -> void:
 	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	grid_panel.add_child(scroll)
 
-	var grid := GridContainer.new()
-	grid.columns = 4
-	grid.add_theme_constant_override("h_separation", 2)
-	grid.add_theme_constant_override("v_separation", 2)
-	scroll.add_child(grid)
+	var ids := _filtered_ids()
+	var rows := ceili(float(ids.size()) / float(ECHO_COLS))
+	var content_h := maxi(ECHO_BOX.y, rows * (ECHO_BOX.y + ECHO_GAP) - ECHO_GAP)
+	var content := Control.new()
+	_pin(content, Vector2.ZERO, Vector2(W - 2, content_h))
+	content.custom_minimum_size = Vector2(W - 2, content_h)
+	scroll.add_child(content)
 
-	for id in _filtered_ids():
-		grid.add_child(_echo_box(id))
+	for i in ids.size():
+		var col := i % ECHO_COLS
+		var row := i / ECHO_COLS
+		var box := _echo_box(ids[i])
+		box.position = Vector2(col * (ECHO_BOX.x + ECHO_GAP), row * (ECHO_BOX.y + ECHO_GAP))
+		content.add_child(box)
 
 	_status = _label_in(parent, Vector2(PAD, STATUS_Y), Vector2(W, 9), "", 5, Color("a8dadc"), false)
 	_build_footer(parent, _on_back, _random_team, "Random", "Battle!" if not _online else "Ready!", _on_action, true)
@@ -184,6 +192,7 @@ func _echo_box(id: String) -> Control:
 	var box := Panel.new()
 	box.custom_minimum_size = Vector2(ECHO_BOX.x, ECHO_BOX.y)
 	box.size = Vector2(ECHO_BOX.x, ECHO_BOX.y)
+	box.clip_contents = true
 	var border_col := Color("7dffb8") if selected else Color("2e4a60")
 	var bg_col := Color("1a3d32", 0.7) if selected else Color("111a22")
 	box.add_theme_stylebox_override("panel", _box(bg_col, border_col))
@@ -194,8 +203,8 @@ func _echo_box(id: String) -> Control:
 		box.add_child(emblem)
 
 	var icon_slot := Panel.new()
-	icon_slot.position = Vector2(14, 4)
-	icon_slot.size = Vector2(34, 30)
+	icon_slot.position = Vector2(12, 3)
+	icon_slot.size = Vector2(32, 26)
 	icon_slot.clip_contents = true
 	icon_slot.add_theme_stylebox_override("panel", _box(Color("060c10"), Color("1e3040")))
 	box.add_child(icon_slot)
@@ -204,20 +213,22 @@ func _echo_box(id: String) -> Control:
 	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.position = Vector2(2, 2)
-	icon.size = Vector2(32, 32)
+	icon.position = Vector2(1, 1)
+	icon.size = Vector2(28, 26)
 	if def and ResourceLoader.exists(def.sprite_path):
 		icon.texture = load(def.sprite_path)
 	icon_slot.add_child(icon)
 
 	var name_lbl := Label.new()
 	name_lbl.text = def.name if def else id
-	name_lbl.position = Vector2(2, 38)
-	name_lbl.size = Vector2(ECHO_BOX.x - 4, 10)
+	name_lbl.position = Vector2(2, 31)
+	name_lbl.size = Vector2(ECHO_BOX.x - 4, 8)
+	name_lbl.custom_minimum_size = Vector2(ECHO_BOX.x - 4, 8)
 	name_lbl.add_theme_font_size_override("font_size", 5)
 	name_lbl.add_theme_color_override("font_color", Color("cfe8ff"))
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name_lbl.clip_text = true
+	name_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	box.add_child(name_lbl)
 
 	var hit := Button.new()

@@ -16,7 +16,6 @@ Thumbs.db
 *.suo
 
 # Builds
-build/
 exports/
 node_modules/
 *.apk
@@ -24,3 +23,12 @@ node_modules/
 *.ipa
 *.exe
 *.pck
+
+# Ignore all build output EXCEPT the root web export, which Vercel serves statically.
+/build/*
+!/build/web/
+!/build/web/**
+
+# Stray/duplicate export dir and local tool logs (not for deploy).
+echo-valley/build/
+echo-valley/tools/*.txt

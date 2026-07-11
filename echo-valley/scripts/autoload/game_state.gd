@@ -66,6 +66,32 @@ func add_echo(e: EchoInstance) -> bool:
 	return true
 
 
+func move_to_box(e: EchoInstance) -> bool:
+	# Send a party member to storage. Never allow an empty party.
+	if e == null or not party.has(e):
+		return false
+	if party.size() <= 1:
+		return false
+	party.erase(e)
+	pc_box.append(e)
+	party_changed.emit()
+	EventBus.party_changed.emit()
+	return true
+
+
+func move_to_party(e: EchoInstance) -> bool:
+	# Pull a stored Echo into the active party if there's room.
+	if e == null or not pc_box.has(e):
+		return false
+	if party.size() >= EchoTypes.PARTY_SIZE:
+		return false
+	pc_box.erase(e)
+	party.append(e)
+	party_changed.emit()
+	EventBus.party_changed.emit()
+	return true
+
+
 func mark_seen(id: String) -> void: seen[id] = true
 func mark_caught(id: String) -> void:
 	seen[id] = true

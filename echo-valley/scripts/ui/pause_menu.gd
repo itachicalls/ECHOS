@@ -84,7 +84,7 @@ func _build() -> void:
 
 	_scroll = ScrollContainer.new()
 	_scroll.position = Vector2(MENU_PAD, CONTENT_Y)
-	_scroll.size = Vector2(MENU_W - MENU_PAD * 2, CONTENT_H)
+	_scroll.size = Vector2(MENU_W - MENU_PAD * 2 - 4, CONTENT_H)
 	_scroll.clip_contents = true
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
@@ -186,28 +186,32 @@ func _render_party() -> void:
 	if GameState.party.is_empty():
 		_content.add_child(_label("You have no Echoes yet.", 8))
 		return
-	for e in GameState.party:
-		_content.add_child(_echo_card(e))
+	for i in GameState.party.size():
+		_content.add_child(_echo_card(GameState.party[i], true))
 
 
 func _render_box() -> void:
-	_content.add_child(_label("ECHO BOX — captured Echoes", 7, Color("cfe8ff")))
+	_content.add_child(_label("ECHO BOX — tap \u25B6Team to add to your party", 6, Color("cfe8ff")))
 	if GameState.pc_box.is_empty():
 		_content.add_child(_label("No Echoes in storage yet.", 8))
-		_content.add_child(_label("Catch wild Echoes or swap party members here later.", 6, Color("a8c0d8")))
+		_content.add_child(_label("Catch wild Echoes, then swap party members here.", 6, Color("a8c0d8")))
 		return
-	for e in GameState.pc_box:
-		_content.add_child(_echo_card(e))
+	for i in GameState.pc_box.size():
+		_content.add_child(_echo_card(GameState.pc_box[i], false))
 
 
-func _echo_card(e: EchoInstance) -> Control:
+const CARD_BTN_W := 42
+
+
+func _echo_card(e: EchoInstance, in_party: bool) -> Control:
 	var card := Panel.new()
 	card.custom_minimum_size = Vector2(0, 56)
+	card.clip_contents = true
 	card.add_theme_stylebox_override("panel", _card_style())
 
 	var h := HBoxContainer.new()
 	h.position = Vector2(4, 3)
-	h.size = Vector2(MENU_W - MENU_PAD * 2 - 12, 50)
+	h.size = Vector2(MENU_W - MENU_PAD * 2 - 16 - CARD_BTN_W, 50)
 	h.add_theme_constant_override("separation", 5)
 	card.add_child(h)
 
@@ -218,10 +222,14 @@ func _echo_card(e: EchoInstance) -> Control:
 	var col := VBoxContainer.new()
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	col.add_theme_constant_override("separation", 0)
+	col.clip_contents = true
 	h.add_child(col)
 
 	var res_name: String = RES_NAMES[int(def.resonance)] if def else "Normal"
-	col.add_child(_label("%s  Lv%d  [%s]" % [e.display_name(), e.level, res_name], 7))
+	var title := _label("%s  Lv%d  [%s]" % [e.display_name(), e.level, res_name], 7)
+	title.clip_text = true
+	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	col.add_child(title)
 	col.add_child(_hp_row(e))
 	col.add_child(_xp_row(e))
 	var move_names: Array = []
@@ -230,8 +238,69 @@ func _echo_card(e: EchoInstance) -> Control:
 	var moves := _label("Moves: " + (", ".join(move_names) if not move_names.is_empty() else "-"), 5, Color("a8c0d8"))
 	moves.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	moves.max_lines_visible = 2
+	moves.clip_text = true
 	col.add_child(moves)
+
+	_add_swap_button(card, e, in_party)
 	return card
+
+
+func _add_swap_button(card: Control, e: EchoInstance, in_party: bool) -> void:
+	var btn := Button.new()
+	btn.focus_mode = Control.FOCUS_NONE
+	btn.clip_text = true
+	btn.add_theme_font_size_override("font_size", 6)
+	btn.anchor_left = 1.0
+	btn.anchor_right = 1.0
+	btn.offset_left = -(CARD_BTN_W + 4)
+	btn.offset_right = -4
+	btn.offset_top = 18
+	btn.offset_bottom = 38
+
+	var enabled: bool
+	if in_party:
+		btn.text = "\u25B6Box"
+		enabled = GameState.party.size() > 1
+		btn.pressed.connect(func(): _do_swap(e, true))
+	else:
+		btn.text = "\u25B6Team"
+		enabled = GameState.party.size() < EchoTypes.PARTY_SIZE
+		btn.pressed.connect(func(): _do_swap(e, false))
+
+	btn.disabled = not enabled
+	var base := Color("2c6e49") if in_party else Color("1d4e6b")
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = base if enabled else Color("2a3644")
+	sb.border_color = Color("8ec8ff") if enabled else Color("3d5066")
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(3)
+	btn.add_theme_stylebox_override("normal", sb)
+	var hover := sb.duplicate()
+	hover.bg_color = base.lightened(0.15)
+	btn.add_theme_stylebox_override("hover", hover)
+	var pressed := sb.duplicate()
+	pressed.bg_color = base.darkened(0.2)
+	btn.add_theme_stylebox_override("pressed", pressed)
+	var disabled_sb := sb.duplicate()
+	btn.add_theme_stylebox_override("disabled", disabled_sb)
+	btn.add_theme_color_override("font_color", Color("eaf7ff") if enabled else Color("6b7890"))
+	btn.add_theme_color_override("font_disabled_color", Color("6b7890"))
+	card.add_child(btn)
+
+
+func _do_swap(e: EchoInstance, from_party: bool) -> void:
+	var ok := false
+	if from_party:
+		ok = GameState.move_to_box(e)
+		if not ok:
+			EventBus.toast.emit("Can't box your last Echo.")
+	else:
+		ok = GameState.move_to_party(e)
+		if not ok:
+			EventBus.toast.emit("Party is full (max %d)." % EchoTypes.PARTY_SIZE)
+	if ok:
+		EventBus.toast.emit("%s moved to %s." % [e.display_name(), "Box" if from_party else "Party"])
+		_render()
 
 
 func _echo_icon(sprite_path: String) -> Control:
