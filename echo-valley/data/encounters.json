@@ -1,0 +1,85 @@
+{
+  "route1": {
+    "chance_per_step": 0.14,
+    "encounters": [
+      { "id": "pebblit", "weight": 28, "level_min": 3, "level_max": 5 },
+      { "id": "zephyr", "weight": 26, "level_min": 3, "level_max": 6 },
+      { "id": "aquari", "weight": 20, "level_min": 3, "level_max": 5 },
+      { "id": "fernkit", "weight": 16, "level_min": 4, "level_max": 6 },
+      { "id": "wispurr", "weight": 10, "level_min": 4, "level_max": 7 }
+    ]
+  },
+  "route2": {
+    "chance_per_step": 0.16,
+    "encounters": [
+      { "id": "dewling", "weight": 26, "level_min": 7, "level_max": 10 },
+      { "id": "fernkit", "weight": 24, "level_min": 7, "level_max": 10 },
+      { "id": "duskling", "weight": 18, "level_min": 8, "level_max": 11 },
+      { "id": "boltmoth", "weight": 16, "level_min": 8, "level_max": 11 },
+      { "id": "mossling", "weight": 16, "level_min": 8, "level_max": 11 }
+    ]
+  },
+  "desert1": {
+    "chance_per_step": 0.15,
+    "encounters": [
+      { "id": "pebblit", "weight": 30, "level_min": 8, "level_max": 11 },
+      { "id": "cindboth", "weight": 24, "level_min": 9, "level_max": 12 },
+      { "id": "boltmoth", "weight": 22, "level_min": 8, "level_max": 11 },
+      { "id": "craggan", "weight": 10, "level_min": 14, "level_max": 15 },
+      { "id": "aquari", "weight": 14, "level_min": 8, "level_max": 11 }
+    ]
+  },
+  "desert2": {
+    "chance_per_step": 0.17,
+    "encounters": [
+      { "id": "pebblit", "weight": 24, "level_min": 10, "level_max": 13 },
+      { "id": "cindboth", "weight": 22, "level_min": 11, "level_max": 14 },
+      { "id": "duskling", "weight": 20, "level_min": 11, "level_max": 14 },
+      { "id": "craggan", "weight": 18, "level_min": 14, "level_max": 16 },
+      { "id": "gustrel", "weight": 10, "level_min": 14, "level_max": 16 },
+      { "id": "wispurr", "weight": 6, "level_min": 12, "level_max": 15 }
+    ]
+  },
+  "desert3": {
+    "chance_per_step": 0.18,
+    "encounters": [
+      { "id": "craggan", "weight": 28, "level_min": 14, "level_max": 17 },
+      { "id": "cindboth", "weight": 24, "level_min": 13, "level_max": 16 },
+      { "id": "nocturn", "weight": 18, "level_min": 16, "level_max": 18 },
+      { "id": "gustrel", "weight": 18, "level_min": 15, "level_max": 18 },
+      { "id": "flarefox", "weight": 8, "level_min": 17, "level_max": 19 }
+    ]
+  },
+  "jungle1": {
+    "chance_per_step": 0.16,
+    "encounters": [
+      { "id": "fernkit", "weight": 30, "level_min": 12, "level_max": 15 },
+      { "id": "dewling", "weight": 26, "level_min": 12, "level_max": 15 },
+      { "id": "mossling", "weight": 20, "level_min": 11, "level_max": 14 },
+      { "id": "wispurr", "weight": 14, "level_min": 12, "level_max": 15 },
+      { "id": "bramblor", "weight": 8, "level_min": 16, "level_max": 17 }
+    ]
+  },
+  "jungle2": {
+    "chance_per_step": 0.17,
+    "encounters": [
+      { "id": "fernkit", "weight": 22, "level_min": 14, "level_max": 17 },
+      { "id": "dewling", "weight": 20, "level_min": 14, "level_max": 17 },
+      { "id": "frondex", "weight": 18, "level_min": 18, "level_max": 20 },
+      { "id": "duskling", "weight": 18, "level_min": 14, "level_max": 17 },
+      { "id": "bramblor", "weight": 14, "level_min": 16, "level_max": 19 },
+      { "id": "naiaqua", "weight": 8, "level_min": 18, "level_max": 20 }
+    ]
+  },
+  "jungle3": {
+    "chance_per_step": 0.19,
+    "encounters": [
+      { "id": "bramblor", "weight": 26, "level_min": 16, "level_max": 19 },
+      { "id": "nocturn", "weight": 22, "level_min": 16, "level_max": 19 },
+      { "id": "naiaqua", "weight": 20, "level_min": 18, "level_max": 21 },
+      { "id": "frondex", "weight": 16, "level_min": 19, "level_max": 21 },
+      { "id": "gustrel", "weight": 12, "level_min": 18, "level_max": 21 },
+      { "id": "cyclora", "weight": 4, "level_min": 30, "level_max": 31 }
+    ]
+  }
+}

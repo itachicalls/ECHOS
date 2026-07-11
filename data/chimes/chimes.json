@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ember_spark",
+    "name": "Ember Spark",
+    "resonance": "ember",
+    "power": 40,
+    "accuracy": 1.0,
+    "description": "A playful flick of living flame."
+  },
+  {
+    "id": "nuzzle",
+    "name": "Nuzzle",
+    "resonance": "ember",
+    "power": 25,
+    "accuracy": 1.0,
+    "description": "A warm bump that builds courage."
+  },
+  {
+    "id": "warm_guard",
+    "name": "Warm Guard",
+    "resonance": "ember",
+    "power": 10,
+    "accuracy": 1.0,
+    "description": "Wraps the body in a protective glow."
+  },
+  {
+    "id": "tide_slap",
+    "name": "Tide Slap",
+    "resonance": "tide",
+    "power": 40,
+    "accuracy": 1.0,
+    "description": "A cheerful splash with surprising force."
+  },
+  {
+    "id": "bubble_hug",
+    "name": "Bubble Hug",
+    "resonance": "tide",
+    "power": 20,
+    "accuracy": 1.0,
+    "description": "Surrounds the foe in soft bubbles."
+  },
+  {
+    "id": "mist_veil",
+    "name": "Mist Veil",
+    "resonance": "tide",
+    "power": 10,
+    "accuracy": 1.0,
+    "description": "A cool mist that steadies the heart."
+  },
+  {
+    "id": "leaf_dart",
+    "name": "Leaf Dart",
+    "resonance": "verdant",
+    "power": 40,
+    "accuracy": 0.95,
+    "description": "A spinning leaf flung with curiosity."
+  },
+  {
+    "id": "root_tug",
+    "name": "Root Tug",
+    "resonance": "verdant",
+    "power": 30,
+    "accuracy": 1.0,
+    "description": "Tiny roots snag an ankle."
+  },
+  {
+    "id": "pollen_puff",
+    "name": "Pollen Puff",
+    "resonance": "verdant",
+    "power": 15,
+    "accuracy": 1.0,
+    "description": "A sneeze of glittering pollen."
+  },
+  {
+    "id": "pebble_tap",
+    "name": "Pebble Tap",
+    "resonance": "stone",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A polite but solid knock."
+  },
+  {
+    "id": "gust_tickle",
+    "name": "Gust Tickle",
+    "resonance": "gust",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A mischievous swirl of wind."
+  },
+  {
+    "id": "shade_nip",
+    "name": "Shade Nip",
+    "resonance": "shade",
+    "power": 38,
+    "accuracy": 0.95,
+    "description": "A bite from a shadow that isn't quite there."
+  },
+  {
+    "id": "flare_rush",
+    "name": "Flare Rush",
+    "resonance": "ember",
+    "power": 55,
+    "accuracy": 0.9,
+    "description": "A grown Echo's confident charge."
+  },
+  {
+    "id": "surge_tail",
+    "name": "Surge Tail",
+    "resonance": "tide",
+    "power": 55,
+    "accuracy": 0.9,
+    "description": "A sweeping wave from a stronger Tide Echo."
+  },
+  {
+    "id": "canopy_crash",
+    "name": "Canopy Crash",
+    "resonance": "verdant",
+    "power": 55,
+    "accuracy": 0.9,
+    "description": "Branches and leaves fall as one."
+  }
+]

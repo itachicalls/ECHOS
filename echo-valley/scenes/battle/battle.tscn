@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/battle/battle.gd" id="1"]
+
+[node name="Battle" type="Control"]
+custom_minimum_size = Vector2(240, 160)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 240.0
+offset_bottom = 160.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("1")

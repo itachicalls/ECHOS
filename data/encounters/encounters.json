@@ -1,0 +1,13 @@
+{
+  "whisperwood_grass": {
+    "min_steps": 28,
+    "chance_per_step": 0.085,
+    "mercy_steps": 12,
+    "encounters": [
+      { "id": "pebblit", "weight": 35, "level_min": 3, "level_max": 5 },
+      { "id": "zephyette", "weight": 30, "level_min": 3, "level_max": 6 },
+      { "id": "mossprite", "weight": 20, "level_min": 4, "level_max": 6 },
+      { "id": "duskip", "weight": 15, "level_min": 5, "level_max": 7 }
+    ]
+  }
+}

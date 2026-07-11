@@ -1,0 +1,46 @@
+[
+  { "id": "tackle", "name": "Tackle", "resonance": "none", "category": "attack", "power": 35, "accuracy": 1.0, "description": "A plain full-body tackle." },
+  { "id": "scratch", "name": "Scratch", "resonance": "none", "category": "attack", "power": 40, "accuracy": 1.0, "description": "A quick raking swipe." },
+  { "id": "quick_jab", "name": "Quick Jab", "resonance": "none", "category": "attack", "power": 38, "accuracy": 1.0, "priority": 1, "description": "A fast strike that always lands first." },
+  { "id": "rest", "name": "Rest", "resonance": "none", "category": "heal", "power": 0, "accuracy": 1.0, "heal_pct": 0.5, "description": "Curl up and recover half your HP." },
+  { "id": "focus", "name": "Focus", "resonance": "none", "category": "buff", "power": 0, "accuracy": 1.0, "stat": "power", "stages": 1, "description": "Sharpen your resolve to raise Power." },
+  { "id": "harden", "name": "Harden", "resonance": "none", "category": "buff", "power": 0, "accuracy": 1.0, "stat": "guard", "stages": 1, "description": "Brace yourself to raise Guard." },
+
+  { "id": "ember_spark", "name": "Ember Spark", "resonance": "fire", "category": "attack", "power": 45, "accuracy": 1.0, "description": "A quick flick of flame." },
+  { "id": "warm_nuzzle", "name": "Warm Nuzzle", "resonance": "fire", "category": "attack", "power": 30, "accuracy": 1.0, "lifesteal": 0.4, "description": "A cozy bump that drains warmth." },
+  { "id": "fire_fang", "name": "Fire Fang", "resonance": "fire", "category": "attack", "power": 55, "accuracy": 0.95, "description": "A blazing bite." },
+  { "id": "flame_wave", "name": "Flame Wave", "resonance": "fire", "category": "attack", "power": 62, "accuracy": 0.9, "description": "A rolling wave of fire." },
+  { "id": "inferno", "name": "Inferno", "resonance": "fire", "category": "attack", "power": 84, "accuracy": 0.82, "description": "An all-consuming blaze." },
+
+  { "id": "tide_slap", "name": "Tide Slap", "resonance": "water", "category": "attack", "power": 45, "accuracy": 1.0, "description": "A cheerful splash of force." },
+  { "id": "bubble_hug", "name": "Bubble Hug", "resonance": "water", "category": "attack", "power": 28, "accuracy": 1.0, "lifesteal": 0.4, "description": "Soft bubbles that soothe you as they burst." },
+  { "id": "dew_splash", "name": "Dew Splash", "resonance": "water", "category": "attack", "power": 46, "accuracy": 1.0, "description": "A refreshing spray of dew." },
+  { "id": "surge_tail", "name": "Surge Tail", "resonance": "water", "category": "attack", "power": 58, "accuracy": 0.95, "description": "A sweeping wave from the tail." },
+  { "id": "aqua_pulse", "name": "Aqua Pulse", "resonance": "water", "category": "attack", "power": 62, "accuracy": 0.9, "description": "A resonant pulse of water." },
+  { "id": "tsunami", "name": "Tsunami", "resonance": "water", "category": "attack", "power": 84, "accuracy": 0.82, "description": "A towering crushing wave." },
+
+  { "id": "leaf_dart", "name": "Leaf Dart", "resonance": "grass", "category": "attack", "power": 45, "accuracy": 0.95, "description": "A spinning razor leaf." },
+  { "id": "root_tug", "name": "Root Tug", "resonance": "grass", "category": "attack", "power": 30, "accuracy": 1.0, "description": "Tiny roots trip the foe." },
+  { "id": "frond_whip", "name": "Frond Whip", "resonance": "grass", "category": "attack", "power": 46, "accuracy": 0.95, "description": "A lashing fern frond." },
+  { "id": "leech_seed", "name": "Leech Seed", "resonance": "grass", "category": "attack", "power": 44, "accuracy": 0.95, "lifesteal": 0.5, "description": "Sprouts that drain the foe's vigor." },
+  { "id": "vine_lash", "name": "Vine Lash", "resonance": "grass", "category": "attack", "power": 58, "accuracy": 0.95, "description": "A whipping tangle of vines." },
+  { "id": "canopy_crash", "name": "Canopy Crash", "resonance": "grass", "category": "attack", "power": 62, "accuracy": 0.9, "description": "Branches fall as one." },
+  { "id": "solar_bloom", "name": "Solar Bloom", "resonance": "grass", "category": "attack", "power": 84, "accuracy": 0.82, "description": "A burst of blinding blossoms." },
+
+  { "id": "pebble_tap", "name": "Pebble Tap", "resonance": "rock", "category": "attack", "power": 42, "accuracy": 1.0, "description": "A solid little knock." },
+  { "id": "rock_throw", "name": "Rock Throw", "resonance": "rock", "category": "attack", "power": 55, "accuracy": 0.95, "description": "Hurls a heavy stone." },
+  { "id": "boulder_bash", "name": "Boulder Bash", "resonance": "rock", "category": "attack", "power": 62, "accuracy": 0.9, "description": "A heavy tumbling blow." },
+  { "id": "stone_edge", "name": "Stone Edge", "resonance": "rock", "category": "attack", "power": 80, "accuracy": 0.8, "description": "Jagged stones erupt from below." },
+
+  { "id": "gust_tickle", "name": "Gust Tickle", "resonance": "air", "category": "attack", "power": 42, "accuracy": 1.0, "description": "A mischievous swirl of wind." },
+  { "id": "air_slash", "name": "Air Slash", "resonance": "air", "category": "attack", "power": 58, "accuracy": 0.95, "description": "A slicing blade of air." },
+  { "id": "sky_dive", "name": "Sky Dive", "resonance": "air", "category": "attack", "power": 56, "accuracy": 0.9, "description": "A swift diving strike." },
+  { "id": "gale_slash", "name": "Gale Slash", "resonance": "air", "category": "attack", "power": 62, "accuracy": 0.9, "description": "A blade of compressed wind." },
+  { "id": "cyclone", "name": "Cyclone", "resonance": "air", "category": "attack", "power": 82, "accuracy": 0.8, "description": "A roaring whirlwind." },
+
+  { "id": "shade_nip", "name": "Shade Nip", "resonance": "shadow", "category": "attack", "power": 45, "accuracy": 0.95, "description": "A bite from the dark." },
+  { "id": "shade_drain", "name": "Shade Drain", "resonance": "shadow", "category": "attack", "power": 46, "accuracy": 0.95, "lifesteal": 0.5, "description": "Siphons life through shadow." },
+  { "id": "shadow_claw", "name": "Shadow Claw", "resonance": "shadow", "category": "attack", "power": 58, "accuracy": 0.95, "description": "A raking claw of dusk." },
+  { "id": "night_veil", "name": "Night Veil", "resonance": "shadow", "category": "attack", "power": 60, "accuracy": 0.9, "description": "Strikes from swirling shadow." },
+  { "id": "eclipse", "name": "Eclipse", "resonance": "shadow", "category": "attack", "power": 84, "accuracy": 0.82, "description": "Darkness swallows the foe." }
+]

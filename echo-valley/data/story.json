@@ -1,0 +1,51 @@
+{
+  "intro": [
+    "Echo Valley — a hidden land where creatures born of sound and light drift through the wilds.",
+    "They are called ECHOES. You have just arrived in Echo Rest, the valley's cozy village.",
+    "Today, Warden Odalie is giving every new keeper their first Echo. Your journey begins!"
+  ],
+  "stages": [
+    {
+      "id": "s0_start", "title": "A New Keeper",
+      "objective": "Choose your first Echo and head north to Route 1.",
+      "hint": "Pick a starter on the title screen, then leave town through the north gate.",
+      "flag": "starter_chosen"
+    },
+    {
+      "id": "s1_firstwin", "title": "First Steps",
+      "objective": "Win your first battle against a wild Echo on Route 1.",
+      "hint": "Walk through tall grass to find wild Echoes, then win a battle.",
+      "flag": "first_win"
+    },
+    {
+      "id": "s2_rival", "title": "The Rival",
+      "objective": "Defeat Rival Sabo deep in the Echowood (Route 2).",
+      "hint": "Sabo waits near the north of Route 2.",
+      "flag": "trainer_r2_rival"
+    },
+    {
+      "id": "s3_desert", "title": "Across the Scorch",
+      "objective": "Cross the desert and defeat the Sun Warden on Scorch Route 3.",
+      "hint": "The Sun Warden guards the far desert.",
+      "flag": "trainer_d3_warden"
+    },
+    {
+      "id": "s4_grove", "title": "Heart of the Jungle",
+      "objective": "Reach the Verdant grove and defeat the Grove Elder.",
+      "hint": "The Grove Elder trains in Verdant Route 3.",
+      "flag": "trainer_j3_elder"
+    },
+    {
+      "id": "s5_finale", "title": "Settle the Score",
+      "objective": "Face Rival Sabo one last time in the grove.",
+      "hint": "Sabo makes a final stand in Verdant Route 3.",
+      "flag": "trainer_j3_rival"
+    },
+    {
+      "id": "s6_champ", "title": "Valley Champion",
+      "objective": "You are the Champion of Echo Valley! Keep exploring and completing your Echo log.",
+      "hint": "Try to catch and evolve every Echo!",
+      "flag": "__complete__"
+    }
+  ]
+}

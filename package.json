@@ -1,0 +1,11 @@
+{
+  "name": "echoheart",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "export:web": "powershell -ExecutionPolicy Bypass -File scripts/export-web.ps1"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

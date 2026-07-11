@@ -1,0 +1,11 @@
+{
+  "name": "echo-valley",
+  "version": "0.1.0",
+  "description": "Echo Valley - a cozy pixel-art creature-collection RPG built with Godot 4.",
+  "private": true,
+  "scripts": {
+    "export:web": "powershell -ExecutionPolicy Bypass -File ./tools/export-web.ps1",
+    "serve": "node server.js",
+    "play": "npm run export:web && npm run serve"
+  }
+}
