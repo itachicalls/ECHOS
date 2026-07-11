@@ -84,7 +84,7 @@ func _build() -> void:
 
 	_scroll = ScrollContainer.new()
 	_scroll.position = Vector2(MENU_PAD, CONTENT_Y)
-	_scroll.size = Vector2(MENU_W - MENU_PAD * 2 - 4, CONTENT_H)
+	_scroll.size = Vector2(MENU_W - MENU_PAD * 2 - 6, CONTENT_H)
 	_scroll.clip_contents = true
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
@@ -175,7 +175,7 @@ func _render() -> void:
 
 
 func _fix_scroll_size() -> void:
-	var w := _scroll.size.x
+	var w := mini(_scroll.size.x, CARD_W)
 	var h := _content.get_combined_minimum_size().y
 	_content.custom_minimum_size = Vector2(w, maxf(h, _scroll.size.y + 1))
 
@@ -191,7 +191,7 @@ func _render_party() -> void:
 
 
 func _render_box() -> void:
-	_content.add_child(_label("ECHO BOX — tap \u25B6Team to add to your party", 6, Color("cfe8ff")))
+	_content.add_child(_label("ECHO BOX — tap Team to add to party", 6, Color("cfe8ff")))
 	if GameState.pc_box.is_empty():
 		_content.add_child(_label("No Echoes in storage yet.", 8))
 		_content.add_child(_label("Catch wild Echoes, then swap party members here.", 6, Color("a8c0d8")))
@@ -200,92 +200,111 @@ func _render_box() -> void:
 		_content.add_child(_echo_card(GameState.pc_box[i], false))
 
 
-const CARD_BTN_W := 42
+const CARD_W := 208
+const CARD_H := 52
+const SWAP_SZ := Vector2(30, 14)
 
 
 func _echo_card(e: EchoInstance, in_party: bool) -> Control:
 	var card := Panel.new()
-	card.custom_minimum_size = Vector2(0, 56)
+	card.custom_minimum_size = Vector2(CARD_W, CARD_H)
+	card.size = Vector2(CARD_W, CARD_H)
 	card.clip_contents = true
 	card.add_theme_stylebox_override("panel", _card_style())
 
-	var h := HBoxContainer.new()
-	h.position = Vector2(4, 3)
-	h.size = Vector2(MENU_W - MENU_PAD * 2 - 16 - CARD_BTN_W, 50)
-	h.add_theme_constant_override("separation", 5)
-	card.add_child(h)
+	const ICON_W := 28
+	const ICON_H := 40
+	const PAD := 3
+	var info_x := PAD + ICON_W + 3
+	var info_w := CARD_W - info_x - SWAP_SZ.x - PAD - 2
 
 	var def := e.get_definition()
 	if def and def.sprite_path != "":
-		h.add_child(_echo_icon(def.sprite_path))
+		var icon_slot := _echo_icon(def.sprite_path, ICON_W, ICON_H)
+		icon_slot.position = Vector2(PAD, 6)
+		card.add_child(icon_slot)
 
 	var col := VBoxContainer.new()
-	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.position = Vector2(info_x, 3)
+	col.size = Vector2(info_w, CARD_H - 6)
+	col.custom_minimum_size = Vector2(info_w, CARD_H - 6)
 	col.add_theme_constant_override("separation", 0)
 	col.clip_contents = true
-	h.add_child(col)
+	card.add_child(col)
 
 	var res_name: String = RES_NAMES[int(def.resonance)] if def else "Normal"
 	var title := _label("%s  Lv%d  [%s]" % [e.display_name(), e.level, res_name], 7)
+	title.custom_minimum_size = Vector2(info_w, 9)
+	title.size = Vector2(info_w, 9)
 	title.clip_text = true
 	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	col.add_child(title)
-	col.add_child(_hp_row(e))
-	col.add_child(_xp_row(e))
+	col.add_child(_hp_row(e, mini(info_w - 36, 68)))
+	col.add_child(_xp_row(e, mini(info_w - 36, 68)))
 	var move_names: Array = []
 	for c in e.get_chimes():
 		move_names.append(c.name)
 	var moves := _label("Moves: " + (", ".join(move_names) if not move_names.is_empty() else "-"), 5, Color("a8c0d8"))
+	moves.custom_minimum_size = Vector2(info_w, 0)
+	moves.size = Vector2(info_w, 0)
 	moves.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	moves.max_lines_visible = 2
 	moves.clip_text = true
 	col.add_child(moves)
 
-	_add_swap_button(card, e, in_party)
+	var swap_label := "Box" if in_party else "Team"
+	var swap_enabled := GameState.party.size() > 1 if in_party else GameState.party.size() < EchoTypes.PARTY_SIZE
+	var swap_pos := Vector2(CARD_W - SWAP_SZ.x - PAD, 19)
+	_add_swap_button(card, swap_pos, swap_label, swap_enabled, func(): _do_swap(e, in_party))
 	return card
 
 
-func _add_swap_button(card: Control, e: EchoInstance, in_party: bool) -> void:
-	var btn := Button.new()
-	btn.focus_mode = Control.FOCUS_NONE
-	btn.clip_text = true
-	btn.add_theme_font_size_override("font_size", 6)
-	btn.anchor_left = 1.0
-	btn.anchor_right = 1.0
-	btn.offset_left = -(CARD_BTN_W + 4)
-	btn.offset_right = -4
-	btn.offset_top = 18
-	btn.offset_bottom = 38
+func _add_swap_button(card: Control, pos: Vector2, text: String, enabled: bool, cb: Callable) -> void:
+	var slot := Panel.new()
+	slot.position = pos
+	slot.size = SWAP_SZ
+	slot.custom_minimum_size = SWAP_SZ
+	slot.clip_contents = true
+	var bg := Color("2b3f56") if enabled else Color("263140")
+	var border := Color("8ec8ff") if enabled else Color("3d5066")
+	slot.add_theme_stylebox_override("panel", _mini_btn_style(bg, border))
 
-	var enabled: bool
-	if in_party:
-		btn.text = "\u25B6Box"
-		enabled = GameState.party.size() > 1
-		btn.pressed.connect(func(): _do_swap(e, true))
-	else:
-		btn.text = "\u25B6Team"
-		enabled = GameState.party.size() < EchoTypes.PARTY_SIZE
-		btn.pressed.connect(func(): _do_swap(e, false))
+	if enabled and cb.is_valid():
+		var hit := Button.new()
+		hit.position = Vector2.ZERO
+		hit.size = SWAP_SZ
+		hit.custom_minimum_size = SWAP_SZ
+		hit.focus_mode = Control.FOCUS_NONE
+		hit.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+		hit.add_theme_stylebox_override("hover", _mini_btn_style(Color("3d597a"), Color("ffffff")))
+		hit.add_theme_stylebox_override("pressed", _mini_btn_style(Color("1d2b3a"), Color("ffd166")))
+		hit.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+		hit.pressed.connect(cb)
+		slot.add_child(hit)
 
-	btn.disabled = not enabled
-	var base := Color("2c6e49") if in_party else Color("1d4e6b")
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.position = Vector2.ZERO
+	lbl.size = SWAP_SZ
+	lbl.custom_minimum_size = SWAP_SZ
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.add_theme_font_size_override("font_size", 5)
+	lbl.add_theme_color_override("font_color", Color("f2f7ff") if enabled else Color("6b7890"))
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lbl.clip_text = true
+	slot.add_child(lbl)
+	card.add_child(slot)
+
+
+func _mini_btn_style(bg: Color, border: Color) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = base if enabled else Color("2a3644")
-	sb.border_color = Color("8ec8ff") if enabled else Color("3d5066")
+	sb.bg_color = bg
+	sb.border_color = border
 	sb.set_border_width_all(1)
 	sb.set_corner_radius_all(3)
-	btn.add_theme_stylebox_override("normal", sb)
-	var hover := sb.duplicate()
-	hover.bg_color = base.lightened(0.15)
-	btn.add_theme_stylebox_override("hover", hover)
-	var pressed := sb.duplicate()
-	pressed.bg_color = base.darkened(0.2)
-	btn.add_theme_stylebox_override("pressed", pressed)
-	var disabled_sb := sb.duplicate()
-	btn.add_theme_stylebox_override("disabled", disabled_sb)
-	btn.add_theme_color_override("font_color", Color("eaf7ff") if enabled else Color("6b7890"))
-	btn.add_theme_color_override("font_disabled_color", Color("6b7890"))
-	card.add_child(btn)
+	sb.set_content_margin_all(0)
+	return sb
 
 
 func _do_swap(e: EchoInstance, from_party: bool) -> void:
@@ -303,11 +322,10 @@ func _do_swap(e: EchoInstance, from_party: bool) -> void:
 		_render()
 
 
-func _echo_icon(sprite_path: String) -> Control:
-	const ICON_W := 36
-	const ICON_H := 48
+func _echo_icon(sprite_path: String, icon_w: int = 28, icon_h: int = 40) -> Control:
 	var slot := Panel.new()
-	slot.custom_minimum_size = Vector2(ICON_W, ICON_H)
+	slot.custom_minimum_size = Vector2(icon_w, icon_h)
+	slot.size = Vector2(icon_w, icon_h)
 	slot.clip_contents = true
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.07, 0.11, 0.15, 0.65)
@@ -321,14 +339,14 @@ func _echo_icon(sprite_path: String) -> Control:
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.position = Vector2(2, 2)
-	icon.size = Vector2(ICON_W - 4, ICON_H - 4)
+	icon.size = Vector2(icon_w - 4, icon_h - 4)
 	if ResourceLoader.exists(sprite_path):
 		icon.texture = load(sprite_path)
 	slot.add_child(icon)
 	return slot
 
 
-func _hp_row(e: EchoInstance) -> Control:
+func _hp_row(e: EchoInstance, bar_w: int = 68) -> Control:
 	var wrap := Control.new()
 	wrap.custom_minimum_size = Vector2(0, 8)
 	var maxhp := e.max_hp()
@@ -336,20 +354,20 @@ func _hp_row(e: EchoInstance) -> Control:
 	var bg := ColorRect.new()
 	bg.color = Color("22303c")
 	bg.position = Vector2(0, 1)
-	bg.size = Vector2(90, 3)
+	bg.size = Vector2(bar_w, 3)
 	wrap.add_child(bg)
 	var fill := ColorRect.new()
 	fill.color = Color("52b788") if ratio > 0.2 else Color("e63946")
 	fill.position = Vector2(0, 1)
-	fill.size = Vector2(90.0 * ratio, 3)
+	fill.size = Vector2(float(bar_w) * ratio, 3)
 	wrap.add_child(fill)
 	var lbl := _label("%d/%d" % [e.current_hp, maxhp], 5, Color("cfe8ff"))
-	lbl.position = Vector2(94, 0)
+	lbl.position = Vector2(bar_w + 2, 0)
 	wrap.add_child(lbl)
 	return wrap
 
 
-func _xp_row(e: EchoInstance) -> Control:
+func _xp_row(e: EchoInstance, bar_w: int = 68) -> Control:
 	var wrap := Control.new()
 	wrap.custom_minimum_size = Vector2(0, 8)
 	var need := EchoTypes.xp_to_next(e.level)
@@ -357,16 +375,16 @@ func _xp_row(e: EchoInstance) -> Control:
 	var bg := ColorRect.new()
 	bg.color = Color("22303c")
 	bg.position = Vector2(0, 1)
-	bg.size = Vector2(90, 3)
+	bg.size = Vector2(bar_w, 3)
 	wrap.add_child(bg)
 	var fill := ColorRect.new()
 	fill.color = Color("7dffb8")
 	fill.position = Vector2(0, 1)
-	fill.size = Vector2(90.0 * clampf(ratio, 0.0, 1.0), 3)
+	fill.size = Vector2(float(bar_w) * clampf(ratio, 0.0, 1.0), 3)
 	wrap.add_child(fill)
 	var txt := "MAX" if e.level >= EchoTypes.MAX_LEVEL else "%d/%d" % [e.xp, need]
 	var lbl := _label("XP " + txt, 5, Color("a8c0d8"))
-	lbl.position = Vector2(94, 0)
+	lbl.position = Vector2(bar_w + 2, 0)
 	wrap.add_child(lbl)
 	return wrap
 
