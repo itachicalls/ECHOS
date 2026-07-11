@@ -57,7 +57,7 @@ const RESONANCE_GLYPHS := {
 const ADV_MULT := 1.5
 const DIS_MULT := 0.66
 const PARTY_SIZE := 6
-const MAX_LEVEL := 50
+const MAX_LEVEL := 60
 
 
 static func resonance_from_string(v: String) -> Resonance:

@@ -241,6 +241,12 @@ func place_bush(cell: Vector2i) -> void:
 	block(cell)
 
 
+## A solid cave wall: stone-brick ground tile that blocks movement.
+func place_rock(cell: Vector2i) -> void:
+	set_ground(cell, Tiles.CAVE_WALL)
+	block(cell)
+
+
 func place_tree(cell: Vector2i, col: int = Tiles.TREE_GREEN_COL) -> void:
 	# 16x32 sprite (treetop + trunk) whose base sits on `cell`.
 	var spr := Sprite2D.new()
@@ -297,6 +303,23 @@ func add_trainer(cell: Vector2i, facing: String, trainer: Dictionary, sight: int
 		npc.kind = "sentry"
 		npc.sight = sight
 	return npc
+
+
+## A gym leader who seals a region exit until defeated. While the leader is
+## unbeaten the exit tiles are blocked and the leader stands in the gateway
+## (challenging on sight). Once "trainer_<id>" is set, the leader steps aside
+## and the path opens. Call AFTER laying down the exit warps.
+func add_gym_gate(trainer: Dictionary, leader_cell: Vector2i, facing: String, exit_cells: Array, side_cell: Vector2i, barrier_cells: Array = [], sight: int = 5) -> void:
+	var id := String(trainer.get("id", ""))
+	var beaten := bool(GameState.flags.get("trainer_" + id, false))
+	if beaten:
+		add_trainer(side_cell, facing, trainer, 0)
+		return
+	add_trainer(leader_cell, facing, trainer, sight)
+	for c in exit_cells:
+		block(c)
+	for c in barrier_cells:
+		place_bush(c)
 
 
 func add_prop(sprite_path: String, cell: Vector2i, blocks: bool = false) -> Sprite2D:

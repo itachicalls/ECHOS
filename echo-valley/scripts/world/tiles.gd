@@ -38,6 +38,13 @@ const FLOWERS := Vector3i(0, 2, 0)
 const BUSH := Vector3i(0, 5, 0)
 const MUSHROOM := Vector3i(0, 5, 2)
 
+# --- cave / dungeon tiles (tiny-dungeon, source 1) ---
+const CAVE_FLOOR := Vector3i(1, 0, 2)   # gray rubble floor (safe path)
+const CAVE_FLOOR2 := Vector3i(1, 0, 3)  # lined stone floor (encounter den)
+const CAVE_WALL := Vector3i(1, 4, 3)    # dark stone-brick wall
+const CAVE_ALTAR := Vector3i(1, 5, 3)   # ornate framed dais
+const CAVE_TORCH := Vector3i(1, 5, 2)   # wall torch flame
+
 # --- tree sprites (tiny-town, 16x32 = treetop + trunk, referenced by column) ---
 const TREE_GREEN_COL := 4
 const TREE_ORANGE_COL := 3

@@ -10,15 +10,16 @@ const ECHO_BOX := Vector2i(54, 50)
 const PAD := 4
 const W := VIEW_W - PAD * 2
 const HDR_Y := 2
-const HDR_H := 11
-const OPT_Y := 15
-const OPT_H := 13
-const FILTER_Y := 30
-const GRID_Y := 45
-const GRID_H := 66
-const STATUS_Y := 113
-const FOOTER_Y := 124
-const FOOTER_H := 14
+const HDR_H := 15
+const OPT_Y := 19
+const OPT_H := 19
+const FILTER_Y := 40
+const FILTER_H := 18
+const GRID_Y := 60
+const GRID_H := 60
+const STATUS_Y := 121
+const FOOTER_Y := 137
+const FOOTER_H := 20
 
 # Echo Valley versus palette (matches title screen)
 const C_SKY_TOP := Color("1a1030")
@@ -96,9 +97,9 @@ func _rebuild() -> void:
 
 func _build_mode(parent: Control) -> void:
 	_header(parent, "VERSUS BATTLE")
-	_caption(parent, "Pick solo CPU or online PvP.", 18)
+	_caption(parent, "Pick solo CPU or online PvP.", 20)
 
-	var card_y := 32
+	var card_y := 34
 	var card_h := 64
 	var card_w := 112
 
@@ -118,37 +119,38 @@ func _build_mode(parent: Control) -> void:
 
 func _build_online(parent: Control) -> void:
 	_header(parent, "PLAYER VS PLAYER")
-	_status = _caption(parent, "Connect, then share your room code.", 16)
+	_status = _caption(parent, "Connect, then share your room code.", 20)
 
-	_label_in(parent, Vector2(PAD, 28), Vector2(40, 8), "Name", 5, Color("7c8aa0"), false)
-	_join_field = _styled_field(Vector2(PAD, 36), Vector2(96, OPT_H))
+	# left column: name + host/join
+	_label_in(parent, Vector2(PAD, 32), Vector2(60, 10), "YOUR NAME", 5, Color("7c8aa0"), false)
+	_join_field = _styled_field(Vector2(PAD, 43), Vector2(110, 18))
 	_join_field.text = "Player"
 	parent.add_child(_join_field)
 
-	_btn_at(parent, Vector2(PAD, 52), Vector2(50, OPT_H), "Host", _host_room)
-	_btn_at(parent, Vector2(58, 52), Vector2(50, OPT_H), "Join", _join_room)
+	_btn_at(parent, Vector2(PAD, 66), Vector2(52, 19), "Host", _host_room)
+	_btn_at(parent, Vector2(62, 66), Vector2(52, 19), "Join", _join_room)
 
-	_label_in(parent, Vector2(PAD, 68), Vector2(56, 8), "Room code", 5, Color("7c8aa0"), false)
-	_code_lbl = _label_in(parent, Vector2(PAD, 78), Vector2(68, 10), "--------", 8, Color("ffd166"), false)
-
-	var code_in := _styled_field(Vector2(76, 76), Vector2(56, OPT_H))
+	# right column: room code display + join field
+	_label_in(parent, Vector2(122, 32), Vector2(110, 10), "ROOM CODE", 5, Color("7c8aa0"), false)
+	_code_lbl = _label_in(parent, Vector2(122, 43), Vector2(110, 16), "------", 10, Color("ffd166"), true)
+	var code_in := _styled_field(Vector2(122, 66), Vector2(110, 18))
 	code_in.name = "code_in"
-	code_in.placeholder_text = "CODE"
+	code_in.placeholder_text = "ENTER CODE"
 	code_in.max_length = 6
 	parent.add_child(code_in)
 
 	_action_btn = null
-	_build_footer(parent, _on_back, Callable(), "", "Draft Team", _go_online_draft, true)
+	_build_footer(parent, _on_back, Callable(), "", "Draft", _go_online_draft, true)
 
 
 func _build_draft(parent: Control, title: String) -> void:
 	_header(parent, title)
-	_btn_at(parent, Vector2(PAD, OPT_Y), Vector2(44, OPT_H), "1v1", func(): _set_team_size(1), _team_size == 1)
-	_btn_at(parent, Vector2(50, OPT_Y), Vector2(44, OPT_H), "3v3", func(): _set_team_size(3), _team_size == 3)
-	_btn_at(parent, Vector2(96, OPT_Y), Vector2(44, OPT_H), "Lv10", func(): _set_level(10), _level == 10)
-	_btn_at(parent, Vector2(142, OPT_Y), Vector2(44, OPT_H), "Lv15", func(): _set_level(15), _level == 15)
-	_btn_at(parent, Vector2(188, OPT_Y), Vector2(48, OPT_H), "Lv20", func(): _set_level(20), _level == 20)
-	_btn_at(parent, Vector2(PAD, FILTER_Y), Vector2(W, OPT_H), _filter_label(), _cycle_filter, true)
+	_btn_at(parent, Vector2(PAD, OPT_Y), Vector2(40, OPT_H), "1v1", func(): _set_team_size(1), _team_size == 1)
+	_btn_at(parent, Vector2(46, OPT_Y), Vector2(40, OPT_H), "3v3", func(): _set_team_size(3), _team_size == 3)
+	_btn_at(parent, Vector2(90, OPT_Y), Vector2(46, OPT_H), "Lv15", func(): _set_level(15), _level == 15)
+	_btn_at(parent, Vector2(138, OPT_Y), Vector2(46, OPT_H), "Lv30", func(): _set_level(30), _level == 30)
+	_btn_at(parent, Vector2(186, OPT_Y), Vector2(50, OPT_H), "Lv50", func(): _set_level(50), _level == 50)
+	_btn_at(parent, Vector2(PAD, FILTER_Y), Vector2(W, FILTER_H), _filter_label(), _cycle_filter, true)
 
 	var grid_panel := Panel.new()
 	_pin(grid_panel, Vector2(PAD, GRID_Y), Vector2(W, GRID_H))
@@ -586,7 +588,7 @@ func _btn_at(parent: Control, pos: Vector2, sz: Vector2, text: String, cb: Calla
 	_pin(b, pos, sz)
 	b.clip_text = true
 	b.focus_mode = Control.FOCUS_NONE
-	b.add_theme_font_size_override("font_size", 5)
+	b.add_theme_font_size_override("font_size", 6)
 	var bg := Color("264d73") if on else Color("1e2d42")
 	var border := C_GOLD_DIM if on else Color("5a7a9a")
 	b.add_theme_stylebox_override("normal", _box(bg, border))

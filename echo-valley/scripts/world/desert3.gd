@@ -58,6 +58,16 @@ func _build_map() -> void:
 		"win_line": "The desert crowns you champion. Until we meet again.",
 	})
 
+	# DESERT GYM — seals the eastern pass to the Verdant Jungle.
+	add_interact(Vector2i(21, 10), { "type": "sign", "text": "DUNE GYM - Leader Sol blocks the jungle pass east. Defeat him to cross!" })
+	add_gym_gate({
+		"id": "gym_desert", "name": "Leader Sol", "look": 5,
+		"party": [{ "id": "cindboth", "level": 17 }, { "id": "dunejaw", "level": 18 }, { "id": "flintaur", "level": 19 }],
+		"reward": 7, "gym": true,
+		"intro": ["I am Sol, Dune Gym Leader.", "The jungle lies east — but first, burn away your doubt!"],
+		"win_line": "You have the desert's fire in you. The pass east is yours!",
+	}, Vector2i(22, 8), "left", [Vector2i(23, 8), Vector2i(23, 9)], Vector2i(22, 6), [Vector2i(22, 9)])
+
 	# jagged rock hazards guarding the throne approach
 	for p in [Vector2i(13, 10), Vector2i(14, 11), Vector2i(15, 10), Vector2i(16, 12), Vector2i(12, 13)]:
 		if not is_blocked(p):

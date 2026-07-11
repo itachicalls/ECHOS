@@ -10,6 +10,8 @@ const MAPS := {
 	"jungle1": "res://scenes/world/jungle1.tscn",
 	"jungle2": "res://scenes/world/jungle2.tscn",
 	"jungle3": "res://scenes/world/jungle3.tscn",
+	"cave1": "res://scenes/world/cave1.tscn",
+	"cave2": "res://scenes/world/cave2.tscn",
 }
 const TITLE := "res://scenes/boot/title.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"

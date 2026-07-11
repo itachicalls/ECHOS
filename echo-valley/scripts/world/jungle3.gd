@@ -23,6 +23,8 @@ func _build_map() -> void:
 
 	add_warp(Vector2i(9, 23), "jungle2", Vector2i(9, 1), "down")
 	add_warp(Vector2i(10, 23), "jungle2", Vector2i(10, 1), "down")
+	add_warp(Vector2i(9, 0), "cave1", Vector2i(9, 22), "up")
+	add_warp(Vector2i(10, 0), "cave1", Vector2i(10, 22), "up")
 
 	_grass_patch(2, 8, 7, 14)
 	_grass_patch(12, 4, 17, 11)
@@ -54,6 +56,16 @@ func _build_map() -> void:
 		"intro": ["I knew you'd make it this far.", "This is where I surpass you!"],
 		"win_line": "...Fine. Next time I'll be stronger. Count on it.",
 	})
+
+	# JUNGLE GYM — seals the northern cavern pass to the Crag Caverns.
+	add_interact(Vector2i(8, 3), { "type": "sign", "text": "GROVE GYM - Leader Ivy guards the cavern pass north. Defeat her to descend!" })
+	add_gym_gate({
+		"id": "gym_jungle", "name": "Leader Ivy", "look": 1,
+		"party": [{ "id": "myconid", "level": 21 }, { "id": "nocturn", "level": 21 }, { "id": "creepvine", "level": 22 }],
+		"reward": 8, "gym": true,
+		"intro": ["I am Ivy, Grove Gym Leader.", "Beyond lies the Crag Caverns. Earn your descent!"],
+		"win_line": "The vines part for you. The caverns await below.",
+	}, Vector2i(9, 2), "down", [Vector2i(9, 0), Vector2i(10, 0)], Vector2i(7, 3), [Vector2i(10, 2)])
 
 
 func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:

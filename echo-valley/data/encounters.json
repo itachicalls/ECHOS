@@ -81,5 +81,27 @@
       { "id": "gustrel", "weight": 12, "level_min": 18, "level_max": 21 },
       { "id": "cyclora", "weight": 4, "level_min": 30, "level_max": 31 }
     ]
+  },
+  "cave1": {
+    "chance_per_step": 0.20,
+    "encounters": [
+      { "id": "cobblit", "weight": 26, "level_min": 22, "level_max": 25 },
+      { "id": "shardling", "weight": 22, "level_min": 22, "level_max": 25 },
+      { "id": "shadelet", "weight": 20, "level_min": 22, "level_max": 25 },
+      { "id": "flintling", "weight": 16, "level_min": 23, "level_max": 26 },
+      { "id": "umbrapaw", "weight": 12, "level_min": 24, "level_max": 27 },
+      { "id": "bouldrake", "weight": 4, "level_min": 27, "level_max": 28 }
+    ]
+  },
+  "cave2": {
+    "chance_per_step": 0.22,
+    "encounters": [
+      { "id": "graniteor", "weight": 24, "level_min": 27, "level_max": 30 },
+      { "id": "duskmaw", "weight": 22, "level_min": 28, "level_max": 31 },
+      { "id": "wraithorn", "weight": 18, "level_min": 28, "level_max": 31 },
+      { "id": "monolith", "weight": 16, "level_min": 29, "level_max": 32 },
+      { "id": "avalanther", "weight": 12, "level_min": 30, "level_max": 32 },
+      { "id": "obsidraith", "weight": 8, "level_min": 31, "level_max": 33 }
+    ]
   }
 }
