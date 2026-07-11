@@ -21,6 +21,8 @@ SaveService="*res://scripts/autoload/save_service.gd"
 StoryService="*res://scripts/autoload/story_service.gd"
 SceneRouter="*res://scripts/autoload/scene_router.gd"
 VersusNet="*res://scripts/autoload/versus_net.gd"
+TouchUtil="*res://scripts/ui/touch_util.gd"
+TouchControls="*res://scripts/ui/touch_controls.gd"
 
 [display]
 

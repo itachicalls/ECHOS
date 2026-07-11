@@ -11,6 +11,8 @@ var _toast_timer: float = 0.0
 var _box: Panel
 var _text: Label
 var _arrow: Label
+var _tap_btn: Button
+var _tap_hint: Label
 var _bag_btn: Control
 var _menu_btn: Control
 var _lines: Array = []
@@ -61,6 +63,7 @@ func _build() -> void:
 	_text.position = Vector2(6, 4)
 	_text.size = Vector2(VIEW_W - 28, 38)
 	_text.clip_text = true
+	_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_box.add_child(_text)
 
 	_arrow = Label.new()
@@ -69,6 +72,33 @@ func _build() -> void:
 	_arrow.add_theme_color_override("font_color", Color("cfe8ff"))
 	_arrow.position = Vector2(VIEW_W - 28, 34)
 	_box.add_child(_arrow)
+
+	_tap_hint = Label.new()
+	_tap_hint.text = "Tap to continue"
+	_tap_hint.add_theme_font_size_override("font_size", 5)
+	_tap_hint.add_theme_color_override("font_color", Color("8ec8ff"))
+	_tap_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_tap_hint.position = Vector2(VIEW_W - 88, 34)
+	_tap_hint.size = Vector2(72, 10)
+	_tap_hint.visible = false
+	_tap_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_box.add_child(_tap_hint)
+
+	# Full-size invisible tap target so the dialogue box responds to touch.
+	_tap_btn = Button.new()
+	_tap_btn.position = Vector2.ZERO
+	_tap_btn.size = _box.size
+	_tap_btn.custom_minimum_size = _box.size
+	_tap_btn.focus_mode = Control.FOCUS_NONE
+	_tap_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_tap_btn.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	_tap_btn.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+	_tap_btn.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+	_tap_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	_tap_btn.visible = false
+	_tap_btn.z_index = 3
+	_tap_btn.pressed.connect(_advance)
+	_box.add_child(_tap_btn)
 
 	_build_quick_bar()
 
@@ -170,7 +200,8 @@ func _process(delta: float) -> void:
 	_menu_btn.visible = hud_visible
 	if _open:
 		_arrow.visible = int(Time.get_ticks_msec() / 350) % 2 == 0
-		if Input.is_action_just_pressed("interact") or Input.is_action_just_pressed("cancel"):
+		_tap_hint.visible = TouchUtil.is_touch_ui_enabled()
+		if TouchUtil.wants_continue():
 			_advance()
 
 
@@ -185,6 +216,7 @@ func _on_dialogue(lines: Array) -> void:
 	_index = 0
 	_open = true
 	_box.visible = true
+	_tap_btn.visible = true
 	EventBus.dialogue_active = true
 	_lock_player(true)
 	_show_current()
@@ -200,6 +232,7 @@ func _advance() -> void:
 	if _index >= _lines.size():
 		_open = false
 		_box.visible = false
+		_tap_btn.visible = false
 		EventBus.dialogue_active = false
 		_lock_player(false)
 		EventBus.dialogue_closed.emit()

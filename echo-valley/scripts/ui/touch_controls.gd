@@ -1,34 +1,24 @@
 extends CanvasLayer
 
-## On-screen D-pad + action button for touch / mobile play. Arrows are drawn as
-## vector triangles (the pixel font has no arrow glyphs), the pad is compact, and
-## the whole overlay only appears on touch devices — never on desktop / CPU play.
+## Global on-screen D-pad + A button for touch / mobile. Autoloaded so every scene
+## (overworld, battle, menus) can advance dialogue and move on phones.
 
 const DIRS := ["move_up", "move_down", "move_left", "move_right"]
 
 var _dir_btns: Dictionary = {}
+var _a_btn: Button
 var _held: Dictionary = {}
 
 
 func _ready() -> void:
 	layer = 9
-	if not _touch_target():
+	if not TouchUtil.is_touch_ui_enabled():
 		queue_free()
 		return
 	_build()
 
 
-func _touch_target() -> bool:
-	# Mobile / touch only. Desktop and CPU-vs players never see this.
-	if OS.has_environment("EV_FORCE_TOUCH"):
-		return true
-	if OS.has_feature("mobile"):
-		return true
-	return DisplayServer.is_touchscreen_available()
-
-
 func _build() -> void:
-	# Compact D-pad, lower-left (16x16 keys in a plus)
 	_dir_btns["move_up"] = _dir_btn(Vector2(20, 110), "up")
 	_dir_btns["move_left"] = _dir_btn(Vector2(4, 126), "left")
 	_dir_btns["move_right"] = _dir_btn(Vector2(36, 126), "right")
@@ -36,19 +26,31 @@ func _build() -> void:
 	for a in DIRS:
 		_held[a] = false
 
-	# A (interact / confirm), lower-right
-	var a_btn := Button.new()
-	a_btn.position = Vector2(206, 124)
-	a_btn.size = Vector2(28, 22)
-	a_btn.custom_minimum_size = a_btn.size
-	a_btn.text = "A"
-	a_btn.focus_mode = Control.FOCUS_NONE
-	a_btn.add_theme_font_size_override("font_size", 11)
-	a_btn.add_theme_color_override("font_color", Color("eaf4ff"))
-	_style_btn(a_btn)
-	a_btn.button_down.connect(func(): Input.action_press("interact"))
-	a_btn.button_up.connect(func(): Input.action_release("interact"))
-	add_child(a_btn)
+	_a_btn = Button.new()
+	_a_btn.position = Vector2(206, 124)
+	_a_btn.size = Vector2(28, 22)
+	_a_btn.custom_minimum_size = _a_btn.size
+	_a_btn.text = "A"
+	_a_btn.focus_mode = Control.FOCUS_NONE
+	_a_btn.add_theme_font_size_override("font_size", 11)
+	_a_btn.add_theme_color_override("font_color", Color("eaf4ff"))
+	_style_btn(_a_btn)
+	_a_btn.button_down.connect(_on_a_down)
+	_a_btn.button_up.connect(_on_a_up)
+	add_child(_a_btn)
+
+
+func _on_a_down() -> void:
+	TouchUtil.register_tap()
+	if EventBus.dialogue_active or EventBus.awaiting_continue:
+		return
+	Input.action_press("interact")
+
+
+func _on_a_up() -> void:
+	if EventBus.dialogue_active or EventBus.awaiting_continue:
+		return
+	Input.action_release("interact")
 
 
 func _dir_btn(pos: Vector2, dir: String) -> Button:
@@ -100,14 +102,18 @@ func _style(bg: Color, border: Color) -> StyleBoxFlat:
 	return sb
 
 
+func _in_overworld() -> bool:
+	return get_tree().get_first_node_in_group("player") != null
+
+
 func _process(_delta: float) -> void:
-	var block := EventBus.dialogue_active or EventBus.menu_active
+	var show_pad := _in_overworld() and not EventBus.dialogue_active and not EventBus.menu_active
 	for a in DIRS:
 		var btn: Button = _dir_btns.get(a, null)
 		if btn == null:
 			continue
-		btn.visible = not block
-		var want: bool = (not block) and btn.button_pressed
+		btn.visible = show_pad
+		var want: bool = show_pad and btn.button_pressed
 		if want and not bool(_held[a]):
 			Input.action_press(a)
 			_held[a] = true
@@ -116,6 +122,9 @@ func _process(_delta: float) -> void:
 			Input.action_release(a)
 			_held[a] = false
 			btn.queue_redraw()
+	# A stays visible everywhere except when pause menu is open.
+	if _a_btn:
+		_a_btn.visible = not EventBus.menu_active
 
 
 func _exit_tree() -> void:

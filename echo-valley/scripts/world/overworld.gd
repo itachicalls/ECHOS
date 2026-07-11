@@ -7,7 +7,6 @@ const TILE := 16
 const PlayerScene = preload("res://scenes/player/player.tscn")
 const HudScene = preload("res://scenes/ui/hud.tscn")
 const PauseMenuScript = preload("res://scripts/ui/pause_menu.gd")
-const TouchControlsScript = preload("res://scripts/ui/touch_controls.gd")
 const NpcScript = preload("res://scripts/world/npc.gd")
 
 const STEP_DIRS := {
@@ -60,7 +59,6 @@ func _ready() -> void:
 	_spawn_player()
 	add_child(HudScene.instantiate())
 	add_child(PauseMenuScript.new())
-	add_child(TouchControlsScript.new())
 	_place_pickups()
 	StoryService.notify_progress.call_deferred()
 

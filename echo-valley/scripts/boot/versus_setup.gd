@@ -574,6 +574,8 @@ func _label_in(parent: Control, pos: Vector2, sz: Vector2, text: String, font: i
 func _styled_field(pos: Vector2, sz: Vector2) -> LineEdit:
 	var f := LineEdit.new()
 	_pin(f, pos, sz)
+	f.virtual_keyboard_enabled = true
+	f.focus_mode = Control.FOCUS_ALL
 	f.add_theme_font_size_override("font_size", 7)
 	f.add_theme_stylebox_override("normal", _box(Color("0c141c"), Color("3a5f8f")))
 	f.add_theme_stylebox_override("focus", _box(Color("14202b"), Color("8ec8ff")))

@@ -33,6 +33,7 @@ var main_menu: Control
 var sub_menu: Control
 var _stage: Control
 var _msg_panel: Panel
+var _msg_tap: Button
 var _home: Dictionary = {}
 var _visual_active: Dictionary = {}  # stage index per side — may lag state.active during animations
 var _idle_tweens: Dictionary = {}
@@ -132,7 +133,22 @@ func _build_ui() -> void:
 	msg.position = Vector2(7, 5)
 	msg.size = Vector2(108, 42)
 	msg.clip_text = true
+	msg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_msg_panel.add_child(msg)
+
+	_msg_tap = Button.new()
+	_msg_tap.z_index = 2
+	_msg_tap.position = Vector2.ZERO
+	_msg_tap.size = _msg_panel.size
+	_msg_tap.custom_minimum_size = _msg_panel.size
+	_msg_tap.focus_mode = Control.FOCUS_NONE
+	_msg_tap.visible = false
+	_msg_tap.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	_msg_tap.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+	_msg_tap.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+	_msg_tap.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	_msg_tap.pressed.connect(func(): TouchUtil.register_tap())
+	_msg_panel.add_child(_msg_tap)
 
 	# action buttons — clipped to right side of bottom bar
 	menu_root = Control.new()
@@ -582,7 +598,21 @@ func _say(text: String) -> void:
 	msg.visible = true
 	msg.size = Vector2(226, 44)
 	msg.text = text
-	await get_tree().create_timer(0.85).timeout
+	await _wait_continue(0.35)
+
+
+func _wait_continue(min_wait: float = 0.0) -> void:
+	EventBus.awaiting_continue = true
+	if TouchUtil.is_touch_ui_enabled():
+		_msg_tap.visible = true
+	if min_wait > 0.0:
+		await get_tree().create_timer(min_wait).timeout
+	while true:
+		await get_tree().process_frame
+		if TouchUtil.wants_continue():
+			break
+	EventBus.awaiting_continue = false
+	_msg_tap.visible = false
 
 
 func _btn_style(bg: Color, border: Color) -> StyleBoxFlat:
