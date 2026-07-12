@@ -100,7 +100,10 @@ body {
 html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;background:#000;touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
 #canvas,canvas{display:block;touch-action:none;outline:none;image-rendering:pixelated;}
 </style>
-	</head>
+	<style id="canvas-fullscreen-fix">
+html,body,#canvas,canvas{width:100%!important;height:100%!important;max-width:100vw;max-height:100vh;}
+</style>
+</head>
 	<body>
 		<canvas id="canvas">
 			Your browser does not support the canvas tag.
@@ -118,7 +121,7 @@ html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;background:#
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":true,"fileSizes":{"index.pck":1235224,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":true,"fileSizes":{"index.pck":1235688,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 

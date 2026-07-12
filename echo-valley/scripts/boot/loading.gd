@@ -27,8 +27,15 @@ var hold_on_complete := false
 func _ready() -> void:
 	custom_minimum_size = Vector2(VIEW_W, VIEW_H)
 	size = Vector2(VIEW_W, VIEW_H)
+	_configure_display()
 	_build_ui()
 	await _run_load()
+
+
+func _configure_display() -> void:
+	# Fill portrait phone screens instead of letterboxing a tiny strip.
+	var win := get_window()
+	win.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
 
 
 func _build_ui() -> void:
