@@ -68,7 +68,7 @@ func _build_map() -> void:
 	add_interact(Vector2i(5, 12), { "type": "sign", "text": "Your cozy cottage. Home sweet home." })
 
 	# starter sign near spawn
-	add_interact(Vector2i(11, 16), { "type": "sign", "text": "ECHO VALLEY - tall grass to the north hides wild Echoes!" })
+	add_interact(Vector2i(11, 16), { "type": "sign", "text": "HARMONA VALLEY - tall grass to the north hides wild Harmons!" })
 
 	# Warden Odalie: your guide. Talk to her (or press M) to review objectives.
 	add_npc(Vector2i(13, 15), "left", Color(1, 1, 1), {
@@ -81,8 +81,8 @@ func _build_map() -> void:
 	add_npc(Vector2i(9, 11), "down", Color(1, 1, 1), {
 		"type": "npc",
 		"lines": [
-			"Long ago the Valley rang with a great CHIME that woke the first Echoes.",
-			"Some say if you listen at dawn, you can still hear it echoing off the peaks.",
+			"Long ago The Chorus linked every creature to the land.",
+			"The Fracture shattered that bond — but Harmons still carry its memories.",
 		],
 	}, Tiles.TRAINER_PATHS[3], 2)
 	add_npc(Vector2i(20, 13), "left", Color(1, 1, 1), {

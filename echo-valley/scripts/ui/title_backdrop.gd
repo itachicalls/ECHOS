@@ -5,7 +5,6 @@ const VIEW_W := 240
 const VIEW_H := 160
 
 var _grass_tex: Texture2D
-var _dirt_tex: Texture2D
 var _tall_grass_tex: Texture2D
 var _cloud_offset: float = 0.0
 var _time: float = 0.0
@@ -18,7 +17,6 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	size = Vector2(VIEW_W, VIEW_H)
 	_grass_tex = load("res://assets/kenney/gen/grass_field.png") as Texture2D
-	_dirt_tex = load("res://assets/kenney/tiles/dirt.png") as Texture2D
 	_tall_grass_tex = load("res://assets/kenney/gen/tall_grass.png") as Texture2D
 	_seed_stars()
 	set_process(true)
@@ -98,15 +96,6 @@ func _draw() -> void:
 				draw_texture_rect(_grass_tex, Rect2(x, ground_y + row * th, tw, th), false)
 	else:
 		draw_rect(Rect2(0, ground_y, VIEW_W, grass_h), Color("4aa858"))
-
-	if _dirt_tex:
-		var tw := _dirt_tex.get_width()
-		var path_w := 28
-		var path_x := 108
-		for x in range(path_x, path_x + path_w, tw):
-			draw_texture_rect(_dirt_tex, Rect2(x, ground_y + 14, tw, 16), false)
-		draw_rect(Rect2(path_x - 1, ground_y + 14, 1, 16), Color("2a5a30", 0.5))
-		draw_rect(Rect2(path_x + path_w, ground_y + 14, 1, 16), Color("2a5a30", 0.5))
 
 	_draw_tuft(Vector2(18, ground_y + 8))
 	_draw_tuft(Vector2(72, ground_y + 12))

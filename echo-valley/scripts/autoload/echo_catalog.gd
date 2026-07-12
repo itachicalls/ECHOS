@@ -9,7 +9,7 @@ func reload() -> void:
 	var db := EchoDatabase.new()
 	db.load_from_res()
 	EchoDatabase.instance = db
-	print("Echo Valley: loaded %d echoes, %d chimes" % [db.echoes.size(), db.chimes.size()])
+	print("%s: loaded %d %s, %d chimes" % [GameStrings.GAME_NAME, db.echoes.size(), GameStrings.CREATURE_PLURAL_LOWER, db.chimes.size()])
 
 
 func has_echo(id: String) -> bool: return EchoDatabase.instance.has_echo(id)

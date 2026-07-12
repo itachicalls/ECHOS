@@ -40,13 +40,13 @@ func _build_map() -> void:
 
 	# grove clinic
 	add_heal_station(Vector2i(12, 5), Vector2i(12, 4), "down")
-	add_interact(Vector2i(9, 21), { "type": "sign", "text": "VERDANT ROUTE 3 - the heart of the jungle. Rare Echoes lurk in the ferns." })
+	add_interact(Vector2i(9, 21), { "type": "sign", "text": "VERDANT ROUTE 3 - the heart of the jungle. Rare Harmons lurk in the ferns." })
 
 	add_trainer(Vector2i(7, 14), "right", {
 		"id": "j3_elder", "name": "Grove Elder", "look": 1,
 		"party": [{ "id": "bramblor", "level": 18 }, { "id": "nocturn", "level": 18 }, { "id": "gustrel", "level": 17 }],
 		"reward": 7,
-		"intro": ["Few trainers reach the grove's heart.", "Prove your bond with your Echoes!"],
+		"intro": ["Few explorers reach the grove's heart.", "Prove your bond with your Harmons!"],
 		"win_line": "The ancient trees bow to your spirit.",
 	})
 	add_trainer(Vector2i(14, 18), "left", {
@@ -58,12 +58,12 @@ func _build_map() -> void:
 	})
 
 	# JUNGLE GYM — seals the northern cavern pass to the Crag Caverns.
-	add_interact(Vector2i(8, 3), { "type": "sign", "text": "GROVE GYM - Leader Ivy guards the cavern pass north. Defeat her to descend!" })
+	add_interact(Vector2i(8, 3), { "type": "sign", "text": "GROVE TRIAL - Ranger Ivy guards the cavern pass. Earn her Sigil to descend!" })
 	add_gym_gate({
-		"id": "gym_jungle", "name": "Leader Ivy", "look": 1,
+		"id": "gym_jungle", "name": "Ranger Ivy", "look": 1,
 		"party": [{ "id": "myconid", "level": 21 }, { "id": "nocturn", "level": 21 }, { "id": "creepvine", "level": 22 }],
 		"reward": 8, "gym": true,
-		"intro": ["I am Ivy, Grove Gym Leader.", "Beyond lies the Crag Caverns. Earn your descent!"],
+		"intro": ["I am Ivy, Grove Route Ranger.", "Beyond lies the Crag Caverns. Earn your Sigil!"],
 		"win_line": "The vines part for you. The caverns await below.",
 	}, Vector2i(9, 2), "down", [Vector2i(9, 0), Vector2i(10, 0)], Vector2i(7, 3), [Vector2i(10, 2)])
 

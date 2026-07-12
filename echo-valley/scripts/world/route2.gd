@@ -70,12 +70,12 @@ func _build_map() -> void:
 	})
 
 	# GRASS GYM — seals the pass to the Scorch Desert until defeated.
-	add_interact(Vector2i(5, 2), { "type": "sign", "text": "MEADOW GYM - Leader Fern guards the desert pass. Defeat her to cross!" })
+	add_interact(Vector2i(5, 2), { "type": "sign", "text": "MEADOW TRIAL - Ranger Fern guards the desert pass. Earn her Sigil to cross!" })
 	add_gym_gate({
-		"id": "gym_grass", "name": "Leader Fern", "look": 1,
+		"id": "gym_grass", "name": "Ranger Fern", "look": 1,
 		"party": [{ "id": "fernkit", "level": 12 }, { "id": "thornvine", "level": 13 }, { "id": "bramblor", "level": 14 }],
 		"reward": 6, "gym": true,
-		"intro": ["I am Fern, Meadow Gym Leader.", "None cross to the desert without besting my Echoes!"],
+		"intro": ["I am Fern, Meadow Route Ranger.", "None cross to the desert without proving your resonance!"],
 		"win_line": "The meadow yields to you. The desert pass is open — go!",
 	}, Vector2i(3, 1), "down", [Vector2i(3, 0), Vector2i(4, 0)], Vector2i(2, 2), [Vector2i(4, 1)])
 

@@ -43,22 +43,22 @@ func _build_ui() -> void:
 	add_child(veil)
 
 	var glow := Label.new()
-	glow.text = "ECHO VALLEY"
+	glow.text = GameStrings.TITLE
 	glow.position = Vector2(0, 42)
 	glow.size = Vector2(VIEW_W, 24)
 	glow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	TitleFonts.apply(glow, 11, Color("7ee8d8", 0.35))
+	TitleFonts.apply(glow, 10, Color("7ee8d8", 0.35))
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(glow)
 
 	TitleFonts.shadow_label(
-		self, "ECHO VALLEY", 11, Color("fff0b0"),
+		self, GameStrings.TITLE, 10, Color("fff0b0"),
 		Vector2(0, 40), Vector2(VIEW_W, 24),
 		HORIZONTAL_ALIGNMENT_CENTER, Color("1a2848"), 3
 	)
 
 	TitleFonts.shadow_label(
-		self, "preparing the valley...", 6, Color("d8f0ff"),
+		self, "awakening the valley...", 6, Color("d8f0ff"),
 		Vector2(0, 62), Vector2(VIEW_W, 12),
 		HORIZONTAL_ALIGNMENT_CENTER, Color("1a3050"), 1
 	)

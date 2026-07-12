@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Echo Valley"
-config/description="A cozy pixel-art creature-collection RPG. Catch Echoes, train them, and battle."
+config/name="Harmona Valley"
+config/description="A cozy pixel-art creature-collection RPG. Catch Harmons, uncover The Fracture, and restore The Chorus."
 config/version="0.1.0"
 run/main_scene="res://scenes/boot/loading.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
@@ -20,6 +20,7 @@ config/icon="res://assets/echoes/emberkit.png"
 [autoload]
 
 EventBus="*res://scripts/autoload/event_bus.gd"
+GameStrings="*res://scripts/autoload/game_strings.gd"
 EchoCatalog="*res://scripts/autoload/echo_catalog.gd"
 GameState="*res://scripts/autoload/game_state.gd"
 SaveService="*res://scripts/autoload/save_service.gd"

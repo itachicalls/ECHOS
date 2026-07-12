@@ -76,6 +76,8 @@ func start_trainer_battle(enemies: Array, trainer_name: String, return_map: Stri
 		"trainer_id": String(extra.get("trainer_id", "")),
 		"reward": int(extra.get("reward", 0)),
 		"win_line": String(extra.get("win_line", "")),
+		"gym": bool(extra.get("gym", false)),
+		"ranger": bool(extra.get("ranger", false)),
 		"level": level, "enemy_team_ids": enemy_ids,
 	}
 	await _swap_scene(BATTLE)

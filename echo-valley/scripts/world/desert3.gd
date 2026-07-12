@@ -59,12 +59,12 @@ func _build_map() -> void:
 	})
 
 	# DESERT GYM — seals the eastern pass to the Verdant Jungle.
-	add_interact(Vector2i(21, 10), { "type": "sign", "text": "DUNE GYM - Leader Sol blocks the jungle pass east. Defeat him to cross!" })
+	add_interact(Vector2i(21, 10), { "type": "sign", "text": "SCORCH TRIAL - Ranger Sol blocks the jungle pass. Earn his Sigil to cross!" })
 	add_gym_gate({
-		"id": "gym_desert", "name": "Leader Sol", "look": 5,
+		"id": "gym_desert", "name": "Ranger Sol", "look": 5,
 		"party": [{ "id": "cindboth", "level": 17 }, { "id": "dunejaw", "level": 18 }, { "id": "flintaur", "level": 19 }],
 		"reward": 7, "gym": true,
-		"intro": ["I am Sol, Dune Gym Leader.", "The jungle lies east — but first, burn away your doubt!"],
+		"intro": ["I am Sol, Scorch Route Ranger.", "The jungle lies east — prove you can restore its resonance!"],
 		"win_line": "You have the desert's fire in you. The pass east is yours!",
 	}, Vector2i(22, 8), "left", [Vector2i(23, 8), Vector2i(23, 9)], Vector2i(22, 6), [Vector2i(22, 9)])
 
@@ -72,7 +72,7 @@ func _build_map() -> void:
 	for p in [Vector2i(13, 10), Vector2i(14, 11), Vector2i(15, 10), Vector2i(16, 12), Vector2i(12, 13)]:
 		if not is_blocked(p):
 			add_desert_spikes(p)
-	add_interact(Vector2i(9, 12), { "type": "sign", "text": "CAUTION: jagged rocks ahead sting careless Echoes." })
+	add_interact(Vector2i(9, 12), { "type": "sign", "text": "CAUTION: jagged rocks ahead sting careless Harmons." })
 
 
 func _place_pickups() -> void:

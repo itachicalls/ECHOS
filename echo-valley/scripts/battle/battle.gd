@@ -96,16 +96,11 @@ func _begin_intro() -> void:
 
 # ------------------------------------------------------------------ UI build
 func _build_ui() -> void:
-	var bg := ColorRect.new()
-	bg.color = Color("bfe3a0")
-	bg.position = Vector2.ZERO
-	bg.size = Vector2(VIEW_W, VIEW_H)
-	add_child(bg)
-	var sky := ColorRect.new()
-	sky.color = Color("dff2c6")
-	sky.position = Vector2.ZERO
-	sky.size = Vector2(VIEW_W, 72)
-	add_child(sky)
+	var map_id := String(request.get("return_map", GameState.current_map))
+	var is_ranger := bool(request.get("gym", false)) or bool(request.get("ranger", false))
+	var backdrop := preload("res://scripts/battle/battle_backdrop.gd").new()
+	backdrop.configure(map_id, is_ranger, String(request.get("kind", "wild")))
+	add_child(backdrop)
 
 	_stage = Control.new()
 	_stage.position = Vector2.ZERO
@@ -300,7 +295,7 @@ func _set_encounter_badge(kind: String) -> void:
 			badge.add_theme_constant_override("outline_size", 1)
 			badge.visible = true
 		"caught":
-			badge.text = "GOT"
+			badge.text = "OWN"
 			badge.add_theme_color_override("font_color", Color("7dffb8"))
 			badge.add_theme_color_override("font_outline_color", Color("143024"))
 			badge.add_theme_constant_override("outline_size", 1)
@@ -572,15 +567,18 @@ func _intro() -> void:
 	_start_idle_bob(player_sprite)
 	var kind := String(request.get("kind", "wild"))
 	if kind == "trainer" or kind == "versus":
-		await _say("%s wants to battle!" % String(request.get("trainer_name", "Rival")))
+		if bool(request.get("gym", false)):
+			await _say("%s %s stands guard!\nA Resonance trial begins!" % [GameStrings.RANGER, String(request.get("trainer_name", "???"))])
+		else:
+			await _say("%s wants to battle!" % String(request.get("trainer_name", "Rival")))
 	else:
 		var foe := _active("enemy")
 		var line := "A wild %s appeared!" % foe.name
 		if bool(request.get("enemy_was_caught", false)):
-			line = "A wild %s appeared!\nAlready in your collection." % foe.name
+			line = "A wild %s appeared!\nAlready in your party." % foe.name
 			_set_encounter_badge("caught")
 		elif bool(request.get("enemy_first_seen", false)):
-			line = "A wild %s appeared!\nA new Echo!" % foe.name
+			line = "A wild %s appeared!\nA new %s!" % [foe.name, GameStrings.CREATURE]
 			_set_encounter_badge("new")
 		else:
 			_set_encounter_badge("")
@@ -798,7 +796,7 @@ func _open_main_menu() -> void:
 	_layout_cmd_2x2([
 		{ "text": "Fight", "cb": _on_fight },
 		{ "text": "Bag", "cb": _on_bag, "enabled": show_bag },
-		{ "text": "Echoes", "cb": _on_switch_menu },
+		{ "text": GameStrings.CREATURE_PLURAL, "cb": _on_switch_menu },
 		{ "text": "Run" if can_flee else "—", "cb": _on_run, "enabled": can_flee },
 	])
 
@@ -1845,7 +1843,7 @@ func _defeat() -> void:
 		_end_battle("loss")
 		return
 	GameState.sync_from_battle(state.player.units)
-	await _say("Your Echoes are worn out...")
+	await _say("Your %s are worn out..." % GameStrings.CREATURE_PLURAL_LOWER)
 	GameState.heal_party()
 	await _say("The nurse at Echo Rest nursed your team back to health.")
 	GameState.current_map = "town"

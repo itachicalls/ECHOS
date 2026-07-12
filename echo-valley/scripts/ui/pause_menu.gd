@@ -184,7 +184,7 @@ func _fix_scroll_size() -> void:
 func _render_party() -> void:
 	_content.add_child(_label("ACTIVE PARTY (%d/%d)" % [GameState.party.size(), EchoTypes.PARTY_SIZE], 7, Color("cfe8ff")))
 	if GameState.party.is_empty():
-		_content.add_child(_label("You have no Echoes yet.", 8))
+		_content.add_child(_label("You have no %s yet." % GameStrings.CREATURE_PLURAL_LOWER, 8))
 		return
 	for i in GameState.party.size():
 		_content.add_child(_echo_card(GameState.party[i], true))
@@ -193,8 +193,8 @@ func _render_party() -> void:
 func _render_box() -> void:
 	_content.add_child(_label("ECHO BOX — tap Team to add to party", 6, Color("cfe8ff")))
 	if GameState.pc_box.is_empty():
-		_content.add_child(_label("No Echoes in storage yet.", 8))
-		_content.add_child(_label("Catch wild Echoes, then swap party members here.", 6, Color("a8c0d8")))
+		_content.add_child(_label("No %s in storage yet." % GameStrings.CREATURE_PLURAL_LOWER, 8))
+		_content.add_child(_label("Catch wild %s, then swap party members here." % GameStrings.CREATURE_PLURAL_LOWER, 6, Color("a8c0d8")))
 		return
 	for i in GameState.pc_box.size():
 		_content.add_child(_echo_card(GameState.pc_box[i], false))
@@ -423,7 +423,7 @@ func _render_bag() -> void:
 		_content.add_child(row)
 	if not any:
 		_content.add_child(_label("Your bag is empty.", 8))
-	var foot := _label("Captured Echoes are stored in the Box tab.", 6, Color("7c8aa0"))
+	var foot := _label("Captured %s are stored in the Box tab." % GameStrings.CREATURE_PLURAL_LOWER, 6, Color("7c8aa0"))
 	foot.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	foot.custom_minimum_size = Vector2(MENU_W - MENU_PAD * 2 - 12, 0)
 	_content.add_child(foot)

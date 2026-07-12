@@ -80,12 +80,12 @@ func add_ledge(cell: Vector2i) -> void:
 	block(cell)
 
 
-func add_spikes(cell: Vector2i, text: String = "Sharp thorns! Your lead Echo took a scratch.") -> void:
+func add_spikes(cell: Vector2i, text: String = "Sharp thorns! Your lead Harmon took a scratch.") -> void:
 	add_prop(Tiles.THORNS, cell, false)
 	add_hazard(cell, text)
 
 
-func add_desert_spikes(cell: Vector2i, text: String = "Jagged rocks! Your lead Echo got nicked.") -> void:
+func add_desert_spikes(cell: Vector2i, text: String = "Jagged rocks! Your lead Harmon got nicked.") -> void:
 	add_prop(Tiles.SPIKES, cell, false)
 	add_hazard(cell, text)
 
@@ -468,8 +468,8 @@ func _handle_interact(data: Dictionary) -> void:
 			if player and player.has_method("set_input_locked"):
 				player.set_input_locked(false)
 			EventBus.dialogue_requested.emit([
-				"Welcome to Echo Rest! Let me tend to your team.",
-				"Your Echoes are fully healed. Journey saved — good luck!",
+				"Welcome to Harmona Rest! Let me tend to your team.",
+				"Your %s are fully healed. Journey saved — good luck!" % GameStrings.CREATURE_PLURAL_LOWER,
 			])
 		"sign":
 			EventBus.dialogue_requested.emit([String(data.get("text", "..."))])
@@ -479,7 +479,7 @@ func _handle_interact(data: Dictionary) -> void:
 			var stage := StoryService.current_stage()
 			var lines := [
 				String(data.get("greeting", "Let me check your journey...")),
-				"Your goal: %s" % String(stage.get("objective", "Explore Echo Valley!")),
+				"Your goal: %s" % String(stage.get("objective", "Explore %s!" % GameStrings.GAME_NAME)),
 			]
 			var hint := String(stage.get("hint", ""))
 			if hint != "":
@@ -527,7 +527,7 @@ func _on_trainer_interact(trainer: Dictionary) -> void:
 		EventBus.dialogue_requested.emit([String(trainer.get("win_line", "That was a great battle!"))])
 		return
 	if GameState.living_party().is_empty():
-		EventBus.dialogue_requested.emit(["Your Echoes are too tired to battle..."])
+		EventBus.dialogue_requested.emit(["Your %s are too tired to battle..." % GameStrings.CREATURE_PLURAL_LOWER])
 		return
 	_pending_trainer = trainer
 	EventBus.dialogue_closed.connect(_launch_trainer, CONNECT_ONE_SHOT)
@@ -548,6 +548,8 @@ func _launch_trainer() -> void:
 		"trainer_id": String(trainer.get("id", "")),
 		"reward": int(trainer.get("reward", 2)),
 		"win_line": String(trainer.get("win_line", "")),
+		"gym": bool(trainer.get("gym", false)),
+		"ranger": bool(trainer.get("ranger", false)),
 	})
 
 
@@ -594,7 +596,7 @@ func _roll_encounter() -> void:
 		if roll <= run:
 			_busy = true
 			var lvl := randi_range(int(e.level_min), int(e.level_max))
-			EventBus.toast.emit("A wild Echo rustles!")
+			EventBus.toast.emit("A wild %s rustles!" % GameStrings.CREATURE_LOWER)
 			await get_tree().create_timer(0.35).timeout
 			SceneRouter.start_wild_battle(String(e.id), lvl)
 			return
