@@ -207,6 +207,8 @@ func _on_tab(tab: String) -> void:
 
 func _render() -> void:
 	_scroll.scroll_vertical = 0
+	var list_w := maxf(8.0, _scroll.size.x - 2.0)
+	_content.custom_minimum_size = Vector2(list_w, 0)
 	for c in _content.get_children():
 		c.queue_free()
 	match _tab:
@@ -248,6 +250,9 @@ const CARD_W := 200
 const CARD_H := 52
 const ACTION_W := 34
 const ACTION_H := 14
+const ITEM_ROW_W := MENU_W - MENU_PAD * 2 - 6
+const ITEM_ROW_H := 38
+const ITEM_ICON_W := 14
 
 
 func _echo_card(e: EchoInstance, in_party: bool, party_index: int = -1) -> Control:
@@ -452,7 +457,7 @@ func _xp_row(e: EchoInstance, bar_w: int = 68) -> Control:
 # ---------------------------------------------------------------- Bag
 func _render_bag() -> void:
 	_section_title.text = "ITEMS"
-	var list_w := int(_scroll.size.x) - 4
+	var row_w := ITEM_ROW_W
 	var any := false
 	for key in GameState.inventory.keys():
 		var item_id := String(key)
@@ -460,47 +465,62 @@ func _render_bag() -> void:
 		if count <= 0 or not ItemCatalog.has(item_id):
 			continue
 		any = true
-		var card := Panel.new()
-		card.add_theme_stylebox_override("panel", _card_style())
-		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		card.custom_minimum_size = Vector2(list_w, 0)
-
-		var margin := MarginContainer.new()
-		margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		margin.add_theme_constant_override("margin_left", 4)
-		margin.add_theme_constant_override("margin_right", 4)
-		margin.add_theme_constant_override("margin_top", 3)
-		margin.add_theme_constant_override("margin_bottom", 3)
-		card.add_child(margin)
-
-		var inner := VBoxContainer.new()
-		inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		inner.add_theme_constant_override("separation", 2)
-		margin.add_child(inner)
-
-		var top := HBoxContainer.new()
-		top.add_theme_constant_override("separation", 4)
-		top.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		top.add_child(ItemIcon.make(item_id, 12))
-		var name_lbl := _label("%s  x%d" % [ItemCatalog.display_name(item_id), count], 8)
-		name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		name_lbl.clip_text = true
-		top.add_child(name_lbl)
-		if ItemCatalog.usable_in_field(item_id):
-			top.add_child(_mini_button("Use", true, Color("f2f7ff"), _use_bag_item.bind(item_id)))
-		inner.add_child(top)
-
-		var desc := _label(ItemCatalog.description(item_id), 6, Color("a8c0d8"))
-		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		desc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		inner.add_child(desc)
-		_content.add_child(card)
+		_content.add_child(_item_row(item_id, count, row_w))
 	if not any:
-		_content.add_child(_label("Your bag is empty.", 8))
-	var foot := _label("Captured %s are stored in the Box tab." % GameStrings.CREATURE_PLURAL_LOWER, 6, Color("7c8aa0"))
+		_content.add_child(_fixed_label("Your bag is empty.", row_w, 8))
+	var spacer := Control.new()
+	spacer.custom_minimum_size = Vector2(row_w, 6)
+	spacer.size = Vector2(row_w, 6)
+	_content.add_child(spacer)
+	var foot := _fixed_label(
+		"Captured %s are stored in the Box tab." % GameStrings.CREATURE_PLURAL_LOWER,
+		row_w, 6, Color("7c8aa0")
+	)
 	foot.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	foot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	foot.custom_minimum_size = Vector2(row_w, 22)
+	foot.size = Vector2(row_w, 22)
 	_content.add_child(foot)
+
+
+func _item_row(item_id: String, count: int, row_w: int) -> Panel:
+	var card := Panel.new()
+	card.custom_minimum_size = Vector2(row_w, ITEM_ROW_H)
+	card.size = Vector2(row_w, ITEM_ROW_H)
+	card.clip_contents = true
+	card.add_theme_stylebox_override("panel", _card_style())
+
+	var pad := 4
+	var icon_x := pad
+	var text_x := pad + ITEM_ICON_W + 4
+	var usable := ItemCatalog.usable_in_field(item_id)
+	var btn_slot := ACTION_W + pad if usable else pad
+	var text_w := row_w - text_x - btn_slot
+
+	var icon := ItemIcon.make(item_id, ITEM_ICON_W)
+	icon.position = Vector2(icon_x, 6)
+	card.add_child(icon)
+
+	var name_lbl := _fixed_label("%s  x%d" % [ItemCatalog.display_name(item_id), count], text_w, 8)
+	name_lbl.position = Vector2(text_x, 4)
+	name_lbl.size = Vector2(text_w, 10)
+	name_lbl.clip_text = true
+	name_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	card.add_child(name_lbl)
+
+	if usable:
+		var use_btn := _mini_button("Use", true, Color("f2f7ff"), _use_bag_item.bind(item_id))
+		use_btn.position = Vector2(row_w - ACTION_W - pad, 4)
+		card.add_child(use_btn)
+
+	var desc := _fixed_label(ItemCatalog.description(item_id), text_w, 6, Color("a8c0d8"))
+	desc.position = Vector2(text_x, 16)
+	desc.size = Vector2(text_w, ITEM_ROW_H - 18)
+	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	desc.max_lines_visible = 2
+	desc.clip_text = true
+	desc.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	card.add_child(desc)
+	return card
 
 
 func _use_bag_item(item_id: String) -> void:
@@ -618,6 +638,15 @@ func _label(text: String, size: int, color: Color = Color("ffffff")) -> Label:
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", color)
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return l
+
+
+func _fixed_label(text: String, width: int, size: int, color: Color = Color("ffffff")) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", color)
+	l.custom_minimum_size = Vector2(width, 0)
 	return l
 
 
