@@ -131,7 +131,7 @@ func _tab_button(text: String, tab_id: String) -> Button:
 	var b := Button.new()
 	b.text = text
 	var touch := TouchUtil != null and TouchUtil.is_touch_ui_enabled()
-	b.custom_minimum_size = Vector2(68, 16 if touch else 12)
+	b.custom_minimum_size = Vector2(68, 14 if touch else 12)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b.add_theme_font_size_override("font_size", 7 if touch else 6)
 	b.focus_mode = Control.FOCUS_NONE
@@ -460,35 +460,46 @@ func _render_bag() -> void:
 		if count <= 0 or not ItemCatalog.has(item_id):
 			continue
 		any = true
-		var row := Panel.new()
-		row.add_theme_stylebox_override("panel", _card_style())
-		row.custom_minimum_size = Vector2(list_w, 0)
+		var card := Panel.new()
+		card.add_theme_stylebox_override("panel", _card_style())
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		card.custom_minimum_size = Vector2(list_w, 0)
+
+		var margin := MarginContainer.new()
+		margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		margin.add_theme_constant_override("margin_left", 4)
+		margin.add_theme_constant_override("margin_right", 4)
+		margin.add_theme_constant_override("margin_top", 3)
+		margin.add_theme_constant_override("margin_bottom", 3)
+		card.add_child(margin)
+
 		var inner := VBoxContainer.new()
-		inner.position = Vector2(4, 3)
-		inner.size = Vector2(list_w - 8, 0)
+		inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		inner.add_theme_constant_override("separation", 2)
-		row.add_child(inner)
+		margin.add_child(inner)
+
 		var top := HBoxContainer.new()
 		top.add_theme_constant_override("separation", 4)
-		var icon := ItemIcon.make(item_id, 12)
-		top.add_child(icon)
+		top.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		top.add_child(ItemIcon.make(item_id, 12))
 		var name_lbl := _label("%s  x%d" % [ItemCatalog.display_name(item_id), count], 8)
 		name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		name_lbl.clip_text = true
 		top.add_child(name_lbl)
 		if ItemCatalog.usable_in_field(item_id):
-			var use := _mini_button("Use", true, Color("f2f7ff"), _use_bag_item.bind(item_id))
-			top.add_child(use)
+			top.add_child(_mini_button("Use", true, Color("f2f7ff"), _use_bag_item.bind(item_id)))
 		inner.add_child(top)
+
 		var desc := _label(ItemCatalog.description(item_id), 6, Color("a8c0d8"))
 		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		desc.custom_minimum_size = Vector2(list_w - 12, 0)
+		desc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		inner.add_child(desc)
-		_content.add_child(row)
+		_content.add_child(card)
 	if not any:
 		_content.add_child(_label("Your bag is empty.", 8))
 	var foot := _label("Captured %s are stored in the Box tab." % GameStrings.CREATURE_PLURAL_LOWER, 6, Color("7c8aa0"))
 	foot.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	foot.custom_minimum_size = Vector2(list_w - 4, 0)
+	foot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_content.add_child(foot)
 
 

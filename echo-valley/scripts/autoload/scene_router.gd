@@ -20,30 +20,47 @@ const VERSUS_SETUP := "res://scenes/boot/versus_setup.tscn"
 var _battle_request: Dictionary = {}
 var _return_map: String = "route1"
 var _busy: bool = false
+var _transition_queue: Array[Callable] = []
+var _draining_queue: bool = false
 
 
-func _ready() -> void:
-	pass
+func is_busy() -> bool:
+	return _busy
 
 
 func go_to_map(map_id: String, spawn_cell: Vector2i = Vector2i(-999, -999), facing: String = "") -> void:
+	var resolved := _normalize_map_id(map_id)
+	_apply_map_state(resolved, spawn_cell, facing)
+	_run_transition(_swap_scene.bind(MAPS[resolved]))
+
+
+func go_to_map_and_wait(map_id: String, spawn_cell: Vector2i = Vector2i(-999, -999), facing: String = "") -> void:
+	var resolved := _normalize_map_id(map_id)
+	_apply_map_state(resolved, spawn_cell, facing)
+	await _run_transition_async(_swap_scene.bind(MAPS[resolved]))
+
+
+func _normalize_map_id(map_id: String) -> String:
 	if not MAPS.has(map_id):
 		push_error("Unknown map: %s — falling back to town" % map_id)
-		map_id = "town"
+		return "town"
+	return map_id
+
+
+func _apply_map_state(map_id: String, spawn_cell: Vector2i, facing: String) -> void:
 	GameState.current_map = map_id
 	if spawn_cell != Vector2i(-999, -999):
 		GameState.player_cell = spawn_cell
 	if facing != "":
 		GameState.player_facing = facing
-	await _swap_scene(MAPS[map_id])
 
 
 func go_to_title() -> void:
-	await _swap_scene(TITLE)
+	_run_transition(_swap_scene.bind(TITLE))
 
 
 func go_to_versus_setup() -> void:
-	await _swap_scene(VERSUS_SETUP)
+	_run_transition(_swap_scene.bind(VERSUS_SETUP))
 
 
 func start_wild_battle(def_id: String, level: int) -> void:
@@ -59,7 +76,7 @@ func start_wild_battle(def_id: String, level: int) -> void:
 		"enemy_was_caught": was_caught,
 		"enemy_first_seen": not was_seen,
 	}
-	await _swap_scene(BATTLE)
+	_run_transition(_swap_scene.bind(BATTLE))
 
 
 func start_fishing_battle(map_id: String) -> void:
@@ -79,7 +96,7 @@ func start_fishing_battle(map_id: String) -> void:
 		"enemy_first_seen": not bool(GameState.seen.get(def_id, false)),
 		"enemy_was_caught": bool(GameState.caught.get(def_id, false)),
 	}
-	await _swap_scene(BATTLE)
+	_run_transition(_swap_scene.bind(BATTLE))
 
 
 func _fishing_level_for_map(map_id: String) -> int:
@@ -93,7 +110,7 @@ func _fishing_level_for_map(map_id: String) -> int:
 
 func start_ambush_chain(trainers: Array, map_id: String) -> void:
 	_return_map = map_id
-	await _launch_ambush_at(trainers, 0, map_id)
+	_run_transition(_launch_ambush_at.bind(trainers, 0, map_id))
 
 
 func _launch_ambush_at(trainers: Array, index: int, map_id: String) -> void:
@@ -145,7 +162,7 @@ func start_trainer_battle(enemies: Array, trainer_name: String, return_map: Stri
 		"ranger": bool(extra.get("ranger", false)),
 		"level": level, "enemy_team_ids": enemy_ids,
 	}
-	await _swap_scene(BATTLE)
+	_run_transition(_swap_scene.bind(BATTLE))
 
 
 func start_versus_battle(player_ids: Array, enemy_ids: Array, rival_name: String, level: int) -> void:
@@ -161,7 +178,7 @@ func start_versus_battle(player_ids: Array, enemy_ids: Array, rival_name: String
 		"player_team_ids": player_ids,
 		"enemy_team_ids": enemy_ids,
 	}
-	await _swap_scene(BATTLE)
+	_run_transition(_swap_scene.bind(BATTLE))
 
 
 func start_online_versus_battle(player_ids: Array, enemy_ids: Array, opponent_name: String, is_host: bool, level: int) -> void:
@@ -178,7 +195,7 @@ func start_online_versus_battle(player_ids: Array, enemy_ids: Array, opponent_na
 		"player_team_ids": player_ids,
 		"enemy_team_ids": enemy_ids,
 	}
-	await _swap_scene(BATTLE)
+	_run_transition(_swap_scene.bind(BATTLE))
 
 
 func get_battle_request() -> Dictionary:
@@ -190,6 +207,10 @@ func ensure_visible() -> void:
 
 
 func finish_battle(result: Dictionary) -> void:
+	_run_transition(_finish_battle_async.bind(result))
+
+
+func _finish_battle_async(result: Dictionary) -> void:
 	var res := String(result.get("result", ""))
 	if res == "win" and _battle_request.get("ambush_chain") is Array:
 		var chain: Array = _battle_request.ambush_chain
@@ -212,18 +233,40 @@ func finish_battle(result: Dictionary) -> void:
 	await _swap_scene(MAPS[map_id])
 
 
+func _run_transition(job: Callable) -> void:
+	_transition_queue.append(job)
+	if not _draining_queue:
+		_drain_queue_async()
+
+
+func _run_transition_async(job: Callable) -> void:
+	_transition_queue.append(job)
+	if not _draining_queue:
+		_drain_queue_async()
+	while _draining_queue or _transition_queue.size() > 0:
+		await get_tree().process_frame
+
+
+func _drain_queue_async() -> void:
+	_draining_queue = true
+	while _transition_queue.size() > 0:
+		var job: Callable = _transition_queue.pop_front()
+		await job.call()
+	_draining_queue = false
+
+
 func _swap_scene(path: String) -> void:
-	# Recover if a prior transition stalled instead of blocking forever.
-	var wait_guard := 0
-	while _busy and wait_guard < 120:
-		wait_guard += 1
+	while _busy:
 		await get_tree().process_frame
 	_busy = true
 	_lock_players(true)
+	# Sync swap on this autoload only — safe because map/battle nodes are not in our call stack.
 	var err := get_tree().change_scene_to_file(path)
 	if err != OK:
 		push_error("Scene change failed: %s (%d)" % [path, err])
-	# A couple of frames lets the new scene finish _ready before we unlock.
+		_busy = false
+		_lock_players(false)
+		return
 	await get_tree().process_frame
 	await get_tree().process_frame
 	_busy = false

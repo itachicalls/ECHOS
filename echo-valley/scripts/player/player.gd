@@ -84,7 +84,7 @@ func _frame(tex: Texture2D, col: int, row: int) -> AtlasTexture:
 
 
 func _process(_delta: float) -> void:
-	if moving or input_locked:
+	if moving or input_locked or SceneRouter.is_busy():
 		return
 	if Input.is_action_just_pressed("interact"):
 		if world:

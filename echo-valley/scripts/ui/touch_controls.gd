@@ -4,6 +4,8 @@ extends CanvasLayer
 ## can move and interact on phones without overlapping battle menus.
 
 const DIRS := ["move_up", "move_down", "move_left", "move_right"]
+const GAME_W := 240.0
+const GAME_H := 160.0
 
 var _root: Control
 var _dir_btns: Dictionary = {}
@@ -22,16 +24,15 @@ func _ready() -> void:
 	_build()
 
 
-const KEY := 28
-const GAP := 3
-const A_W := 40
-const A_H := 30
-const GAME_H := 160.0
+const KEY := 20
+const GAP := 2
+const A_W := 26
+const A_H := 20
 
 
 func _build() -> void:
-	var cx := 22
-	var cy := 118
+	var cx := 14
+	var cy := 124
 	_dir_btns["move_up"] = _dir_btn(Vector2(cx, cy - KEY - GAP), "up")
 	_dir_btns["move_left"] = _dir_btn(Vector2(cx - KEY - GAP, cy), "left")
 	_dir_btns["move_right"] = _dir_btn(Vector2(cx + KEY + GAP, cy), "right")
@@ -40,38 +41,17 @@ func _build() -> void:
 		_held[a] = false
 
 	_a_btn = Button.new()
-	_a_btn.position = Vector2(78, 122)
+	_a_btn.position = Vector2(62, 126)
 	_a_btn.size = Vector2(A_W, A_H)
 	_a_btn.custom_minimum_size = _a_btn.size
 	_a_btn.text = "A"
 	_a_btn.focus_mode = Control.FOCUS_NONE
-	_a_btn.add_theme_font_size_override("font_size", 12)
+	_a_btn.add_theme_font_size_override("font_size", 8)
 	_a_btn.add_theme_color_override("font_color", Color("eaf4ff"))
 	_style_btn(_a_btn)
 	_a_btn.button_down.connect(_on_a_down)
 	_a_btn.button_up.connect(_on_a_up)
 	_root.add_child(_a_btn)
-
-
-func _apply_layout() -> void:
-	var m := TouchUtil.get_game_margins()
-	var cx := int(m.x) + 20
-	var cy := int(GAME_H - m.w) - 42
-	var up: Button = _dir_btns.get("move_up", null)
-	var left: Button = _dir_btns.get("move_left", null)
-	var right: Button = _dir_btns.get("move_right", null)
-	var down: Button = _dir_btns.get("move_down", null)
-	if up:
-		up.position = Vector2(cx, cy - KEY - GAP)
-	if left:
-		left.position = Vector2(cx - KEY - GAP, cy)
-	if right:
-		right.position = Vector2(cx + KEY + GAP, cy)
-	if down:
-		down.position = Vector2(cx, cy + KEY + GAP)
-	if _a_btn:
-		# A sits to the right of the D-pad, never overlapping the center cluster.
-		_a_btn.position = Vector2(cx + KEY + GAP + 14, cy - 6)
 
 
 func _on_a_down() -> void:
@@ -101,7 +81,7 @@ func _dir_btn(pos: Vector2, dir: String) -> Button:
 
 func _draw_arrow(b: Button, dir: String) -> void:
 	var c := b.size * 0.5
-	var a := 8.0
+	var a := 6.0
 	var pts: PackedVector2Array
 	match dir:
 		"up":
@@ -132,7 +112,7 @@ func _style(bg: Color, border: Color) -> StyleBoxFlat:
 	sb.bg_color = bg
 	sb.border_color = border
 	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(5)
+	sb.set_corner_radius_all(4)
 	return sb
 
 
@@ -141,7 +121,6 @@ func _in_overworld() -> bool:
 
 
 func _process(_delta: float) -> void:
-	_apply_layout()
 	var show_pad := (
 		_in_overworld()
 		and not EventBus.dialogue_active
@@ -163,10 +142,7 @@ func _process(_delta: float) -> void:
 			_held[a] = false
 			btn.queue_redraw()
 	if _a_btn:
-		_a_btn.visible = (
-			show_pad
-			and not EventBus.battle_menu_active
-		)
+		_a_btn.visible = show_pad and not EventBus.battle_menu_active
 
 
 func _exit_tree() -> void:

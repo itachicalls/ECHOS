@@ -602,10 +602,10 @@ func _on_battle_start(payload: Dictionary) -> void:
 	var lv := int(payload.get("level", 15))
 	var role := String(payload.get("role", ""))
 	if role == "host":
-		await SceneRouter.start_online_versus_battle(
+		SceneRouter.start_online_versus_battle(
 			host_ids, guest_ids, String(payload.get("guest_name", "Guest")), true, lv)
 	else:
-		await SceneRouter.start_online_versus_battle(
+		SceneRouter.start_online_versus_battle(
 			guest_ids, host_ids, String(payload.get("host_name", "Host")), false, lv)
 
 
@@ -681,7 +681,7 @@ func _on_action() -> void:
 	var rival: String = RIVAL_NAMES[randi() % RIVAL_NAMES.size()]
 	if _action_btn:
 		_action_btn.disabled = true
-	await SceneRouter.start_versus_battle(_selected, enemy_ids, rival, _level)
+	SceneRouter.start_versus_battle(_selected, enemy_ids, rival, _level)
 
 
 func _on_back() -> void:

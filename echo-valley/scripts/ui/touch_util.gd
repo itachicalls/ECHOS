@@ -94,7 +94,7 @@ func _compute_game_margins() -> Vector4:
 
 ## Slightly larger UI on touch (buttons, fonts).
 static func ui_scale() -> float:
-	return 1.28 if is_touch_ui_enabled() else 1.0
+	return 1.0
 
 
 ## Consume one queued screen tap (call once per frame from dialogue / battle waits).

@@ -38,7 +38,7 @@ window/size/viewport_height=160
 window/size/window_width_override=960
 window/size/window_height_override=640
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/aspect="keep"
 window/stretch/scale_mode="fractional"
 window/handheld/orientation=0
 

@@ -37,19 +37,3 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Web export complete: build/web/index.html"
-
-# Ensure the canvas fills mobile viewports (no tiny letterboxed strip).
-$htmlPath = Join-Path $outDir "index.html"
-if (Test-Path $htmlPath) {
-  $html = Get-Content $htmlPath -Raw
-  if ($html -notmatch 'canvas-fullscreen-fix') {
-    $inject = @'
-<style id="canvas-fullscreen-fix">
-html,body,#canvas,canvas{width:100%!important;height:100%!important;max-width:100vw;max-height:100vh;}
-</style>
-'@
-    $html = $html -replace '</head>', ($inject + "`n</head>")
-    Set-Content -Path $htmlPath -Value $html -NoNewline
-    Write-Host "Patched index.html for full-viewport mobile canvas."
-  }
-}

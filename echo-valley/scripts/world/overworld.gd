@@ -45,6 +45,7 @@ var player: Node2D
 var _encounter_data: Dictionary = {}
 var _busy: bool = false
 var _cutscene: bool = false
+var _transitioning: bool = false
 var _pending_trainer: Dictionary = {}
 
 const FACING_ROW := { "down": 0, "right": 1, "up": 2, "left": 3 }
@@ -506,13 +507,23 @@ func play_ambush_surround(actor_defs: Array, lines: Array, on_dialogue_done: Cal
 
 
 func on_player_step(cell: Vector2i) -> void:
+	if _transitioning:
+		return
 	if pickups.has(cell):
 		_collect_pickup(cell)
 	if hazards.has(cell):
 		_apply_hazard(cell)
 	if warps.has(cell):
 		var w: Dictionary = warps[cell]
-		await SceneRouter.go_to_map(String(w.map), Vector2i(w.cell.x, w.cell.y) if w.cell is Vector2i else w.cell, String(w.facing))
+		_transitioning = true
+		_busy = true
+		if player and player.has_method("set_input_locked"):
+			player.set_input_locked(true)
+		SceneRouter.go_to_map(
+			String(w.map),
+			Vector2i(w.cell.x, w.cell.y) if w.cell is Vector2i else w.cell,
+			String(w.facing)
+		)
 		return
 	if is_grass(cell):
 		_roll_encounter()
@@ -763,8 +774,7 @@ func _try_fishing(water_cell: Vector2i = Vector2i.ZERO) -> void:
 
 	EventBus.toast.emit("Something bites!")
 	await get_tree().create_timer(0.35).timeout
-	await SceneRouter.start_fishing_battle(GameState.current_map)
-	_busy = false
+	SceneRouter.start_fishing_battle(GameState.current_map)
 
 
 func _play_heal_animation() -> void:

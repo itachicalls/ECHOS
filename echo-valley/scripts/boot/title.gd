@@ -144,7 +144,7 @@ func _on_continue() -> void:
 		EventBus.toast.emit("Could not load save file.")
 		return
 	GameState.play_mode = "solo"
-	await SceneRouter.go_to_map(GameState.current_map, GameState.player_cell, GameState.player_facing)
+	await SceneRouter.go_to_map_and_wait(GameState.current_map, GameState.player_cell, GameState.player_facing)
 
 
 func _on_versus() -> void:
@@ -247,7 +247,7 @@ func _on_pick_starter(id: String) -> void:
 		return
 	GameState.flags["intro_seen"] = true
 	SaveService.save_game()
-	await SceneRouter.go_to_map("town", Vector2i(12, 16), "up")
+	await SceneRouter.go_to_map_and_wait("town", Vector2i(12, 16), "up")
 
 
 func _play_cutscene(sequence_id: String, starter_id: String = "") -> void:

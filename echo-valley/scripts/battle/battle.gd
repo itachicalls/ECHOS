@@ -91,7 +91,7 @@ func _load_teams_from_request() -> void:
 
 
 func _abort_empty_battle() -> void:
-	await SceneRouter.finish_battle({ "result": "flee" })
+	SceneRouter.finish_battle({ "result": "flee" })
 
 
 func _begin_intro() -> void:
@@ -2012,4 +2012,4 @@ func _end_battle(result: String) -> void:
 	if String(request.get("kind", "wild")) != "versus":
 		GameState.sync_from_battle(state.player.units)
 		SaveService.save_game(true)
-	await SceneRouter.finish_battle({ "result": result })
+	SceneRouter.finish_battle({ "result": result })
