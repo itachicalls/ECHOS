@@ -104,6 +104,25 @@ func _build() -> void:
 	_box.add_child(_tap_btn)
 
 	_build_quick_bar()
+	if TouchUtil != null and TouchUtil.is_touch_ui_enabled():
+		_apply_touch_layout()
+
+
+func _apply_touch_layout() -> void:
+	var m := TouchUtil.get_game_margins()
+	_box.position = Vector2(4 + int(m.x), 88)
+	_box.size = Vector2(VIEW_W - 8 - int(m.x) - int(m.z), 68)
+	_text.size = Vector2(_box.size.x - 22, 52)
+	_tap_btn.size = _box.size
+	_tap_btn.custom_minimum_size = _box.size
+	_tap_hint.add_theme_font_size_override("font_size", 6)
+	_tap_hint.position = Vector2(_box.size.x - 78, _box.size.y - 14)
+	_quick_bar.position = Vector2(VIEW_W - int(m.z) - 52, int(VIEW_H - m.w) - 18)
+	_quick_bar.size = Vector2(48, 16)
+	_menu_btn.position = Vector2(_quick_bar.position.x + 2, _quick_bar.position.y + 2)
+	_menu_btn.size = Vector2(22, 14)
+	_bag_btn.position = Vector2(_quick_bar.position.x + 26, _quick_bar.position.y + 2)
+	_bag_btn.size = Vector2(22, 14)
 
 
 func _build_quick_bar() -> void:
@@ -205,8 +224,8 @@ func _process(delta: float) -> void:
 	_menu_btn.visible = hud_visible
 	if _open:
 		_arrow.visible = int(Time.get_ticks_msec() / 350) % 2 == 0
-		_tap_hint.visible = TouchUtil.is_touch_ui_enabled()
-		if TouchUtil.wants_continue():
+		_tap_hint.visible = TouchUtil != null and TouchUtil.is_touch_ui_enabled()
+		if TouchUtil != null and TouchUtil.wants_continue():
 			_advance()
 
 

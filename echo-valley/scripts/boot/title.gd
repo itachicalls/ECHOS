@@ -97,15 +97,23 @@ func _button(text: String, cb: Callable) -> Button:
 	b.add_theme_stylebox_override("hover", _button_style(Color("1e3058", 0.95), Color("fff0b0")))
 	b.add_theme_stylebox_override("pressed", _button_style(Color("0c1828", 0.95), Color("7ee8d8")))
 	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	b.custom_minimum_size = Vector2(90, 18)
-	b.size = Vector2(90, 18)
+	var btn_h := 18
+	if TouchUtil != null and TouchUtil.is_touch_ui_enabled():
+		btn_h = 22
+	b.custom_minimum_size = Vector2(90, btn_h)
+	b.size = Vector2(90, btn_h)
 	b.pressed.connect(cb)
 	return b
 
 
 func _build_menu() -> void:
-	var count := 3 if SaveService.has_save() else 2
-	var panel_h := count * 18 + (count - 1) * 4 + 12
+	var count := 2
+	if SaveService.has_save():
+		count = 3
+	var btn_h := 18
+	if TouchUtil != null and TouchUtil.is_touch_ui_enabled():
+		btn_h = 22
+	var panel_h := count * btn_h + (count - 1) * 4 + 12
 
 	var panel := Panel.new()
 	panel.position = Vector2(124, 52)
@@ -132,9 +140,11 @@ func _build_menu() -> void:
 
 
 func _on_continue() -> void:
-	if SaveService.load_game():
-		GameState.play_mode = "solo"
-		SceneRouter.go_to_map(GameState.current_map, GameState.player_cell, GameState.player_facing)
+	if not SaveService.load_game():
+		EventBus.toast.emit("Could not load save file.")
+		return
+	GameState.play_mode = "solo"
+	await SceneRouter.go_to_map(GameState.current_map, GameState.player_cell, GameState.player_facing)
 
 
 func _on_versus() -> void:
@@ -156,6 +166,7 @@ func _reset_state() -> void:
 	GameState.party.clear()
 	GameState.pc_box.clear()
 	GameState.flags = { "starter_chosen": false, "intro_seen": false }
+	GameState.inventory = ItemCatalog.starter_inventory()
 	GameState.seen = {}
 	GameState.caught = {}
 	GameState.current_map = "town"

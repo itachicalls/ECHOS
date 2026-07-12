@@ -2,6 +2,8 @@ extends Control
 
 ## GBA-style turn-based battle scene.
 
+const ItemIcon := preload("res://scripts/ui/item_icon.gd")
+
 const VIEW_W := 240
 const VIEW_H := 160
 const ECHO_PX := 52  # scaled down so stat panels never cover opposing sprites
@@ -34,6 +36,7 @@ var sub_menu: Control
 var _stage: Control
 var _msg_panel: Panel
 var _msg_tap: Button
+var _msg_tap_hint: Label
 var _home: Dictionary = {}
 var _visual_active: Dictionary = {}  # stage index per side — may lag state.active during animations
 var _idle_tweens: Dictionary = {}
@@ -60,6 +63,7 @@ func _ready() -> void:
 	_visual_active = { "player": int(state.player.active), "enemy": int(state.enemy.active) }
 	_build_ui()
 	_refresh_all()
+	EventBus.battle_active = true
 	call_deferred("_begin_intro")
 
 
@@ -109,11 +113,16 @@ func _build_ui() -> void:
 	add_child(_stage)
 
 	# Classic GBA layout — panels in corners, sprites in front (higher z_index).
-	enemy_base = _terrain_base(Vector2(146, 50), Vector2(86, 16))
+	var is_versus := String(request.get("kind", "")) == "versus"
+	if is_versus:
+		enemy_base = _versus_pad(Vector2(146, 50), Vector2(86, 16))
+		player_base = _versus_pad(Vector2(4, 88), Vector2(92, 18))
+	else:
+		enemy_base = _terrain_base(Vector2(146, 50), Vector2(86, 16))
+		player_base = _terrain_base(Vector2(4, 88), Vector2(92, 18))
 	enemy_info = _info_panel(Vector2(6, 6), false)
 	_add_encounter_badge(enemy_info)
 	enemy_sprite = _echo_sprite(Vector2(170, 6))
-	player_base = _terrain_base(Vector2(4, 88), Vector2(92, 18))
 	player_sprite = _echo_sprite(Vector2(10, 50))
 	player_info = _info_panel(Vector2(126, 68), true)
 
@@ -146,6 +155,17 @@ func _build_ui() -> void:
 	_msg_tap.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	_msg_tap.pressed.connect(func(): TouchUtil.register_tap())
 	_msg_panel.add_child(_msg_tap)
+
+	_msg_tap_hint = Label.new()
+	_msg_tap_hint.text = "Tap to continue"
+	_msg_tap_hint.add_theme_font_size_override("font_size", 6)
+	_msg_tap_hint.add_theme_color_override("font_color", Color("8ec8ff"))
+	_msg_tap_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_msg_tap_hint.position = Vector2(4, 38)
+	_msg_tap_hint.size = Vector2(228, 10)
+	_msg_tap_hint.visible = false
+	_msg_tap_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_msg_panel.add_child(_msg_tap_hint)
 
 	# action buttons — clipped to right side of bottom bar
 	menu_root = Control.new()
@@ -323,6 +343,16 @@ func _swap_type_badge(info: Dictionary, resonance: int) -> void:
 	info.type_badge = emblem
 
 
+func _versus_pad(pos: Vector2, sz: Vector2) -> Control:
+	var base := Control.new()
+	base.position = pos
+	base.size = sz
+	base.z_index = 0
+	base.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(base)
+	return base
+
+
 func _terrain_base(pos: Vector2, sz: Vector2) -> Control:
 	var base := Control.new()
 	base.position = pos
@@ -454,7 +484,8 @@ func _refresh_side(side: String, info: Dictionary, spr: TextureRect, index: int 
 	info.level.text = "Lv%d" % int(u.level)
 	_swap_type_badge(info, int(u.get("resonance", 0)))
 	var base := player_base if side == "player" else enemy_base
-	_paint_terrain(base, int(u.get("resonance", 0)), base.size)
+	if String(request.get("kind", "")) != "versus":
+		_paint_terrain(base, int(u.get("resonance", 0)), base.size)
 	var hp := hp_display if hp_display >= 0 else int(u.current_hp)
 	_set_hp_bar(info, hp, int(u.max_hp))
 	if bool(info.get("show_xp", false)) and info.has("xp_bar"):
@@ -567,7 +598,14 @@ func _intro() -> void:
 	_start_idle_bob(enemy_sprite)
 	_start_idle_bob(player_sprite)
 	var kind := String(request.get("kind", "wild"))
-	if kind == "trainer" or kind == "versus":
+	if kind == "ambush":
+		for line in request.get("intro", []):
+			await _say(String(line))
+		await _say("%s wants to battle!" % String(request.get("trainer_name", "Agent")))
+	elif kind == "fishing":
+		var foe := _active("enemy")
+		await _say("Splash! A wild %s took the bait!" % foe.name)
+	elif kind == "trainer" or kind == "versus":
 		if bool(request.get("gym", false)):
 			await _say("%s %s stands guard!\nA Resonance trial begins!" % [GameStrings.RANGER, String(request.get("trainer_name", "???"))])
 		else:
@@ -639,8 +677,13 @@ func _stop_idle_bob(spr: TextureRect) -> void:
 	spr.position = _home_pos(spr)
 
 
+func _sync_battle_menu() -> void:
+	EventBus.battle_menu_active = menu_root.visible and phase == Phase.CHOOSING
+
+
 func _say(text: String) -> void:
 	menu_root.visible = false
+	_sync_battle_menu()
 	msg.visible = true
 	msg.size = Vector2(226, 44)
 	msg.text = text
@@ -651,6 +694,7 @@ func _wait_continue(min_wait: float = 0.0) -> void:
 	EventBus.awaiting_continue = true
 	if TouchUtil.is_touch_ui_enabled():
 		_msg_tap.visible = true
+		_msg_tap_hint.visible = true
 	if min_wait > 0.0:
 		await get_tree().create_timer(min_wait).timeout
 	while true:
@@ -659,6 +703,7 @@ func _wait_continue(min_wait: float = 0.0) -> void:
 			break
 	EventBus.awaiting_continue = false
 	_msg_tap.visible = false
+	_msg_tap_hint.visible = false
 
 
 func _btn_style(bg: Color, border: Color) -> StyleBoxFlat:
@@ -676,6 +721,7 @@ func _clear_menu() -> void:
 	for c in menu_root.get_children():
 		menu_root.remove_child(c)
 		c.free()
+	_sync_battle_menu()
 
 
 func _pin_menu(node: Control, pos: Vector2, sz: Vector2) -> void:
@@ -696,7 +742,8 @@ func _menu_btn(pos: Vector2, sz: Vector2, text: String, cb: Callable, font_size:
 	# never paints over the label above it.
 	if enabled and cb.is_valid():
 		var hit := Button.new()
-		_pin_menu(hit, Vector2.ZERO, sz)
+		var pad := 3 if TouchUtil.is_touch_ui_enabled() else 0
+		_pin_menu(hit, Vector2(-pad, -pad), sz + Vector2(pad * 2, pad * 2))
 		hit.focus_mode = Control.FOCUS_NONE
 		hit.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 		hit.add_theme_stylebox_override("hover", _btn_style(Color("3d597a"), Color("ffffff")))
@@ -737,15 +784,18 @@ func _fit_label_in_btn(lbl: Label, btn_sz: Vector2, font_size: int) -> void:
 func _layout_cmd_2x2(items: Array) -> void:
 	var x0 := 2
 	var y0 := 3
-	var dx := _CMD_BTN.x + _MENU_GAP
-	var row_h := 22
+	var btn_sz := _CMD_BTN
+	if TouchUtil.is_touch_ui_enabled():
+		btn_sz = Vector2(58, 22)
+	var dx := btn_sz.x + _MENU_GAP
+	var row_h := int(btn_sz.y) + 2
 	for i in mini(items.size(), 4):
 		var it: Dictionary = items[i]
 		var col := i % 2
 		var row := i / 2
 		_menu_btn(
 			Vector2(x0 + col * dx, y0 + row * row_h),
-			_CMD_BTN,
+			btn_sz,
 			String(it.get("text", "")),
 			it.get("cb", Callable()),
 			int(it.get("font", 6)),
@@ -756,7 +806,10 @@ func _layout_cmd_2x2(items: Array) -> void:
 func _layout_submenu(items: Array, back_cb: Callable = Callable()) -> void:
 	var x0 := 2
 	var y0 := 2
-	var dx := _SUB_BTN.x + _MENU_GAP
+	var sub_sz := _SUB_BTN
+	if TouchUtil.is_touch_ui_enabled():
+		sub_sz = Vector2(74, 20)
+	var dx := sub_sz.x + _MENU_GAP
 	var item_rows := 0
 	for i in items.size():
 		item_rows = maxi(item_rows, i / _SUB_COLS + 1)
@@ -800,13 +853,16 @@ func _open_main_menu() -> void:
 		{ "text": GameStrings.CREATURE_PLURAL, "cb": _on_switch_menu },
 		{ "text": "Run" if can_flee else "—", "cb": _on_run, "enabled": can_flee },
 	])
+	_sync_battle_menu()
 
 
 func _open_submenu(items: Array, back_cb: Callable = Callable()) -> void:
 	menu_root.position = Vector2(2, 106)
 	menu_root.size = Vector2(234, 52)
+	menu_root.visible = true
 	_clear_menu()
 	_layout_submenu(items, back_cb)
+	_sync_battle_menu()
 
 
 func _on_fight() -> void:
@@ -829,7 +885,28 @@ func _on_bag() -> void:
 	if can_catch:
 		var cap := int(GameState.inventory.get("echo_capsule", 0))
 		items.append({ "text": "Capsule x%d" % cap, "cb": _on_catch, "enabled": cap > 0 })
+	var rev := int(GameState.inventory.get("revive_capsule", 0))
+	items.append({ "text": "Revive x%d" % rev, "cb": _use_revive, "enabled": rev > 0 })
 	_open_submenu(items, _open_main_menu)
+
+
+func _use_revive() -> void:
+	_clear_menu()
+	phase = Phase.RESOLVING
+	if int(GameState.inventory.get("revive_capsule", 0)) <= 0:
+		await _say("You have no Revive Capsules!")
+		_open_main_menu()
+		return
+	var u := _active("player")
+	if int(u.current_hp) > 0:
+		await _say("%s isn't fainted!" % u.name)
+		_open_main_menu()
+		return
+	ItemCatalog.consume_item("revive_capsule", 1)
+	u.current_hp = maxi(1, int(round(float(u.max_hp) * 0.5)))
+	_tween_hp_bar(player_info, int(u.current_hp), int(u.max_hp))
+	await _say("Revive Capsule restored %s!" % u.name)
+	await _enemy_only_turn()
 
 
 func _use_salve() -> void:
@@ -845,7 +922,7 @@ func _use_salve() -> void:
 		await _say("%s is already at full HP." % u.name)
 		_open_main_menu()
 		return
-	GameState.inventory["heart_salve"] = salves - 1
+	ItemCatalog.consume_item("heart_salve", 1)
 	var heal := int(round(float(u.max_hp) * 0.6))
 	u.current_hp = mini(int(u.max_hp), int(u.current_hp) + heal)
 	_tween_hp_bar(player_info, int(u.current_hp), int(u.max_hp))
@@ -895,7 +972,7 @@ func _on_catch() -> void:
 		await _say("You have no Echo Capsules left!")
 		_open_main_menu()
 		return
-	GameState.inventory["echo_capsule"] = capsules - 1
+	ItemCatalog.consume_item("echo_capsule", 1)
 	var u := _active("enemy")
 	await _say("You toss an Echo Capsule!")
 	var def := EchoCatalog.get_echo(String(u.definition_id))
@@ -917,54 +994,108 @@ func _on_catch() -> void:
 
 # ------------------------------------------------------------------ catch FX
 func _play_catch_animation(success: bool, shakes: int) -> void:
-	var capsule := TextureRect.new()
-	capsule.texture = load(Tiles.ECHO_CAPSULE)
-	capsule.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	capsule.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	capsule.custom_minimum_size = Vector2(12, 16)
-	capsule.size = Vector2(12, 16)
-	capsule.pivot_offset = Vector2(6, 8)
-	capsule.position = Vector2(50, 112)
-	capsule.z_index = 20
-	add_child(capsule)
+	const CAP := 22
+	var half := float(CAP) * 0.5
+	var enemy_center := _sprite_center(enemy_sprite)
+	var throw_from := _sprite_center(player_sprite) - Vector2(half, half)
+	var cap_pos := enemy_center - Vector2(half, half)
 
-	var target := Vector2(170, 30)
-	var arc := create_tween()
-	arc.tween_property(capsule, "position", Vector2((50 + target.x) * 0.5, 2), 0.18).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	arc.tween_property(capsule, "position", target, 0.18).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	await arc.finished
+	var capsule := ItemIcon.make("echo_capsule", CAP)
+	capsule.pivot_offset = Vector2(half, half)
+	capsule.position = throw_from
+	capsule.z_index = 25
+	_stage.add_child(capsule)
 
-	await _flash(0.14)
-	var suck := create_tween()
-	suck.set_parallel(true)
-	suck.tween_property(enemy_sprite, "scale", Vector2(0.15, 0.15), 0.16)
-	suck.tween_property(enemy_sprite, "modulate", Color(1, 1, 1, 0.0), 0.16)
-	await suck.finished
+	var arc_peak := Vector2(
+		(throw_from.x + cap_pos.x) * 0.5 + half,
+		minf(throw_from.y + half, cap_pos.y + half) - 28.0
+	)
+	var throw_tw := create_tween()
+	throw_tw.tween_property(capsule, "position", arc_peak - Vector2(half, half), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	throw_tw.parallel().tween_property(capsule, "rotation_degrees", 240.0, 0.16)
+	throw_tw.tween_property(capsule, "position", cap_pos, 0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	throw_tw.parallel().tween_property(capsule, "rotation_degrees", 360.0, 0.14)
+	await throw_tw.finished
 
+	_flash_ring(enemy_center, Color("3ecf6e"))
+	_impact_spark(enemy_center, Color("f4f6f8"))
+
+	var absorb := create_tween().set_parallel(true)
+	absorb.tween_property(
+		enemy_sprite, "position",
+		enemy_center - Vector2(ECHO_PX * 0.5, ECHO_PX * 0.5), 0.1
+	)
+	absorb.tween_property(enemy_sprite, "scale", Vector2(0.02, 0.02), 0.14)
+	absorb.tween_property(enemy_sprite, "modulate:a", 0.0, 0.14)
+	absorb.tween_property(capsule, "scale", Vector2(1.18, 1.18), 0.1)
+	await absorb.finished
+
+	var seal := create_tween()
+	seal.tween_property(capsule, "scale", Vector2(1.0, 1.0), 0.08)
+	await seal.finished
+
+	var ground := Vector2(cap_pos.x + half, 56.0)
 	var drop := create_tween()
-	drop.tween_property(capsule, "position", Vector2(target.x, 52), 0.16).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+	drop.tween_property(capsule, "position", ground - Vector2(half, half), 0.22).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 	await drop.finished
 
-	for i in shakes:
-		await get_tree().create_timer(0.28).timeout
+	for _i in shakes:
+		await get_tree().create_timer(0.3).timeout
+		var origin_x := capsule.position.x
 		var sh := create_tween()
-		sh.tween_property(capsule, "rotation_degrees", -18.0, 0.08)
-		sh.tween_property(capsule, "rotation_degrees", 18.0, 0.12)
-		sh.tween_property(capsule, "rotation_degrees", 0.0, 0.08)
+		sh.tween_property(capsule, "position:x", origin_x - 5.0, 0.06).set_trans(Tween.TRANS_SINE)
+		sh.tween_property(capsule, "position:x", origin_x + 5.0, 0.1).set_trans(Tween.TRANS_SINE)
+		sh.tween_property(capsule, "position:x", origin_x, 0.06).set_trans(Tween.TRANS_SINE)
 		await sh.finished
 
 	if success:
-		await get_tree().create_timer(0.15).timeout
-		_sparkle(Vector2(target.x + 8, 60))
-		await get_tree().create_timer(0.35).timeout
+		var pulse := create_tween()
+		pulse.tween_property(capsule, "scale", Vector2(1.1, 0.88), 0.08)
+		pulse.tween_property(capsule, "scale", Vector2(1.0, 1.0), 0.1)
+		await pulse.finished
+		_flash_ring(ground, Color("3ecf6e"))
+		_sparkle(ground)
+		await get_tree().create_timer(0.3).timeout
 		capsule.queue_free()
 	else:
-		await _flash(0.1)
-		enemy_sprite.scale = Vector2(1, 1)
-		var pop := create_tween()
-		pop.tween_property(enemy_sprite, "modulate", Color(1, 1, 1, 1.0), 0.16)
+		await _flash(0.08)
+		var pop := create_tween().set_parallel(true)
+		pop.tween_property(capsule, "scale", Vector2(1.4, 0.6), 0.12)
+		pop.tween_property(capsule, "modulate:a", 0.0, 0.18)
 		await pop.finished
 		capsule.queue_free()
+		enemy_sprite.position = _home_pos(enemy_sprite)
+		enemy_sprite.scale = Vector2(0.05, 0.05)
+		enemy_sprite.modulate = Color(1, 1, 1, 0)
+		var restore := create_tween().set_parallel(true)
+		restore.tween_property(enemy_sprite, "scale", Vector2(1, 1), 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		restore.tween_property(enemy_sprite, "modulate:a", 1.0, 0.18)
+		await restore.finished
+
+
+func _play_battle_item_receive(items: Dictionary) -> void:
+	var from := _sprite_center(enemy_sprite) - Vector2(8, 8)
+	var to := _sprite_center(player_sprite) - Vector2(8, 12)
+	var i := 0
+	for k in items.keys():
+		var amt := int(items[k])
+		if amt <= 0:
+			continue
+		ItemCatalog.add_item(String(k), amt)
+		var icon := ItemIcon.make(String(k), 16)
+		icon.position = from + Vector2(i * 5, 0)
+		icon.z_index = 26
+		_stage.add_child(icon)
+		var tw := create_tween().set_parallel(true)
+		tw.tween_property(icon, "position", to + Vector2(i * 7, 0), 0.48).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tw.tween_property(icon, "scale", Vector2(1.2, 1.2), 0.18)
+		tw.chain().tween_property(icon, "scale", Vector2(1.0, 1.0), 0.12)
+		tw.tween_property(icon, "modulate:a", 0.0, 0.22).set_delay(0.34)
+		tw.chain().tween_callback(icon.queue_free)
+		_flash_ring(to + Vector2(i * 7, 0), Color("ffd166"))
+		i += 1
+		await get_tree().create_timer(0.08).timeout
+	await get_tree().create_timer(0.35).timeout
 
 
 func _res_color(res: int) -> Color:
@@ -1823,17 +1954,36 @@ func _victory() -> void:
 			"evolve":
 				await _play_evolution(String(g.get("from_id", "")), String(g.get("to_id", "")), String(g.from), String(g.to))
 
-	if kind == "trainer":
+	if kind == "trainer" or kind == "ambush":
 		var tid := String(request.get("trainer_id", ""))
 		if tid != "":
 			GameState.flags["trainer_" + tid] = true
 		var reward := int(request.get("reward", 0))
+		var extras: Dictionary = request.get("reward_items", {})
+		var gift_bundle: Dictionary = extras.duplicate()
 		if reward > 0:
-			GameState.inventory["echo_capsule"] = int(GameState.inventory.get("echo_capsule", 0)) + reward
+			gift_bundle["echo_capsule"] = int(gift_bundle.get("echo_capsule", 0)) + reward
+		if gift_bundle.size() > 0:
+			await _play_battle_item_receive(gift_bundle)
+		if reward > 0:
 			await _say("%s handed you %d Echo Capsules!" % [String(request.get("trainer_name", "Rival")), reward])
+		for k in extras.keys():
+			var item_id := String(k)
+			var amt := int(extras[k])
+			await _say("You received %d %s!" % [amt, ItemCatalog.display_name(item_id)])
+		if kind == "trainer" and randf() < 0.08:
+			ItemCatalog.add_item("evo_capsule", 1)
+			await _say("A rare Evo Capsule glinted in the spoils!")
+		if kind == "trainer" and randf() < 0.14:
+			ItemCatalog.add_item("revive_capsule", 1)
+			await _say("You found a Revive Capsule!")
 		var wl := String(request.get("win_line", ""))
 		if wl != "":
 			await _say(wl)
+		if kind == "ambush" and request.get("ambush_chain") is Array:
+			var next_i := int(request.get("ambush_index", 0)) + 1
+			if next_i < (request.ambush_chain as Array).size():
+				await _say("Another faction member steps forward...")
 
 	_end_battle("win")
 
@@ -1855,6 +2005,8 @@ func _defeat() -> void:
 
 func _end_battle(result: String) -> void:
 	phase = Phase.ENDED
+	EventBus.battle_active = false
+	EventBus.battle_menu_active = false
 	if _online and VersusNet.lobby_open():
 		VersusNet.disconnect_lobby()
 	if String(request.get("kind", "wild")) != "versus":

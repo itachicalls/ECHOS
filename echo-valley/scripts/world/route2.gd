@@ -54,6 +54,8 @@ func _build_map() -> void:
 
 	add_interact(Vector2i(8, 19), { "type": "sign", "text": "ECHOWOOD - deeper Echoes roam here. The path north-west leads to the desert." })
 
+	add_interact(Vector2i(12, 6), { "type": "sign", "text": "FISHING DOCK - face the pond and press J with your Fishing Rod equipped in your bag." })
+
 	add_trainer(Vector2i(6, 16), "right", {
 		"id": "r2_lena", "name": "Ranger Lena", "look": 4,
 		"party": [{ "id": "fernkit", "level": 9 }, { "id": "dewling", "level": 9 }],
@@ -74,10 +76,63 @@ func _build_map() -> void:
 	add_gym_gate({
 		"id": "gym_grass", "name": "Ranger Fern", "look": 1,
 		"party": [{ "id": "fernkit", "level": 12 }, { "id": "thornvine", "level": 13 }, { "id": "bramblor", "level": 14 }],
-		"reward": 6, "gym": true,
+		"reward": 4,
+		"reward_items": { "fishing_rod": 1 },
+		"gym": true,
 		"intro": ["I am Fern, Meadow Route Ranger.", "None cross to the desert without proving your resonance!"],
-		"win_line": "The meadow yields to you. The desert pass is open — go!",
+		"win_line": "The meadow yields to you. Take this rod — the desert oasis rewards patient fishers.",
 	}, Vector2i(3, 1), "down", [Vector2i(3, 0), Vector2i(4, 0)], Vector2i(2, 2), [Vector2i(4, 1)])
+
+
+func _on_map_step(cell: Vector2i) -> void:
+	if bool(GameState.flags.get("faction_ambush_route2", false)):
+		return
+	if cell != Vector2i(8, 14) and cell != Vector2i(9, 14):
+		return
+	_trigger_faction_ambush()
+
+
+func _trigger_faction_ambush() -> void:
+	if _cutscene or _busy:
+		return
+	_cutscene = true
+	if player and player.has_method("set_input_locked"):
+		player.set_input_locked(true)
+	EventBus.dialogue_requested.emit([
+		"Shadows move between the trees...",
+		"Three figures step onto the path — emblems of the Veil, the Rangers, and the Archive.",
+		"\"You carry too much resonance for one keeper,\" one warns.",
+		"\"Prove your strength, or turn back.\"",
+	])
+	EventBus.dialogue_closed.connect(func() -> void:
+		var chain := [
+			{
+				"id": "faction_veil", "name": "Veil Agent", "look": 3,
+				"party": [{ "id": "duskling", "level": 10 }, { "id": "shadelet", "level": 11 }],
+				"reward": 2,
+				"intro": ["The Veil tests every rising keeper.", "Your Harmons will tell us if you listen to the Fracture."],
+				"win_line": "Hmm. You fight with conviction.",
+			},
+			{
+				"id": "faction_ranger", "name": "Ranger Scout", "look": 4,
+				"party": [{ "id": "fernkit", "level": 11 }, { "id": "dewling", "level": 11 }],
+				"reward": 2,
+				"intro": ["Route Rangers guard the valley's balance.", "Show me you can protect your team!"],
+				"win_line": "Steady command. The routes respect you.",
+			},
+			{
+				"id": "faction_archive", "name": "Archive Hunter", "look": 0,
+				"party": [{ "id": "cindboth", "level": 11 }, { "id": "zephyr", "level": 12 }],
+				"reward": 3,
+				"intro": ["The Memory Archive records every battle.", "We will see what your Harmons remember."],
+				"win_line": "Logged. Your story grows louder.",
+			},
+		]
+		SceneRouter.start_ambush_chain(chain, "route2")
+		if player and player.has_method("set_input_locked"):
+			player.set_input_locked(false)
+		_cutscene = false
+	, CONNECT_ONE_SHOT)
 
 
 func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:

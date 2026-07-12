@@ -10,3 +10,5 @@ signal menu_requested(tab: String)
 var dialogue_active: bool = false
 var menu_active: bool = false
 var awaiting_continue: bool = false
+var battle_active: bool = false
+var battle_menu_active: bool = false

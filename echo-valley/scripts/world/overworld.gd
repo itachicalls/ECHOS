@@ -8,6 +8,7 @@ const PlayerScene = preload("res://scenes/player/player.tscn")
 const HudScene = preload("res://scenes/ui/hud.tscn")
 const PauseMenuScript = preload("res://scripts/ui/pause_menu.gd")
 const NpcScript = preload("res://scripts/world/npc.gd")
+const ItemIcon := preload("res://scripts/ui/item_icon.gd")
 
 const STEP_DIRS := {
 	"up": Vector2i(0, -1),
@@ -32,6 +33,7 @@ var pickups: Dictionary = {}
 var npcs: Array = []
 var _path_cells: Dictionary = {}
 var _stone_cells: Dictionary = {}
+var water_cells: Dictionary = {}
 
 var map_w: int = 20
 var map_h: int = 20
@@ -98,22 +100,18 @@ func add_hazard(cell: Vector2i, text: String = "Ouch! The terrain stings!") -> v
 	hazards[cell] = { "text": text }
 
 
-func add_pickup(cell: Vector2i, item: String, amount: int = 1, sprite_path: String = "") -> void:
+func add_pickup(cell: Vector2i, item: String, amount: int = 1, _sprite_path: String = "") -> void:
 	var flag := "pickup_%s_%d_%d" % [name.to_lower(), cell.x, cell.y]
 	if bool(GameState.flags.get(flag, false)):
 		return
-	var path := sprite_path
-	if path == "":
-		path = Tiles.ECHO_CAPSULE if item == "echo_capsule" else Tiles.ECHO_CAPSULE
-	var spr := Sprite2D.new()
-	spr.texture = load(path)
-	spr.centered = true
-	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	# Sit on the tile floor — never use the tall-character -16 offset.
-	spr.position = Vector2(cell.x * TILE + 8, cell.y * TILE + 10)
-	spr.z_index = 2
-	add_child(spr)
-	pickups[cell] = { "item": item, "amount": amount, "sprite": spr, "flag": flag }
+	var wrap := Node2D.new()
+	wrap.position = Vector2(cell.x * TILE + 8, cell.y * TILE + 10)
+	wrap.z_index = 2
+	var icon := ItemIcon.make(item, 14)
+	icon.position = Vector2(-7, -7)
+	wrap.add_child(icon)
+	add_child(wrap)
+	pickups[cell] = { "item": item, "amount": amount, "sprite": wrap, "flag": flag }
 
 
 func _collect_pickup(cell: Vector2i) -> void:
@@ -125,9 +123,8 @@ func _collect_pickup(cell: Vector2i) -> void:
 	if is_instance_valid(spr):
 		spr.queue_free()
 	GameState.flags[p.flag] = true
-	GameState.inventory[p.item] = int(GameState.inventory.get(p.item, 0)) + int(p.amount)
-	var nice := "Heart Salve" if p.item == "heart_salve" else "Echo Capsule"
-	EventBus.toast.emit("Found %d %s!" % [int(p.amount), nice])
+	ItemCatalog.add_item(String(p.item), int(p.amount))
+	EventBus.toast.emit("Found %d %s!" % [int(p.amount), ItemCatalog.display_name(String(p.item))])
 
 
 func _apply_hazard(cell: Vector2i) -> void:
@@ -181,12 +178,19 @@ func set_ground(cell: Vector2i, tile: Vector3i) -> void:
 	if tile == Tiles.PATH:
 		_path_cells[cell] = true
 		_stone_cells.erase(cell)
+		water_cells.erase(cell)
 	elif tile == Tiles.STONE:
 		_stone_cells[cell] = true
 		_path_cells.erase(cell)
+		water_cells.erase(cell)
+	elif tile == Tiles.WATER:
+		water_cells[cell] = true
+		_path_cells.erase(cell)
+		_stone_cells.erase(cell)
 	else:
 		_path_cells.erase(cell)
 		_stone_cells.erase(cell)
+		water_cells.erase(cell)
 
 
 func _set_ground_raw(cell: Vector2i, tile: Vector3i) -> void:
@@ -305,6 +309,15 @@ func add_trainer(cell: Vector2i, facing: String, trainer: Dictionary, sight: int
 	return npc
 
 
+func add_greeter(cell: Vector2i, facing: String, greeter: Dictionary, sight: int = 4) -> Node2D:
+	var look: int = int(greeter.get("look", 1))
+	look = clampi(look, 0, Tiles.TRAINER_PATHS.size() - 1)
+	var npc := add_npc(cell, facing, Color(1, 1, 1), { "type": "greeter", "greeter": greeter }, Tiles.TRAINER_PATHS[look])
+	npc.kind = "sentry"
+	npc.sight = sight
+	return npc
+
+
 ## A gym leader who seals a region exit until defeated. While the leader is
 ## unbeaten the exit tiles are blocked and the leader stands in the gateway
 ## (challenging on sight). Once "trainer_<id>" is set, the leader steps aside
@@ -394,6 +407,9 @@ func try_interact(cell: Vector2i) -> void:
 			return
 	if interacts.has(cell):
 		_handle_interact(interacts[cell])
+		return
+	if water_cells.get(cell, false) and ItemCatalog.has_item("fishing_rod"):
+		_try_fishing(cell)
 
 
 # --- line-of-sight trainer marches up and challenges the player ---
@@ -408,6 +424,12 @@ func begin_sentry(npc: Node2D) -> void:
 	if player:
 		npc.face_towards(player.cell)
 	await get_tree().create_timer(0.15).timeout
+	if String(npc.data.get("type", "")) == "greeter":
+		await _on_greeter_interact(npc.data.get("greeter", {}), npc.position + Vector2(8, -8))
+		_cutscene = false
+		if player and player.has_method("set_input_locked"):
+			player.set_input_locked(false)
+		return
 	_cutscene = false
 	_on_trainer_interact(npc.data.get("trainer", {}))
 
@@ -456,6 +478,11 @@ func on_player_step(cell: Vector2i) -> void:
 		return
 	if is_grass(cell):
 		_roll_encounter()
+	_on_map_step(cell)
+
+
+func _on_map_step(_cell: Vector2i) -> void:
+	pass
 
 
 func _handle_interact(data: Dictionary) -> void:
@@ -488,6 +515,167 @@ func _handle_interact(data: Dictionary) -> void:
 			EventBus.dialogue_requested.emit(lines)
 		"trainer":
 			_on_trainer_interact(data.get("trainer", {}))
+		"greeter":
+			var gid := String(data.get("greeter", {}).get("id", ""))
+			await _on_greeter_interact(data.get("greeter", {}), _npc_gift_pos(gid))
+
+
+func _npc_gift_pos(npc_id: String) -> Vector2:
+	if npc_id == "":
+		return Vector2.INF
+	for n in npcs:
+		if not is_instance_valid(n):
+			continue
+		var g: Dictionary = n.data.get("greeter", {}) if String(n.data.get("type", "")) == "greeter" else {}
+		if String(g.get("id", "")) == npc_id:
+			return n.position + Vector2(8, -8)
+	return Vector2.INF
+
+
+func _on_greeter_interact(greeter: Dictionary, gift_from: Vector2 = Vector2.INF) -> void:
+	var id := String(greeter.get("id", ""))
+	if id != "" and bool(GameState.flags.get("greeter_" + id, false)):
+		EventBus.dialogue_requested.emit(greeter.get("repeat", ["Safe travels, keeper."]))
+		return
+	EventBus.dialogue_closed.connect(_finish_greeter_gifts.bind(greeter, gift_from), CONNECT_ONE_SHOT)
+	EventBus.dialogue_requested.emit(greeter.get("lines", ["Welcome, keeper!"]))
+
+
+func _finish_greeter_gifts(greeter: Dictionary, gift_from: Vector2 = Vector2.INF) -> void:
+	var id := String(greeter.get("id", ""))
+	var gifts: Dictionary = greeter.get("gifts", {})
+	if id != "":
+		GameState.flags["greeter_" + id] = true
+	for k in gifts.keys():
+		ItemCatalog.add_item(String(k), int(gifts[k]))
+	if gifts.size() > 0 and player:
+		var from_pos: Vector2 = gift_from if gift_from != Vector2.INF else player.position + Vector2(-18, -10)
+		await _play_item_receive(gifts, from_pos)
+	var parts: PackedStringArray = PackedStringArray()
+	for k in gifts.keys():
+		parts.append("%d %s" % [int(gifts[k]), ItemCatalog.display_name(String(k))])
+	if parts.size() > 0:
+		EventBus.toast.emit("Received: " + ", ".join(parts))
+	SaveService.save_game()
+
+
+func _play_fishing_cast(splash_at: Vector2) -> void:
+	if player and player.has_method("set_input_locked"):
+		player.set_input_locked(true)
+	var cast_from: Vector2 = player.position + Vector2(6, -6) if player else splash_at + Vector2(0, 24)
+
+	# Quick rod whip (line flash)
+	var whip := Line2D.new()
+	whip.width = 1.5
+	whip.default_color = Color("8b5a2b")
+	whip.points = PackedVector2Array([cast_from, cast_from + Vector2(10, -14)])
+	whip.z_index = 11
+	add_child(whip)
+	var whip_tw := create_tween()
+	whip_tw.tween_property(whip, "modulate:a", 0.0, 0.18).set_delay(0.08)
+	whip_tw.chain().tween_callback(whip.queue_free)
+
+	# Bobber flies to the water
+	var bob := ColorRect.new()
+	bob.color = Color("ff5050")
+	bob.size = Vector2(3, 3)
+	bob.position = cast_from
+	bob.z_index = 12
+	add_child(bob)
+	var fly := create_tween()
+	fly.tween_property(bob, "position", splash_at - Vector2(1.5, 1.5), 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await fly.finished
+
+	# Splash ripples
+	for i in 3:
+		var ring := _make_splash_ring(splash_at, 4 + i * 4)
+		add_child(ring)
+		var rt := create_tween()
+		rt.set_parallel(true)
+		rt.tween_property(ring, "scale", Vector2(2.2, 1.2), 0.35)
+		rt.tween_property(ring, "modulate:a", 0.0, 0.35)
+		rt.chain().tween_callback(ring.queue_free)
+
+	# Bobber bobs while waiting
+	for _i in 3:
+		var bob_tw := create_tween()
+		bob_tw.tween_property(bob, "position:y", bob.position.y - 2.0, 0.22).set_trans(Tween.TRANS_SINE)
+		bob_tw.tween_property(bob, "position:y", bob.position.y + 2.0, 0.22).set_trans(Tween.TRANS_SINE)
+		await bob_tw.finished
+		await get_tree().create_timer(0.12).timeout
+
+	var sink := create_tween()
+	sink.tween_property(bob, "modulate:a", 0.0, 0.15)
+	await sink.finished
+	bob.queue_free()
+	if player and player.has_method("set_input_locked"):
+		player.set_input_locked(false)
+
+
+func _make_splash_ring(pos: Vector2, radius: float) -> Node2D:
+	var ring := Node2D.new()
+	ring.position = pos
+	ring.z_index = 11
+	ring.set_meta("radius", radius)
+	ring.set_script(preload("res://scripts/world/splash_ring.gd"))
+	return ring
+
+
+func _play_item_receive(items: Dictionary, from_pos: Vector2) -> void:
+	_busy = true
+	var to_pos: Vector2 = player.position + Vector2(4, -18) if player else from_pos + Vector2(20, -16)
+	var i := 0
+	for k in items.keys():
+		var item_id := String(k)
+		var icon := ItemIcon.make(item_id, 14)
+		icon.position = from_pos + Vector2(i * 6, 0)
+		icon.z_index = 14
+		add_child(icon)
+		var tw := create_tween().set_parallel(true)
+		tw.tween_property(icon, "position", to_pos + Vector2(i * 8, 0), 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tw.tween_property(icon, "scale", Vector2(1.25, 1.25), 0.2)
+		tw.chain().tween_property(icon, "scale", Vector2(1.0, 1.0), 0.15)
+		tw.tween_property(icon, "modulate:a", 0.0, 0.25).set_delay(0.38)
+		tw.chain().tween_callback(icon.queue_free)
+		# Sparkle burst at destination
+		var spark := ColorRect.new()
+		spark.color = Color("fff8b0", 0.9)
+		spark.size = Vector2(2, 2)
+		spark.position = to_pos + Vector2(i * 8, 0)
+		spark.z_index = 13
+		add_child(spark)
+		var st := create_tween()
+		st.tween_property(spark, "modulate:a", 0.0, 0.3).set_delay(0.15)
+		st.chain().tween_callback(spark.queue_free)
+		i += 1
+		await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.45).timeout
+	_busy = false
+
+
+func _try_fishing(water_cell: Vector2i = Vector2i.ZERO) -> void:
+	if _busy or _cutscene:
+		return
+	if GameState.living_party().is_empty():
+		EventBus.toast.emit("Your team is too tired to fish.")
+		return
+	_busy = true
+	var target_cell := water_cell
+	if target_cell == Vector2i.ZERO and player:
+		target_cell = player.cell + STEP_DIRS.get(player.facing, Vector2i(0, 1))
+	var splash_at := Vector2(target_cell.x * TILE + 8, target_cell.y * TILE + 10)
+	await _play_fishing_cast(splash_at)
+
+	# Not every cast hooks a Harmon.
+	if randf() > 0.58:
+		EventBus.toast.emit("Not even a nibble... try again.")
+		_busy = false
+		return
+
+	EventBus.toast.emit("Something bites!")
+	await get_tree().create_timer(0.35).timeout
+	await SceneRouter.start_fishing_battle(GameState.current_map)
+	_busy = false
 
 
 func _play_heal_animation() -> void:

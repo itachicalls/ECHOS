@@ -7,7 +7,7 @@ const STARTERS := ["emberkit", "tideling", "mossling"]
 var player_name: String = "Ash"
 var party: Array[EchoInstance] = []
 var pc_box: Array[EchoInstance] = []
-var inventory: Dictionary = { "echo_capsule": 8, "heart_salve": 4 }
+var inventory: Dictionary = { "echo_capsule": 3, "heart_salve": 2 }
 var flags: Dictionary = { "starter_chosen": false, "intro_seen": false }
 var seen: Dictionary = {}
 var caught: Dictionary = {}
@@ -90,6 +90,22 @@ func move_to_party(e: EchoInstance) -> bool:
 	party_changed.emit()
 	EventBus.party_changed.emit()
 	return true
+
+
+func set_party_lead(e: EchoInstance) -> bool:
+	if e == null or not party.has(e):
+		return false
+	if party[0] == e:
+		return false
+	party.erase(e)
+	party.insert(0, e)
+	party_changed.emit()
+	EventBus.party_changed.emit()
+	return true
+
+
+func party_lead() -> EchoInstance:
+	return party[0] if party.size() > 0 else null
 
 
 func mark_seen(id: String) -> void: seen[id] = true

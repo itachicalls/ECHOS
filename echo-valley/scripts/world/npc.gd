@@ -100,6 +100,9 @@ func _process(delta: float) -> void:
 func _defeated() -> bool:
 	if kind != "sentry":
 		return false
+	if String(data.get("type", "")) == "greeter":
+		var g: Dictionary = data.get("greeter", {})
+		return bool(GameState.flags.get("greeter_" + String(g.get("id", "")), false))
 	var t: Dictionary = data.get("trainer", {})
 	return bool(GameState.flags.get("trainer_" + String(t.get("id", "")), false))
 

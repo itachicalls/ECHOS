@@ -128,6 +128,22 @@ func try_evolve() -> Dictionary:
 	return { "type": "evolve", "from": old, "to": display_name(), "from_id": old_id, "to_id": definition_id }
 
 
+func can_evolve_now() -> bool:
+	var d := get_definition()
+	return d != null and d.evolve_to != "" and d.evolve_level > 0 and level >= d.evolve_level
+
+
+func evolve_with_capsule() -> Dictionary:
+	return try_evolve() if can_evolve_now() else {}
+
+
+func revive_from_capsule() -> bool:
+	if current_hp > 0:
+		return false
+	current_hp = maxi(1, int(round(float(max_hp()) * 0.5)))
+	return true
+
+
 func to_dict() -> Dictionary:
 	return {
 		"instance_id": instance_id, "definition_id": definition_id, "nickname": nickname,

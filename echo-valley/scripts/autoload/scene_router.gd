@@ -28,8 +28,8 @@ func _ready() -> void:
 
 func go_to_map(map_id: String, spawn_cell: Vector2i = Vector2i(-999, -999), facing: String = "") -> void:
 	if not MAPS.has(map_id):
-		push_error("Unknown map: %s" % map_id)
-		return
+		push_error("Unknown map: %s — falling back to town" % map_id)
+		map_id = "town"
 	GameState.current_map = map_id
 	if spawn_cell != Vector2i(-999, -999):
 		GameState.player_cell = spawn_cell
@@ -62,6 +62,70 @@ func start_wild_battle(def_id: String, level: int) -> void:
 	await _swap_scene(BATTLE)
 
 
+func start_fishing_battle(map_id: String) -> void:
+	_return_map = map_id
+	var def_id := EchoCatalog.random_water_echo_id()
+	var lv := _fishing_level_for_map(map_id)
+	var enemy := EchoCatalog.create_instance(def_id, lv)
+	GameState.mark_seen(def_id)
+	_battle_request = {
+		"kind": "fishing",
+		"enemies": [enemy],
+		"return_map": _return_map,
+		"can_flee": true,
+		"can_catch": true,
+		"level": lv,
+		"enemy_team_ids": [def_id],
+		"enemy_first_seen": not bool(GameState.seen.get(def_id, false)),
+		"enemy_was_caught": bool(GameState.caught.get(def_id, false)),
+	}
+	await _swap_scene(BATTLE)
+
+
+func _fishing_level_for_map(map_id: String) -> int:
+	match map_id:
+		"route1": return randi_range(3, 6)
+		"route2": return randi_range(7, 10)
+		"desert1", "desert2": return randi_range(9, 12)
+		"jungle1", "jungle2": return randi_range(12, 16)
+		_: return randi_range(5, 12)
+
+
+func start_ambush_chain(trainers: Array, map_id: String) -> void:
+	_return_map = map_id
+	await _launch_ambush_at(trainers, 0, map_id)
+
+
+func _launch_ambush_at(trainers: Array, index: int, map_id: String) -> void:
+	if index >= trainers.size():
+		return
+	var trainer: Dictionary = trainers[index]
+	var enemies: Array = []
+	var enemy_ids: Array[String] = []
+	for m in trainer.get("party", []):
+		var inst := EchoCatalog.create_instance(String(m.get("id", "")), int(m.get("level", 10)))
+		if inst:
+			enemies.append(inst)
+			enemy_ids.append(inst.definition_id)
+	_battle_request = {
+		"kind": "ambush",
+		"enemies": enemies,
+		"trainer_name": String(trainer.get("name", "Agent")),
+		"return_map": map_id,
+		"can_flee": false,
+		"can_catch": false,
+		"trainer_id": String(trainer.get("id", "")),
+		"reward": int(trainer.get("reward", 0)),
+		"win_line": String(trainer.get("win_line", "")),
+		"intro": trainer.get("intro", []),
+		"ambush_chain": trainers,
+		"ambush_index": index,
+		"level": int(trainer.get("party", [{}])[0].get("level", 10)) if trainer.get("party", []).size() > 0 else 10,
+		"enemy_team_ids": enemy_ids,
+	}
+	await _swap_scene(BATTLE)
+
+
 func start_trainer_battle(enemies: Array, trainer_name: String, return_map: String, extra: Dictionary = {}) -> void:
 	_return_map = return_map
 	var enemy_ids: Array[String] = []
@@ -75,6 +139,7 @@ func start_trainer_battle(enemies: Array, trainer_name: String, return_map: Stri
 		"return_map": return_map, "can_flee": false, "can_catch": false,
 		"trainer_id": String(extra.get("trainer_id", "")),
 		"reward": int(extra.get("reward", 0)),
+		"reward_items": extra.get("reward_items", {}),
 		"win_line": String(extra.get("win_line", "")),
 		"gym": bool(extra.get("gym", false)),
 		"ranger": bool(extra.get("ranger", false)),
@@ -126,6 +191,14 @@ func ensure_visible() -> void:
 
 func finish_battle(result: Dictionary) -> void:
 	var res := String(result.get("result", ""))
+	if res == "win" and _battle_request.get("ambush_chain") is Array:
+		var chain: Array = _battle_request.ambush_chain
+		var next_i := int(_battle_request.get("ambush_index", 0)) + 1
+		if next_i < chain.size():
+			var map_id := String(_battle_request.get("return_map", _return_map))
+			await _launch_ambush_at(chain, next_i, map_id)
+			return
+		GameState.flags["faction_ambush_route2"] = true
 	if GameState.play_mode == "versus" or String(_battle_request.get("kind", "")) == "versus":
 		GameState.play_mode = "solo"
 		await _swap_scene(TITLE)

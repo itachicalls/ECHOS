@@ -1,10 +1,11 @@
 extends CanvasLayer
 
 ## Global on-screen D-pad + A button for touch / mobile. Autoloaded so every scene
-## (overworld, battle, menus) can advance dialogue and move on phones.
+## can move and interact on phones without overlapping battle menus.
 
 const DIRS := ["move_up", "move_down", "move_left", "move_right"]
 
+var _root: Control
 var _dir_btns: Dictionary = {}
 var _a_btn: Button
 var _held: Dictionary = {}
@@ -15,16 +16,21 @@ func _ready() -> void:
 	if not TouchUtil.is_touch_ui_enabled():
 		queue_free()
 		return
+	_root = Control.new()
+	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_root)
 	_build()
 
 
-const KEY := 22
-const GAP := 2
+const KEY := 28
+const GAP := 3
+const A_W := 40
+const A_H := 30
+const GAME_H := 160.0
 
 
 func _build() -> void:
-	# Compact D-pad, lower-left — sized for comfortable mobile thumbs.
-	var cx := 24
+	var cx := 22
 	var cy := 118
 	_dir_btns["move_up"] = _dir_btn(Vector2(cx, cy - KEY - GAP), "up")
 	_dir_btns["move_left"] = _dir_btn(Vector2(cx - KEY - GAP, cy), "left")
@@ -34,17 +40,38 @@ func _build() -> void:
 		_held[a] = false
 
 	_a_btn = Button.new()
-	_a_btn.position = Vector2(200, 118)
-	_a_btn.size = Vector2(34, 26)
+	_a_btn.position = Vector2(78, 122)
+	_a_btn.size = Vector2(A_W, A_H)
 	_a_btn.custom_minimum_size = _a_btn.size
 	_a_btn.text = "A"
 	_a_btn.focus_mode = Control.FOCUS_NONE
-	_a_btn.add_theme_font_size_override("font_size", 11)
+	_a_btn.add_theme_font_size_override("font_size", 12)
 	_a_btn.add_theme_color_override("font_color", Color("eaf4ff"))
 	_style_btn(_a_btn)
 	_a_btn.button_down.connect(_on_a_down)
 	_a_btn.button_up.connect(_on_a_up)
-	add_child(_a_btn)
+	_root.add_child(_a_btn)
+
+
+func _apply_layout() -> void:
+	var m := TouchUtil.get_game_margins()
+	var cx := int(m.x) + 20
+	var cy := int(GAME_H - m.w) - 42
+	var up: Button = _dir_btns.get("move_up", null)
+	var left: Button = _dir_btns.get("move_left", null)
+	var right: Button = _dir_btns.get("move_right", null)
+	var down: Button = _dir_btns.get("move_down", null)
+	if up:
+		up.position = Vector2(cx, cy - KEY - GAP)
+	if left:
+		left.position = Vector2(cx - KEY - GAP, cy)
+	if right:
+		right.position = Vector2(cx + KEY + GAP, cy)
+	if down:
+		down.position = Vector2(cx, cy + KEY + GAP)
+	if _a_btn:
+		# A sits to the right of the D-pad, never overlapping the center cluster.
+		_a_btn.position = Vector2(cx + KEY + GAP + 14, cy - 6)
 
 
 func _on_a_down() -> void:
@@ -68,13 +95,13 @@ func _dir_btn(pos: Vector2, dir: String) -> Button:
 	b.focus_mode = Control.FOCUS_NONE
 	_style_btn(b)
 	b.draw.connect(_draw_arrow.bind(b, dir))
-	add_child(b)
+	_root.add_child(b)
 	return b
 
 
 func _draw_arrow(b: Button, dir: String) -> void:
 	var c := b.size * 0.5
-	var a := 6.0
+	var a := 8.0
 	var pts: PackedVector2Array
 	match dir:
 		"up":
@@ -94,9 +121,9 @@ func _dir_of(dir: String) -> String:
 
 
 func _style_btn(b: Button) -> void:
-	b.add_theme_stylebox_override("normal", _style(Color(0.11, 0.17, 0.24, 0.6), Color(0.55, 0.72, 0.9, 0.65)))
-	b.add_theme_stylebox_override("hover", _style(Color(0.16, 0.26, 0.35, 0.72), Color(0.7, 0.85, 1.0, 0.85)))
-	b.add_theme_stylebox_override("pressed", _style(Color(0.08, 0.36, 0.4, 0.85), Color("ffd166")))
+	b.add_theme_stylebox_override("normal", _style(Color(0.11, 0.17, 0.24, 0.72), Color(0.55, 0.72, 0.9, 0.75)))
+	b.add_theme_stylebox_override("hover", _style(Color(0.16, 0.26, 0.35, 0.82), Color(0.7, 0.85, 1.0, 0.9)))
+	b.add_theme_stylebox_override("pressed", _style(Color(0.08, 0.36, 0.4, 0.9), Color("ffd166")))
 	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 
 
@@ -105,7 +132,7 @@ func _style(bg: Color, border: Color) -> StyleBoxFlat:
 	sb.bg_color = bg
 	sb.border_color = border
 	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(4)
+	sb.set_corner_radius_all(5)
 	return sb
 
 
@@ -114,7 +141,13 @@ func _in_overworld() -> bool:
 
 
 func _process(_delta: float) -> void:
-	var show_pad := _in_overworld() and not EventBus.dialogue_active and not EventBus.menu_active
+	_apply_layout()
+	var show_pad := (
+		_in_overworld()
+		and not EventBus.dialogue_active
+		and not EventBus.menu_active
+		and not EventBus.battle_active
+	)
 	for a in DIRS:
 		var btn: Button = _dir_btns.get(a, null)
 		if btn == null:
@@ -129,9 +162,11 @@ func _process(_delta: float) -> void:
 			Input.action_release(a)
 			_held[a] = false
 			btn.queue_redraw()
-	# A stays visible except during menus and dialogue (dialogue has its own tap target).
 	if _a_btn:
-		_a_btn.visible = not EventBus.menu_active and not EventBus.dialogue_active
+		_a_btn.visible = (
+			show_pad
+			and not EventBus.battle_menu_active
+		)
 
 
 func _exit_tree() -> void:

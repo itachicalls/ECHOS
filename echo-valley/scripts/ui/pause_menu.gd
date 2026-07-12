@@ -3,12 +3,14 @@ extends CanvasLayer
 ## Overworld menu: Party / Bag / Journal. Toggle with the "menu" action.
 
 const RES_NAMES := ["Normal", "Fire", "Water", "Grass", "Rock", "Air", "Shadow"]
+const ItemIcon := preload("res://scripts/ui/item_icon.gd")
 const MENU_W := 228
 const MENU_H := 148
 const MENU_PAD := 5
 const TAB_BLOCK_H := 28
-const CONTENT_Y := 34
-const CONTENT_H := MENU_H - CONTENT_Y - MENU_PAD
+const SECTION_Y := 35
+const CONTENT_Y := 47
+const LIST_H := MENU_H - CONTENT_Y - MENU_PAD
 
 var _open: bool = false
 var _tab: String = "party"
@@ -16,6 +18,8 @@ var _root: Control
 var _content: VBoxContainer
 var _dim: ColorRect
 var _scroll: ScrollContainer
+var _section_title: Label
+var _list_frame: Panel
 
 
 func _ready() -> void:
@@ -55,6 +59,7 @@ func _build() -> void:
 	_dim = ColorRect.new()
 	_dim.color = Color(0, 0, 0, 0.55)
 	_dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_dim.gui_input.connect(_on_dim_input)
 	add_child(_dim)
 
 	var panel := Panel.new()
@@ -82,28 +87,53 @@ func _build() -> void:
 	for t in [["Journal", "journal"], ["Save", "save"], ["Close", "close"]]:
 		row2.add_child(_tab_button(String(t[0]), String(t[1])))
 
+	_section_title = Label.new()
+	_section_title.position = Vector2(MENU_PAD, SECTION_Y)
+	_section_title.size = Vector2(MENU_W - MENU_PAD * 2, 10)
+	_section_title.clip_text = true
+	_section_title.add_theme_font_size_override("font_size", 7)
+	_section_title.add_theme_color_override("font_color", Color("cfe8ff"))
+	panel.add_child(_section_title)
+
+	_list_frame = Panel.new()
+	_list_frame.position = Vector2(MENU_PAD, CONTENT_Y)
+	_list_frame.size = Vector2(MENU_W - MENU_PAD * 2, LIST_H)
+	_list_frame.clip_contents = true
+	_list_frame.add_theme_stylebox_override("panel", _list_frame_style())
+	panel.add_child(_list_frame)
+
 	_scroll = ScrollContainer.new()
-	_scroll.position = Vector2(MENU_PAD, CONTENT_Y)
-	_scroll.size = Vector2(MENU_W - MENU_PAD * 2 - 6, CONTENT_H)
+	_scroll.position = Vector2(3, 3)
+	_scroll.size = Vector2(MENU_W - MENU_PAD * 2 - 6, LIST_H - 6)
 	_scroll.clip_contents = true
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	panel.add_child(_scroll)
+	_list_frame.add_child(_scroll)
 
 	_content = VBoxContainer.new()
 	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_content.add_theme_constant_override("separation", 2)
+	_content.add_theme_constant_override("separation", 3)
 	_scroll.add_child(_content)
 
 	_root = panel
 
 
+func _on_dim_input(event: InputEvent) -> void:
+	if not _open:
+		return
+	if event is InputEventScreenTouch and event.pressed:
+		_hide_menu()
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_hide_menu()
+
+
 func _tab_button(text: String, tab_id: String) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(68, 12)
+	var touch := TouchUtil != null and TouchUtil.is_touch_ui_enabled()
+	b.custom_minimum_size = Vector2(68, 16 if touch else 12)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.add_theme_font_size_override("font_size", 6)
+	b.add_theme_font_size_override("font_size", 7 if touch else 6)
 	b.focus_mode = Control.FOCUS_NONE
 	b.clip_text = true
 	var sb := StyleBoxFlat.new()
@@ -122,6 +152,19 @@ func _tab_button(text: String, tab_id: String) -> Button:
 	b.add_theme_stylebox_override("pressed", pressed)
 	b.pressed.connect(_on_tab.bind(tab_id))
 	return b
+
+
+func _list_frame_style() -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color("152433")
+	sb.border_color = Color("3a556b")
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(3)
+	sb.content_margin_left = 2
+	sb.content_margin_right = 2
+	sb.content_margin_top = 2
+	sb.content_margin_bottom = 2
+	return sb
 
 
 func _style() -> StyleBoxFlat:
@@ -175,23 +218,24 @@ func _render() -> void:
 
 
 func _fix_scroll_size() -> void:
-	var w := mini(_scroll.size.x, CARD_W)
+	var w := maxf(8.0, _scroll.size.x - 2.0)
 	var h := _content.get_combined_minimum_size().y
 	_content.custom_minimum_size = Vector2(w, maxf(h, _scroll.size.y + 1))
 
 
 # ---------------------------------------------------------------- Party
 func _render_party() -> void:
-	_content.add_child(_label("ACTIVE PARTY (%d/%d)" % [GameState.party.size(), EchoTypes.PARTY_SIZE], 7, Color("cfe8ff")))
+	_section_title.text = "ACTIVE PARTY (%d/%d)" % [GameState.party.size(), EchoTypes.PARTY_SIZE]
 	if GameState.party.is_empty():
 		_content.add_child(_label("You have no %s yet." % GameStrings.CREATURE_PLURAL_LOWER, 8))
 		return
 	for i in GameState.party.size():
-		_content.add_child(_echo_card(GameState.party[i], true))
+		_content.add_child(_echo_card(GameState.party[i], true, i))
 
 
 func _render_box() -> void:
-	_content.add_child(_label("ECHO BOX — tap Team to add to party", 6, Color("cfe8ff")))
+	_section_title.text = "ECHO BOX"
+	_content.add_child(_label("Tap Team to add to party", 6, Color("a8c0d8")))
 	if GameState.pc_box.is_empty():
 		_content.add_child(_label("No %s in storage yet." % GameStrings.CREATURE_PLURAL_LOWER, 8))
 		_content.add_child(_label("Catch wild %s, then swap party members here." % GameStrings.CREATURE_PLURAL_LOWER, 6, Color("a8c0d8")))
@@ -200,12 +244,13 @@ func _render_box() -> void:
 		_content.add_child(_echo_card(GameState.pc_box[i], false))
 
 
-const CARD_W := 208
+const CARD_W := 200
 const CARD_H := 52
-const SWAP_SZ := Vector2(30, 14)
+const ACTION_W := 34
+const ACTION_H := 14
 
 
-func _echo_card(e: EchoInstance, in_party: bool) -> Control:
+func _echo_card(e: EchoInstance, in_party: bool, party_index: int = -1) -> Control:
 	var card := Panel.new()
 	card.custom_minimum_size = Vector2(CARD_W, CARD_H)
 	card.size = Vector2(CARD_W, CARD_H)
@@ -216,7 +261,8 @@ func _echo_card(e: EchoInstance, in_party: bool) -> Control:
 	const ICON_H := 40
 	const PAD := 3
 	var info_x := PAD + ICON_W + 3
-	var info_w := CARD_W - info_x - SWAP_SZ.x - PAD - 2
+	var actions_w := ACTION_W
+	var info_w := CARD_W - info_x - actions_w - PAD - 2
 
 	var def := e.get_definition()
 	if def and def.sprite_path != "":
@@ -233,7 +279,8 @@ func _echo_card(e: EchoInstance, in_party: bool) -> Control:
 	card.add_child(col)
 
 	var res_name: String = RES_NAMES[int(def.resonance)] if def else "Normal"
-	var title := _label("%s  Lv%d  [%s]" % [e.display_name(), e.level, res_name], 7)
+	var lead_tag := "  ★" if in_party and party_index == 0 else ""
+	var title := _label("%s  Lv%d  [%s]%s" % [e.display_name(), e.level, res_name, lead_tag], 7)
 	title.custom_minimum_size = Vector2(info_w, 9)
 	title.size = Vector2(info_w, 9)
 	title.clip_text = true
@@ -252,49 +299,62 @@ func _echo_card(e: EchoInstance, in_party: bool) -> Control:
 	moves.clip_text = true
 	col.add_child(moves)
 
-	var swap_label := "Box" if in_party else "Team"
-	var swap_enabled := GameState.party.size() > 1 if in_party else GameState.party.size() < EchoTypes.PARTY_SIZE
-	var swap_pos := Vector2(CARD_W - SWAP_SZ.x - PAD, 19)
-	_add_swap_button(card, swap_pos, swap_label, swap_enabled, func(): _do_swap(e, in_party))
+	if in_party and party_index == 0:
+		title.add_theme_color_override("font_color", Color("ffe08a"))
+
+	var actions := VBoxContainer.new()
+	actions.position = Vector2(CARD_W - ACTION_W - PAD, 8)
+	actions.size = Vector2(ACTION_W, CARD_H - 16)
+	actions.add_theme_constant_override("separation", 2)
+	card.add_child(actions)
+
+	if in_party:
+		if party_index == 0:
+			actions.add_child(_mini_button("LEAD", false, Color("ffe08a")))
+		elif not e.is_fainted():
+			actions.add_child(_mini_button("Lead", true, Color("f2f7ff"), func(): _set_lead(e)))
+		else:
+			actions.add_child(_mini_button("Lead", false, Color("6b7890")))
+		var box_enabled := GameState.party.size() > 1
+		actions.add_child(_mini_button("Box", box_enabled, Color("f2f7ff"), func(): _do_swap(e, true) if box_enabled else Callable()))
+	else:
+		var team_enabled := GameState.party.size() < EchoTypes.PARTY_SIZE
+		actions.add_child(_mini_button("Team", team_enabled, Color("f2f7ff"), func(): _do_swap(e, false) if team_enabled else Callable()))
 	return card
 
 
-func _add_swap_button(card: Control, pos: Vector2, text: String, enabled: bool, cb: Callable) -> void:
-	var slot := Panel.new()
-	slot.position = pos
-	slot.size = SWAP_SZ
-	slot.custom_minimum_size = SWAP_SZ
-	slot.clip_contents = true
-	var bg := Color("2b3f56") if enabled else Color("263140")
-	var border := Color("8ec8ff") if enabled else Color("3d5066")
-	slot.add_theme_stylebox_override("panel", _mini_btn_style(bg, border))
-
+func _mini_button(text: String, enabled: bool, col: Color, cb: Callable = Callable()) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.custom_minimum_size = Vector2(ACTION_W, ACTION_H)
+	b.size = Vector2(ACTION_W, ACTION_H)
+	b.focus_mode = Control.FOCUS_NONE
+	b.clip_text = true
+	b.disabled = not enabled
+	b.add_theme_font_size_override("font_size", 6)
+	b.add_theme_color_override("font_color", col)
+	b.add_theme_color_override("font_disabled_color", Color("6b7890"))
+	var sb := _mini_btn_style(Color("2b3f56") if enabled else Color("263140"), Color("8ec8ff") if enabled else Color("3d5066"))
+	b.add_theme_stylebox_override("normal", sb)
+	var hover := sb.duplicate()
+	hover.bg_color = Color("3d597a")
+	hover.border_color = Color("ffffff")
+	b.add_theme_stylebox_override("hover", hover)
+	var pressed := sb.duplicate()
+	pressed.bg_color = Color("1d2b3a")
+	pressed.border_color = Color("ffd166")
+	b.add_theme_stylebox_override("pressed", pressed)
+	b.add_theme_stylebox_override("disabled", sb)
+	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	if enabled and cb.is_valid():
-		var hit := Button.new()
-		hit.position = Vector2.ZERO
-		hit.size = SWAP_SZ
-		hit.custom_minimum_size = SWAP_SZ
-		hit.focus_mode = Control.FOCUS_NONE
-		hit.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
-		hit.add_theme_stylebox_override("hover", _mini_btn_style(Color("3d597a"), Color("ffffff")))
-		hit.add_theme_stylebox_override("pressed", _mini_btn_style(Color("1d2b3a"), Color("ffd166")))
-		hit.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-		hit.pressed.connect(cb)
-		slot.add_child(hit)
+		b.pressed.connect(cb)
+	return b
 
-	var lbl := Label.new()
-	lbl.text = text
-	lbl.position = Vector2.ZERO
-	lbl.size = SWAP_SZ
-	lbl.custom_minimum_size = SWAP_SZ
-	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	lbl.add_theme_font_size_override("font_size", 5)
-	lbl.add_theme_color_override("font_color", Color("f2f7ff") if enabled else Color("6b7890"))
-	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	lbl.clip_text = true
-	slot.add_child(lbl)
-	card.add_child(slot)
+
+func _set_lead(e: EchoInstance) -> void:
+	if GameState.set_party_lead(e):
+		EventBus.toast.emit("%s is now your lead %s!" % [e.display_name(), GameStrings.CREATURE_LOWER])
+		_render()
 
 
 func _mini_btn_style(bg: Color, border: Color) -> StyleBoxFlat:
@@ -303,7 +363,8 @@ func _mini_btn_style(bg: Color, border: Color) -> StyleBoxFlat:
 	sb.border_color = border
 	sb.set_border_width_all(1)
 	sb.set_corner_radius_all(3)
-	sb.set_content_margin_all(0)
+	sb.content_margin_top = 1
+	sb.content_margin_bottom = 1
 	return sb
 
 
@@ -391,46 +452,99 @@ func _xp_row(e: EchoInstance, bar_w: int = 68) -> Control:
 
 # ---------------------------------------------------------------- Bag
 func _render_bag() -> void:
-	_content.add_child(_label("ITEMS", 7, Color("cfe8ff")))
-	var names := { "echo_capsule": "Echo Capsule", "heart_salve": "Heart Salve" }
-	var descs := {
-		"echo_capsule": "Toss at a weakened wild Echo to catch it.",
-		"heart_salve": "Restores 60% HP to your most hurt Echo.",
-	}
+	_section_title.text = "ITEMS"
+	var list_w := int(_scroll.size.x) - 4
 	var any := false
 	for key in GameState.inventory.keys():
-		var count := int(GameState.inventory[key])
-		if count <= 0:
+		var item_id := String(key)
+		var count := int(GameState.inventory[item_id])
+		if count <= 0 or not ItemCatalog.has(item_id):
 			continue
 		any = true
-		var row := VBoxContainer.new()
-		row.add_theme_constant_override("separation", 1)
+		var row := Panel.new()
+		row.add_theme_stylebox_override("panel", _card_style())
+		row.custom_minimum_size = Vector2(list_w, 0)
+		var inner := VBoxContainer.new()
+		inner.position = Vector2(4, 3)
+		inner.size = Vector2(list_w - 8, 0)
+		inner.add_theme_constant_override("separation", 2)
+		row.add_child(inner)
 		var top := HBoxContainer.new()
-		top.add_theme_constant_override("separation", 6)
-		top.add_child(_label("%s  x%d" % [String(names.get(key, String(key).capitalize())), count], 8))
-		if key == "heart_salve":
-			var use := Button.new()
-			use.text = "Use"
-			use.add_theme_font_size_override("font_size", 7)
-			use.custom_minimum_size = Vector2(36, 13)
-			use.pressed.connect(_use_salve)
+		top.add_theme_constant_override("separation", 4)
+		var icon := ItemIcon.make(item_id, 12)
+		top.add_child(icon)
+		var name_lbl := _label("%s  x%d" % [ItemCatalog.display_name(item_id), count], 8)
+		name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		top.add_child(name_lbl)
+		if ItemCatalog.usable_in_field(item_id):
+			var use := _mini_button("Use", true, Color("f2f7ff"), _use_bag_item.bind(item_id))
 			top.add_child(use)
-		row.add_child(top)
-		var desc := _label(String(descs.get(key, "")), 6, Color("a8c0d8"))
+		inner.add_child(top)
+		var desc := _label(ItemCatalog.description(item_id), 6, Color("a8c0d8"))
 		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		desc.custom_minimum_size = Vector2(MENU_W - MENU_PAD * 2 - 12, 0)
-		row.add_child(desc)
+		desc.custom_minimum_size = Vector2(list_w - 12, 0)
+		inner.add_child(desc)
 		_content.add_child(row)
 	if not any:
 		_content.add_child(_label("Your bag is empty.", 8))
 	var foot := _label("Captured %s are stored in the Box tab." % GameStrings.CREATURE_PLURAL_LOWER, 6, Color("7c8aa0"))
 	foot.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	foot.custom_minimum_size = Vector2(MENU_W - MENU_PAD * 2 - 12, 0)
+	foot.custom_minimum_size = Vector2(list_w - 4, 0)
 	_content.add_child(foot)
 
 
+func _use_bag_item(item_id: String) -> void:
+	match item_id:
+		"heart_salve":
+			_use_salve()
+		"revive_capsule":
+			_use_revive_bag()
+		"evo_capsule":
+			_use_evo_bag()
+
+
+func _use_revive_bag() -> void:
+	if not ItemCatalog.consume_item("revive_capsule", 1):
+		return
+	var target: EchoInstance = null
+	for e in GameState.party:
+		if e and e.is_fainted():
+			target = e
+			break
+	if target == null:
+		ItemCatalog.add_item("revive_capsule", 1)
+		EventBus.toast.emit("No fainted %s to revive." % GameStrings.CREATURE_PLURAL_LOWER)
+		return
+	target.revive_from_capsule()
+	EventBus.toast.emit("%s was revived!" % target.display_name())
+	EventBus.party_changed.emit()
+	_render()
+
+
+func _use_evo_bag() -> void:
+	if not ItemCatalog.consume_item("evo_capsule", 1):
+		return
+	var target: EchoInstance = null
+	for e in GameState.party:
+		if e and e.can_evolve_now():
+			target = e
+			break
+	if target == null:
+		ItemCatalog.add_item("evo_capsule", 1)
+		EventBus.toast.emit("No %s is ready to evolve." % GameStrings.CREATURE_PLURAL_LOWER)
+		return
+	var evo := target.evolve_with_capsule()
+	if evo.is_empty():
+		ItemCatalog.add_item("evo_capsule", 1)
+		EventBus.toast.emit("Evolution failed.")
+		return
+	EventBus.toast.emit("%s evolved into %s!" % [String(evo.from), String(evo.to)])
+	EventBus.party_changed.emit()
+	_render()
+
+
 func _use_salve() -> void:
-	if int(GameState.inventory.get("heart_salve", 0)) <= 0:
+	if not ItemCatalog.consume_item("heart_salve", 1):
 		return
 	var target: EchoInstance = null
 	var worst := 2.0
@@ -454,6 +568,7 @@ func _use_salve() -> void:
 
 # ---------------------------------------------------------------- Journal
 func _render_journal() -> void:
+	_section_title.text = "JOURNAL"
 	var cur := StoryService.current_stage()
 	var head := Panel.new()
 	head.custom_minimum_size = Vector2(0, 40)

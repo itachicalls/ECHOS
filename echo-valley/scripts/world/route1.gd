@@ -42,6 +42,29 @@ func _build_map() -> void:
 
 	add_interact(Vector2i(9, 21), { "type": "sign", "text": "ROUTE 1 - wild Echoes live in the tall grass. North leads deeper into the valley." })
 
+	# Pond for fishing once you have a rod.
+	for x in range(2, 6):
+		for y in range(17, 20):
+			set_ground(Vector2i(x, y), Tiles.WATER)
+			block(Vector2i(x, y))
+	add_interact(Vector2i(3, 18), { "type": "sign", "text": "STILL POND - face the water and press J to fish. Only water Harmons bite here." })
+
+	# Pathkeeper Mara greets new keepers leaving town.
+	add_greeter(Vector2i(9, 20), "down", {
+		"id": "r1_mara",
+		"look": 1,
+		"gifts": { "echo_capsule": 5, "heart_salve": 3, "fishing_rod": 1 },
+		"lines": [
+			"Hold on, new keeper! Welcome to Route 1.",
+			"Harmona Valley is beautiful — but the tall grass hides wild Harmons that show no mercy.",
+			"Take these supplies. Fish the pond when you need water types, and tread carefully beyond the meadows.",
+		],
+		"repeat": [
+			"Still getting your bearings? Good.",
+			"The pond west of the path is calm — perfect for practicing with your rod.",
+		],
+	}, 5)
+
 	add_trainer(Vector2i(6, 11), "down", {
 		"id": "r1_finn", "name": "Camper Finn", "look": 4,
 		"party": [{ "id": "pebblit", "level": 5 }, { "id": "zephyr", "level": 6 }],

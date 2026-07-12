@@ -4,6 +4,9 @@ extends Control
 const VIEW_W := 240
 const VIEW_H := 160
 const HORIZON := 74
+const C_ARENA_BLUE := Color("4a9eff")
+const C_ARENA_PURPLE := Color("c49bff")
+const ARENA_FLOOR_Y := 86
 
 var _theme := "meadow"
 var _time := 0.0
@@ -32,7 +35,11 @@ func _seed_stars(count: int) -> void:
 
 
 func configure(map_id: String, is_ranger: bool, kind: String) -> void:
-	if is_ranger:
+	if kind == "versus":
+		_theme = "arena"
+	elif kind == "fishing":
+		_theme = "fishing"
+	elif is_ranger:
 		_theme = "ranger"
 	elif map_id.begins_with("desert"):
 		_theme = "desert"
@@ -42,8 +49,6 @@ func configure(map_id: String, is_ranger: bool, kind: String) -> void:
 		_theme = "cave"
 	elif map_id == "route2":
 		_theme = "wood"
-	elif kind == "versus":
-		_theme = "arena"
 	else:
 		_theme = "meadow"
 	queue_redraw()
@@ -65,6 +70,7 @@ func _draw() -> void:
 		"wood": _draw_wood()
 		"ranger": _draw_ranger()
 		"arena": _draw_arena()
+		"fishing": _draw_fishing()
 		_: _draw_meadow()
 	_vignette()
 
@@ -196,22 +202,122 @@ func _draw_ranger() -> void:
 
 
 func _draw_arena() -> void:
-	_paint_sky(func(t): return Color("1a2848").lerp(Color("5070a8"), t))
-	# Stadium rim lights.
-	for i in 6:
-		draw_rect(Rect2(8 + i * 38, 6, 6, 2), Color("fff0b0", 0.35 + sin(_time * 4 + i) * 0.15))
-	# Crowd silhouettes.
-	for i in 20:
-		var cx := i * 12
-		draw_rect(Rect2(cx, 52 + (i % 3), 8, 6), Color("1a2038", 0.6))
-	# Battle mat.
-	draw_rect(Rect2(0, 86, VIEW_W, 74), Color("3a4050"))
-	for x in range(0, VIEW_W, 12):
-		draw_line(Vector2(x, 86), Vector2(x, VIEW_H), Color("2a3040", 0.5))
-	for y in range(86, VIEW_H, 12):
-		draw_line(Vector2(0, y), Vector2(VIEW_W, y), Color("2a3040", 0.5))
-	draw_rect(Rect2(16, 92, VIEW_W - 32, 2), Color("5ad4c8", 0.4))
-	draw_rect(Rect2(16, VIEW_H - 18, VIEW_W - 32, 2), Color("5ad4c8", 0.4))
+	# Rich showdown arena — matches the versus mode-select screen aesthetic.
+	for y in VIEW_H:
+		var t := float(y) / float(VIEW_H - 1)
+		draw_rect(Rect2(0, y, VIEW_W, 1), Color("0a0e20").lerp(Color("161028"), t))
+
+	var sway := sin(_time * 0.8) * 4.0
+	var top_x := 132.0 + sway
+	var bot_x := 108.0 - sway
+
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(0, 0), Vector2(top_x, 0), Vector2(bot_x, VIEW_H), Vector2(0, VIEW_H),
+	]), Color(C_ARENA_BLUE.r, C_ARENA_BLUE.g, C_ARENA_BLUE.b, 0.16))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(top_x, 0), Vector2(VIEW_W, 0), Vector2(VIEW_W, VIEW_H), Vector2(bot_x, VIEW_H),
+	]), Color(C_ARENA_PURPLE.r, C_ARENA_PURPLE.g, C_ARENA_PURPLE.b, 0.16))
+
+	# Stadium canopy + rim lights.
+	draw_rect(Rect2(0, 0, VIEW_W, 14), Color("080c18", 0.85))
+	for i in 7:
+		var lx := 10 + i * 32
+		var flick := 0.35 + sin(_time * 4.0 + i * 1.1) * 0.18
+		draw_rect(Rect2(lx, 4, 8, 2), Color("fff0b0", flick))
+		draw_rect(Rect2(lx + 2, 6, 4, 1), Color("ffe08a", flick * 0.7))
+
+	# Layered crowd silhouettes.
+	for row in 3:
+		var cy := 38 + row * 8
+		var alpha := 0.35 + row * 0.12
+		for i in 18:
+			var cx := i * 13 + (row * 5)
+			var h := 5 + (i + row) % 3
+			draw_rect(Rect2(cx, cy, 9, h), Color("1a2038", alpha))
+
+	_arena_spotlight(Vector2(18, -6), Vector2(58, 82), C_ARENA_BLUE)
+	_arena_spotlight(Vector2(VIEW_W - 18, -6), Vector2(182, 48), C_ARENA_PURPLE)
+
+	var center := Vector2(120, 54)
+	var pulse := 0.5 + sin(_time * 2.2) * 0.15
+	for r in range(32, 0, -4):
+		var a := (1.0 - float(r) / 32.0) * 0.08 * pulse
+		draw_circle(center, float(r), Color("ffe0a0", a))
+
+	_arena_seam(top_x, bot_x)
+	_arena_motes(true, C_ARENA_BLUE)
+	_arena_motes(false, C_ARENA_PURPLE)
+
+	draw_rect(Rect2(0, ARENA_FLOOR_Y, VIEW_W, VIEW_H - ARENA_FLOOR_Y), Color("0c0f1e"))
+	draw_rect(Rect2(0, ARENA_FLOOR_Y, VIEW_W, 2), Color("3a4060"))
+	draw_rect(Rect2(0, ARENA_FLOOR_Y + 2, VIEW_W, 1), Color("5ad4c8", 0.35))
+
+	# Battle ring + side glows under the Harmon positions.
+	draw_arc(Vector2(120, 94), 68.0, PI * 0.12, PI * 0.88, 28, Color("5ad4c8", 0.3), 1.5, true)
+	draw_arc(Vector2(120, 94), 54.0, PI * 0.15, PI * 0.85, 24, Color("ffe08a", 0.18), 1.0, true)
+	_arena_floor_glow(Vector2(48, 96), C_ARENA_BLUE)
+	_arena_floor_glow(Vector2(192, 58), C_ARENA_PURPLE)
+
+	_draw_battle_floor()
+
+
+func _arena_spotlight(from: Vector2, to: Vector2, col: Color) -> void:
+	var dir := (to - from).normalized()
+	var perp := Vector2(-dir.y, dir.x)
+	var flick := 0.05 + 0.02 * sin(_time * 3.0 + from.x)
+	draw_colored_polygon(PackedVector2Array([
+		from - perp * 3.0, from + perp * 3.0,
+		to + perp * 24.0, to - perp * 24.0,
+	]), Color(col.r, col.g, col.b, flick))
+
+
+func _arena_seam(top_x: float, bot_x: float) -> void:
+	var segs := 10
+	var prev := Vector2(top_x, 0)
+	var rng := int(_time * 20.0)
+	for i in range(1, segs + 1):
+		var ty := float(i) / float(segs)
+		var base_x := lerpf(top_x, bot_x, ty)
+		rng = (rng * 1103515245 + 12345) & 0x7fffffff
+		var jitter := float(rng % 11) - 5.0
+		var p := Vector2(base_x + jitter, ty * VIEW_H)
+		var a := 0.25 + 0.2 * sin(_time * 6.0 + i)
+		draw_line(prev, p, Color("bfe0ff", a), 1.0)
+		prev = p
+
+
+func _arena_motes(left_side: bool, col: Color) -> void:
+	var rng := 131 if left_side else 977
+	for i in 10:
+		rng = (rng * 1103515245 + 12345) & 0x7fffffff
+		var phase := float(rng % 100) / 100.0
+		var x0 := (10.0 + phase * 90.0) if left_side else (140.0 + phase * 90.0)
+		var y := fmod(_time * (10.0 + phase * 8.0) + phase * float(ARENA_FLOOR_Y), float(ARENA_FLOOR_Y))
+		var a := 0.2 + 0.2 * sin(_time * 2.0 + i)
+		draw_rect(Rect2(x0 + sin(_time + i) * 3.0, ARENA_FLOOR_Y - y, 1, 1), Color(col.r, col.g, col.b, a))
+
+
+func _arena_floor_glow(feet: Vector2, col: Color) -> void:
+	for k in 3:
+		var rx := 22.0 - k * 5.0
+		var a := 0.14 + 0.05 * sin(_time * 3.0 + k)
+		var pts := PackedVector2Array()
+		for i in 18:
+			var ang := float(i) / 18.0 * TAU
+			pts.append(feet + Vector2(cos(ang) * rx, sin(ang) * rx * 0.28))
+		draw_colored_polygon(pts, Color(col.r, col.g, col.b, a))
+
+
+func _draw_fishing() -> void:
+	_paint_sky(func(t): return Color("4a90d8").lerp(Color("8ec8e8"), t))
+	draw_rect(Rect2(0, 58, VIEW_W, VIEW_H - 58), Color("2a6888"))
+	for y in range(58, VIEW_H, 3):
+		var w := sin(_time * 2.0 + y * 0.15) * 1.5
+		draw_rect(Rect2(0, y + int(w), VIEW_W, 2), Color("3a88a8", 0.45))
+	draw_rect(Rect2(0, 54, VIEW_W, 6), Color("5a9a58"))
+	for i in 5:
+		draw_rect(Rect2(18 + i * 38, 50 + (i % 2), 10, 4), Color("4a8a48"))
+	_draw_battle_floor()
 
 
 # ---- shared painters -------------------------------------------------------

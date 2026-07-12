@@ -1,0 +1,38 @@
+{
+  "echo_capsule": {
+    "name": "Echo Capsule",
+    "desc": "Toss at a weakened wild Harmon to catch it.",
+    "category": "capture",
+    "battle": true,
+    "field": false
+  },
+  "heart_salve": {
+    "name": "Heart Salve",
+    "desc": "Restores 60% HP to one Harmon.",
+    "category": "heal",
+    "battle": true,
+    "field": true
+  },
+  "fishing_rod": {
+    "name": "Fishing Rod",
+    "desc": "Cast at water to fish up wild water Harmons.",
+    "category": "key",
+    "battle": false,
+    "field": false,
+    "key_item": true
+  },
+  "revive_capsule": {
+    "name": "Revive Capsule",
+    "desc": "Revives a fainted Harmon with half its HP.",
+    "category": "revive",
+    "battle": true,
+    "field": true
+  },
+  "evo_capsule": {
+    "name": "Evo Capsule",
+    "desc": "Triggers evolution in a Harmon that is ready.",
+    "category": "evolve",
+    "battle": false,
+    "field": true
+  }
+}
