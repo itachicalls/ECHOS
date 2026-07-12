@@ -12,6 +12,13 @@ const MAPS := {
 	"jungle3": "res://scenes/world/jungle3.tscn",
 	"cave1": "res://scenes/world/cave1.tscn",
 	"cave2": "res://scenes/world/cave2.tscn",
+	# --- expansion: Tidecross coast chain ---
+	"beach1": "res://scenes/world/beach1.tscn",
+	"tide_town": "res://scenes/world/tide_town.tscn",
+	"storm1": "res://scenes/world/storm1.tscn",
+	"psychic_town": "res://scenes/world/psychic_town.tscn",
+	"psychic1": "res://scenes/world/psychic1.tscn",
+	"graveyard1": "res://scenes/world/graveyard1.tscn",
 }
 const TITLE := "res://scenes/boot/title.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -19,6 +26,7 @@ const VERSUS_SETUP := "res://scenes/boot/versus_setup.tscn"
 
 var _battle_request: Dictionary = {}
 var _return_map: String = "route1"
+var _ambush_complete_flag: String = "faction_ambush_route2"
 var _busy: bool = false
 var _transition_queue: Array[Callable] = []
 var _draining_queue: bool = false
@@ -105,11 +113,16 @@ func _fishing_level_for_map(map_id: String) -> int:
 		"route2": return randi_range(7, 10)
 		"desert1", "desert2": return randi_range(9, 12)
 		"jungle1", "jungle2": return randi_range(12, 16)
+		"beach1", "tide_town": return randi_range(9, 14)
+		"storm1": return randi_range(16, 22)
+		"psychic1", "psychic_town": return randi_range(26, 32)
+		"graveyard1": return randi_range(36, 44)
 		_: return randi_range(5, 12)
 
 
-func start_ambush_chain(trainers: Array, map_id: String) -> void:
+func start_ambush_chain(trainers: Array, map_id: String, complete_flag: String = "faction_ambush_route2") -> void:
 	_return_map = map_id
+	_ambush_complete_flag = complete_flag
 	_run_transition(_launch_ambush_at.bind(trainers, 0, map_id))
 
 
@@ -223,7 +236,7 @@ func _finish_battle_async(result: Dictionary) -> void:
 			var map_id := String(_battle_request.get("return_map", _return_map))
 			await _launch_ambush_at(chain, next_i, map_id)
 			return
-		GameState.flags["faction_ambush_route2"] = true
+		GameState.flags[_ambush_complete_flag] = true
 	if GameState.play_mode == "versus" or String(_battle_request.get("kind", "")) == "versus":
 		GameState.play_mode = "solo"
 		await _swap_scene(TITLE)

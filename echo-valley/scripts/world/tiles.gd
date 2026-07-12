@@ -74,6 +74,17 @@ const TRAINER_PATHS := [
 	"res://assets/sprites/npc/npc_sand.png",
 	"res://assets/sprites/npc/npc_steel.png",
 	"res://assets/sprites/npc/npc_violet.png",
+	# expansion trainer variants (indices 10-19)
+	"res://assets/sprites/npc/npc_tide.png",
+	"res://assets/sprites/npc/npc_storm.png",
+	"res://assets/sprites/npc/npc_psy.png",
+	"res://assets/sprites/npc/npc_grave.png",
+	"res://assets/sprites/npc/npc_ember.png",
+	"res://assets/sprites/npc/npc_frost.png",
+	"res://assets/sprites/npc/npc_jade.png",
+	"res://assets/sprites/npc/npc_crimson.png",
+	"res://assets/sprites/npc/npc_dusk.png",
+	"res://assets/sprites/npc/npc_coral.png",
 ]
 
 const NURSE := "res://assets/sprites/npc/nurse.png"
@@ -83,6 +94,10 @@ const ECHO_CAPSULE := "res://assets/kenney/items/echo_capsule.png"
 const HEART_SALVE := "res://assets/kenney/items/heart_salve.png"
 const SPIKES := "res://assets/kenney/props/spikes.png"
 const THORNS := "res://assets/kenney/props/thorns.png"
+# expansion region props
+const TOMBSTONE := "res://assets/kenney/props/tombstone.png"
+const PALM := "res://assets/kenney/props/palm.png"
+const CRYSTAL := "res://assets/kenney/props/crystal.png"
 
 
 static func sheet_count() -> int:

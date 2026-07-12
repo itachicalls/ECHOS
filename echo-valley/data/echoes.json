@@ -1219,6 +1219,1366 @@
     "evolve_to": "", "evolve_level": 0, "catch_rate": 0.04,
     "sprite": "res://assets/echoes/mortifume.png",
     "description": "A void-touched mortifume that swallows light."
+  },
+  {
+    "id": "dripling", "name": "Dripling", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "splooze", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/dripling.png",
+    "description": "A dewy dripling that plays in the shallows."
+  },
+  {
+    "id": "splooze", "name": "Splooze", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "tidalisk", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/splooze.png",
+    "description": "A tidal splooze that rides the coastal current."
+  },
+  {
+    "id": "tidalisk", "name": "Tidalisk", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/tidalisk.png",
+    "description": "A deep tidalisk whose song stirs the sea."
+  },
+  {
+    "id": "shellby", "name": "Shellby", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "caraspine", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/shellby.png",
+    "description": "A dewy shellby that plays in the shallows."
+  },
+  {
+    "id": "caraspine", "name": "Caraspine", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "fortclaw", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/caraspine.png",
+    "description": "A tidal caraspine that rides the coastal current."
+  },
+  {
+    "id": "fortclaw", "name": "Fortclaw", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/fortclaw.png",
+    "description": "A deep fortclaw whose song stirs the sea."
+  },
+  {
+    "id": "pearlet", "name": "Pearlet", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "nacreef", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/pearlet.png",
+    "description": "A dewy pearlet that plays in the shallows."
+  },
+  {
+    "id": "nacreef", "name": "Nacreef", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "abysshell", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/nacreef.png",
+    "description": "A tidal nacreef that rides the coastal current."
+  },
+  {
+    "id": "abysshell", "name": "Abysshell", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/abysshell.png",
+    "description": "A deep abysshell whose song stirs the sea."
+  },
+  {
+    "id": "fintot", "name": "Fintot", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "sharkling", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/fintot.png",
+    "description": "A dewy fintot that plays in the shallows."
+  },
+  {
+    "id": "sharkling", "name": "Sharkling", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "megalodrift", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/sharkling.png",
+    "description": "A tidal sharkling that rides the coastal current."
+  },
+  {
+    "id": "megalodrift", "name": "Megalodrift", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/megalodrift.png",
+    "description": "A deep megalodrift whose song stirs the sea."
+  },
+  {
+    "id": "coraline", "name": "Coraline", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "reefspire", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/coraline.png",
+    "description": "A dewy coraline that plays in the shallows."
+  },
+  {
+    "id": "reefspire", "name": "Reefspire", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "atollus", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/reefspire.png",
+    "description": "A tidal reefspire that rides the coastal current."
+  },
+  {
+    "id": "atollus", "name": "Atollus", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/atollus.png",
+    "description": "A deep atollus whose song stirs the sea."
+  },
+  {
+    "id": "mistkoi", "name": "Mistkoi", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "rainkoi", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/mistkoi.png",
+    "description": "A dewy mistkoi that plays in the shallows."
+  },
+  {
+    "id": "rainkoi", "name": "Rainkoi", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "monsoong", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/rainkoi.png",
+    "description": "A tidal rainkoi that rides the coastal current."
+  },
+  {
+    "id": "monsoong", "name": "Monsoong", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/monsoong.png",
+    "description": "A deep monsoong whose song stirs the sea."
+  },
+  {
+    "id": "puddlepaw", "name": "Puddlepaw", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "ottersurge", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/puddlepaw.png",
+    "description": "A dewy puddlepaw that plays in the shallows."
+  },
+  {
+    "id": "ottersurge", "name": "Ottersurge", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "hydranox", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/ottersurge.png",
+    "description": "A tidal ottersurge that rides the coastal current."
+  },
+  {
+    "id": "hydranox", "name": "Hydranox", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/hydranox.png",
+    "description": "A deep hydranox whose song stirs the sea."
+  },
+  {
+    "id": "kelplet", "name": "Kelplet", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "weedwhirl", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/kelplet.png",
+    "description": "A dewy kelplet that plays in the shallows."
+  },
+  {
+    "id": "weedwhirl", "name": "Weedwhirl", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "sargasso", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/weedwhirl.png",
+    "description": "A tidal weedwhirl that rides the coastal current."
+  },
+  {
+    "id": "sargasso", "name": "Sargasso", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/sargasso.png",
+    "description": "A deep sargasso whose song stirs the sea."
+  },
+  {
+    "id": "frostdew", "name": "Frostdew", "resonance": "water",
+    "base_stats": { "hp": 52, "power": 46, "guard": 52, "swift": 40 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":5,"chime":"aqua_ring"}, {"level":9,"chime":"ice_fang"}, {"level":13,"chime":"torrent_wave"} ],
+    "evolve_to": "snowmelt", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/frostdew.png",
+    "description": "A dewy frostdew that plays in the shallows."
+  },
+  {
+    "id": "snowmelt", "name": "Snowmelt", "resonance": "water",
+    "base_stats": { "hp": 70, "power": 62, "guard": 70, "swift": 54 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"aqua_jet"}, {"level":1,"chime":"ice_fang"}, {"level":16,"chime":"torrent_wave"}, {"level":22,"chime":"harden"}, {"level":28,"chime":"geyser_blast"} ],
+    "evolve_to": "glacierra", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/snowmelt.png",
+    "description": "A tidal snowmelt that rides the coastal current."
+  },
+  {
+    "id": "glacierra", "name": "Glacierra", "resonance": "water",
+    "base_stats": { "hp": 93, "power": 82, "guard": 93, "swift": 71 },
+    "learnset": [ {"level":1,"chime":"ice_fang"}, {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":32,"chime":"aqua_ring"}, {"level":36,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/glacierra.png",
+    "description": "A deep glacierra whose song stirs the sea."
+  },
+  {
+    "id": "sparklit", "name": "Sparklit", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "voltwing", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/sparklit.png",
+    "description": "A crackling sparklit buzzing with static."
+  },
+  {
+    "id": "voltwing", "name": "Voltwing", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "stormraptor", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/voltwing.png",
+    "description": "A swift voltwing that races the storm front."
+  },
+  {
+    "id": "stormraptor", "name": "Stormraptor", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/stormraptor.png",
+    "description": "A thunder-born stormraptor that walks the gale."
+  },
+  {
+    "id": "buzzfly", "name": "Buzzfly", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "zaptenna", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/buzzfly.png",
+    "description": "A crackling buzzfly buzzing with static."
+  },
+  {
+    "id": "zaptenna", "name": "Zaptenna", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "tesloom", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/zaptenna.png",
+    "description": "A swift zaptenna that races the storm front."
+  },
+  {
+    "id": "tesloom", "name": "Tesloom", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/tesloom.png",
+    "description": "A thunder-born tesloom that walks the gale."
+  },
+  {
+    "id": "wattpup", "name": "Wattpup", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "amperewolf", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/wattpup.png",
+    "description": "A crackling wattpup buzzing with static."
+  },
+  {
+    "id": "amperewolf", "name": "Amperewolf", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "voltcanine", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/amperewolf.png",
+    "description": "A swift amperewolf that races the storm front."
+  },
+  {
+    "id": "voltcanine", "name": "Voltcanine", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/voltcanine.png",
+    "description": "A thunder-born voltcanine that walks the gale."
+  },
+  {
+    "id": "statikit", "name": "Statikit", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "chargewisp", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/statikit.png",
+    "description": "A crackling statikit buzzing with static."
+  },
+  {
+    "id": "chargewisp", "name": "Chargewisp", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "plasmind", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/chargewisp.png",
+    "description": "A swift chargewisp that races the storm front."
+  },
+  {
+    "id": "plasmind", "name": "Plasmind", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/plasmind.png",
+    "description": "A thunder-born plasmind that walks the gale."
+  },
+  {
+    "id": "kiteon", "name": "Kiteon", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "glidewatt", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/kiteon.png",
+    "description": "A crackling kiteon buzzing with static."
+  },
+  {
+    "id": "glidewatt", "name": "Glidewatt", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "thunderoc", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/glidewatt.png",
+    "description": "A swift glidewatt that races the storm front."
+  },
+  {
+    "id": "thunderoc", "name": "Thunderoc", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/thunderoc.png",
+    "description": "A thunder-born thunderoc that walks the gale."
+  },
+  {
+    "id": "ionling", "name": "Ionling", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "dynamo", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/ionling.png",
+    "description": "A crackling ionling buzzing with static."
+  },
+  {
+    "id": "dynamo", "name": "Dynamo", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "galvanix", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/dynamo.png",
+    "description": "A swift dynamo that races the storm front."
+  },
+  {
+    "id": "galvanix", "name": "Galvanix", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/galvanix.png",
+    "description": "A thunder-born galvanix that walks the gale."
+  },
+  {
+    "id": "breezik", "name": "Breezik", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "squallow", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/breezik.png",
+    "description": "A crackling breezik buzzing with static."
+  },
+  {
+    "id": "squallow", "name": "Squallow", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "cyclonimbus", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/squallow.png",
+    "description": "A swift squallow that races the storm front."
+  },
+  {
+    "id": "cyclonimbus", "name": "Cyclonimbus", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/cyclonimbus.png",
+    "description": "A thunder-born cyclonimbus that walks the gale."
+  },
+  {
+    "id": "feathervolt", "name": "Feathervolt", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "arcwing", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/feathervolt.png",
+    "description": "A crackling feathervolt buzzing with static."
+  },
+  {
+    "id": "arcwing", "name": "Arcwing", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "skytalon", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/arcwing.png",
+    "description": "A swift arcwing that races the storm front."
+  },
+  {
+    "id": "skytalon", "name": "Skytalon", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/skytalon.png",
+    "description": "A thunder-born skytalon that walks the gale."
+  },
+  {
+    "id": "zephyrl", "name": "Zephyrl", "resonance": "air",
+    "base_stats": { "hp": 42, "power": 52, "guard": 38, "swift": 60 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":5,"chime":"quick_jab"}, {"level":9,"chime":"shock_wave"}, {"level":13,"chime":"thunder_bolt"} ],
+    "evolve_to": "galewhisk", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/zephyrl.png",
+    "description": "A crackling zephyrl buzzing with static."
+  },
+  {
+    "id": "galewhisk", "name": "Galewhisk", "resonance": "air",
+    "base_stats": { "hp": 57, "power": 70, "guard": 51, "swift": 81 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"spark_bite"}, {"level":1,"chime":"shock_wave"}, {"level":16,"chime":"thunder_bolt"}, {"level":22,"chime":"galvanize"}, {"level":28,"chime":"discharge"} ],
+    "evolve_to": "tempestwing", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/galewhisk.png",
+    "description": "A swift galewhisk that races the storm front."
+  },
+  {
+    "id": "tempestwing", "name": "Tempestwing", "resonance": "air",
+    "base_stats": { "hp": 75, "power": 93, "guard": 68, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shock_wave"}, {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":32,"chime":"quick_jab"}, {"level":36,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/tempestwing.png",
+    "description": "A thunder-born tempestwing that walks the gale."
+  },
+  {
+    "id": "psybud", "name": "Psybud", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "mesmind", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/psybud.png",
+    "description": "A hushed psybud with softly glowing eyes."
+  },
+  {
+    "id": "mesmind", "name": "Mesmind", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "hypnaura", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/mesmind.png",
+    "description": "A shrouded mesmind woven from twilight."
+  },
+  {
+    "id": "hypnaura", "name": "Hypnaura", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/hypnaura.png",
+    "description": "A void-touched hypnaura that drinks the light."
+  },
+  {
+    "id": "dreamlet", "name": "Dreamlet", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "lullabye", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/dreamlet.png",
+    "description": "A hushed dreamlet with softly glowing eyes."
+  },
+  {
+    "id": "lullabye", "name": "Lullabye", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "somnarch", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/lullabye.png",
+    "description": "A shrouded lullabye woven from twilight."
+  },
+  {
+    "id": "somnarch", "name": "Somnarch", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/somnarch.png",
+    "description": "A void-touched somnarch that drinks the light."
+  },
+  {
+    "id": "runelet", "name": "Runelet", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "sigilix", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/runelet.png",
+    "description": "A hushed runelet with softly glowing eyes."
+  },
+  {
+    "id": "sigilix", "name": "Sigilix", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "arcanexus", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/sigilix.png",
+    "description": "A shrouded sigilix woven from twilight."
+  },
+  {
+    "id": "arcanexus", "name": "Arcanexus", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/arcanexus.png",
+    "description": "A void-touched arcanexus that drinks the light."
+  },
+  {
+    "id": "orbitot", "name": "Orbitot", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "astralynx", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/orbitot.png",
+    "description": "A hushed orbitot with softly glowing eyes."
+  },
+  {
+    "id": "astralynx", "name": "Astralynx", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "cosmindra", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/astralynx.png",
+    "description": "A shrouded astralynx woven from twilight."
+  },
+  {
+    "id": "cosmindra", "name": "Cosmindra", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/cosmindra.png",
+    "description": "A void-touched cosmindra that drinks the light."
+  },
+  {
+    "id": "blinkit", "name": "Blinkit", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "warppaw", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/blinkit.png",
+    "description": "A hushed blinkit with softly glowing eyes."
+  },
+  {
+    "id": "warppaw", "name": "Warppaw", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "telephase", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/warppaw.png",
+    "description": "A shrouded warppaw woven from twilight."
+  },
+  {
+    "id": "telephase", "name": "Telephase", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/telephase.png",
+    "description": "A void-touched telephase that drinks the light."
+  },
+  {
+    "id": "willowick", "name": "Willowick", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "foxfyre", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/willowick.png",
+    "description": "A hushed willowick with softly glowing eyes."
+  },
+  {
+    "id": "foxfyre", "name": "Foxfyre", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "mindflare", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/foxfyre.png",
+    "description": "A shrouded foxfyre woven from twilight."
+  },
+  {
+    "id": "mindflare", "name": "Mindflare", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/mindflare.png",
+    "description": "A void-touched mindflare that drinks the light."
+  },
+  {
+    "id": "tombkin", "name": "Tombkin", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "cryptid", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/tombkin.png",
+    "description": "A hushed tombkin with softly glowing eyes."
+  },
+  {
+    "id": "cryptid", "name": "Cryptid", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "sarcolord", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/cryptid.png",
+    "description": "A shrouded cryptid woven from twilight."
+  },
+  {
+    "id": "sarcolord", "name": "Sarcolord", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/sarcolord.png",
+    "description": "A void-touched sarcolord that drinks the light."
+  },
+  {
+    "id": "boneling", "name": "Boneling", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "rattlejaw", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/boneling.png",
+    "description": "A hushed boneling with softly glowing eyes."
+  },
+  {
+    "id": "rattlejaw", "name": "Rattlejaw", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "ossuary", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/rattlejaw.png",
+    "description": "A shrouded rattlejaw woven from twilight."
+  },
+  {
+    "id": "ossuary", "name": "Ossuary", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/ossuary.png",
+    "description": "A void-touched ossuary that drinks the light."
+  },
+  {
+    "id": "wispire", "name": "Wispire", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "shroudmoth", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/wispire.png",
+    "description": "A hushed wispire with softly glowing eyes."
+  },
+  {
+    "id": "shroudmoth", "name": "Shroudmoth", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "reaperwing", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/shroudmoth.png",
+    "description": "A shrouded shroudmoth woven from twilight."
+  },
+  {
+    "id": "reaperwing", "name": "Reaperwing", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/reaperwing.png",
+    "description": "A void-touched reaperwing that drinks the light."
+  },
+  {
+    "id": "gravemoss", "name": "Gravemoss", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "wraithvine", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/gravemoss.png",
+    "description": "A hushed gravemoss with softly glowing eyes."
+  },
+  {
+    "id": "wraithvine", "name": "Wraithvine", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "tombthorn", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/wraithvine.png",
+    "description": "A shrouded wraithvine woven from twilight."
+  },
+  {
+    "id": "tombthorn", "name": "Tombthorn", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/tombthorn.png",
+    "description": "A void-touched tombthorn that drinks the light."
+  },
+  {
+    "id": "candleflit", "name": "Candleflit", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "lanternox", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/candleflit.png",
+    "description": "A hushed candleflit with softly glowing eyes."
+  },
+  {
+    "id": "lanternox", "name": "Lanternox", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "pyrewraith", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/lanternox.png",
+    "description": "A shrouded lanternox woven from twilight."
+  },
+  {
+    "id": "pyrewraith", "name": "Pyrewraith", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/pyrewraith.png",
+    "description": "A void-touched pyrewraith that drinks the light."
+  },
+  {
+    "id": "ghastling", "name": "Ghastling", "resonance": "shadow",
+    "base_stats": { "hp": 44, "power": 56, "guard": 40, "swift": 52 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":5,"chime":"spirit_drain"}, {"level":9,"chime":"hex_bolt"}, {"level":13,"chime":"shadow_claw"} ],
+    "evolve_to": "poltergeist", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/ghastling.png",
+    "description": "A hushed ghastling with softly glowing eyes."
+  },
+  {
+    "id": "poltergeist", "name": "Poltergeist", "resonance": "shadow",
+    "base_stats": { "hp": 59, "power": 76, "guard": 54, "swift": 70 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"shade_nip"}, {"level":1,"chime":"hex_bolt"}, {"level":16,"chime":"shadow_claw"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"doom_beam"} ],
+    "evolve_to": "banshee", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/poltergeist.png",
+    "description": "A shrouded poltergeist woven from twilight."
+  },
+  {
+    "id": "banshee", "name": "Banshee", "resonance": "shadow",
+    "base_stats": { "hp": 78, "power": 100, "guard": 71, "swift": 93 },
+    "learnset": [ {"level":1,"chime":"hex_bolt"}, {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":32,"chime":"spirit_drain"}, {"level":36,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/banshee.png",
+    "description": "A void-touched banshee that drinks the light."
+  },
+  {
+    "id": "cindermol", "name": "Cindermol", "resonance": "fire",
+    "base_stats": { "hp": 46, "power": 58, "guard": 42, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":5,"chime":"warm_nuzzle"}, {"level":9,"chime":"scorch_fang"}, {"level":13,"chime":"blaze_rush"} ],
+    "evolve_to": "magmapup", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/cindermol.png",
+    "description": "An ember-warm cindermol that smoulders quietly."
+  },
+  {
+    "id": "magmapup", "name": "Magmapup", "resonance": "fire",
+    "base_stats": { "hp": 62, "power": 78, "guard": 57, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":1,"chime":"scorch_fang"}, {"level":16,"chime":"blaze_rush"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"magma_ball"} ],
+    "evolve_to": "volcanid", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/magmapup.png",
+    "description": "A blazing magmapup wreathed in restless heat."
+  },
+  {
+    "id": "volcanid", "name": "Volcanid", "resonance": "fire",
+    "base_stats": { "hp": 82, "power": 103, "guard": 75, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"scorch_fang"}, {"level":1,"chime":"blaze_rush"}, {"level":1,"chime":"magma_ball"}, {"level":32,"chime":"warm_nuzzle"}, {"level":36,"chime":"firestorm"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/volcanid.png",
+    "description": "A towering volcanid crowned in living fire."
+  },
+  {
+    "id": "torchit", "name": "Torchit", "resonance": "fire",
+    "base_stats": { "hp": 46, "power": 58, "guard": 42, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":5,"chime":"warm_nuzzle"}, {"level":9,"chime":"scorch_fang"}, {"level":13,"chime":"blaze_rush"} ],
+    "evolve_to": "flambeau", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/torchit.png",
+    "description": "An ember-warm torchit that smoulders quietly."
+  },
+  {
+    "id": "flambeau", "name": "Flambeau", "resonance": "fire",
+    "base_stats": { "hp": 62, "power": 78, "guard": 57, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":1,"chime":"scorch_fang"}, {"level":16,"chime":"blaze_rush"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"magma_ball"} ],
+    "evolve_to": "infernost", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/flambeau.png",
+    "description": "A blazing flambeau wreathed in restless heat."
+  },
+  {
+    "id": "infernost", "name": "Infernost", "resonance": "fire",
+    "base_stats": { "hp": 82, "power": 103, "guard": 75, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"scorch_fang"}, {"level":1,"chime":"blaze_rush"}, {"level":1,"chime":"magma_ball"}, {"level":32,"chime":"warm_nuzzle"}, {"level":36,"chime":"firestorm"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/infernost.png",
+    "description": "A towering infernost crowned in living fire."
+  },
+  {
+    "id": "ashwing", "name": "Ashwing", "resonance": "fire",
+    "base_stats": { "hp": 46, "power": 58, "guard": 42, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":5,"chime":"warm_nuzzle"}, {"level":9,"chime":"scorch_fang"}, {"level":13,"chime":"blaze_rush"} ],
+    "evolve_to": "cinderavian", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/ashwing.png",
+    "description": "An ember-warm ashwing that smoulders quietly."
+  },
+  {
+    "id": "cinderavian", "name": "Cinderavian", "resonance": "fire",
+    "base_stats": { "hp": 62, "power": 78, "guard": 57, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":1,"chime":"scorch_fang"}, {"level":16,"chime":"blaze_rush"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"magma_ball"} ],
+    "evolve_to": "phoenixar", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/cinderavian.png",
+    "description": "A blazing cinderavian wreathed in restless heat."
+  },
+  {
+    "id": "phoenixar", "name": "Phoenixar", "resonance": "fire",
+    "base_stats": { "hp": 82, "power": 103, "guard": 75, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"scorch_fang"}, {"level":1,"chime":"blaze_rush"}, {"level":1,"chime":"magma_ball"}, {"level":32,"chime":"warm_nuzzle"}, {"level":36,"chime":"firestorm"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/phoenixar.png",
+    "description": "A towering phoenixar crowned in living fire."
+  },
+  {
+    "id": "embertoad", "name": "Embertoad", "resonance": "fire",
+    "base_stats": { "hp": 46, "power": 58, "guard": 42, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":5,"chime":"warm_nuzzle"}, {"level":9,"chime":"scorch_fang"}, {"level":13,"chime":"blaze_rush"} ],
+    "evolve_to": "lavaleap", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/embertoad.png",
+    "description": "An ember-warm embertoad that smoulders quietly."
+  },
+  {
+    "id": "lavaleap", "name": "Lavaleap", "resonance": "fire",
+    "base_stats": { "hp": 62, "power": 78, "guard": 57, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":1,"chime":"scorch_fang"}, {"level":16,"chime":"blaze_rush"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"magma_ball"} ],
+    "evolve_to": "calderoad", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/lavaleap.png",
+    "description": "A blazing lavaleap wreathed in restless heat."
+  },
+  {
+    "id": "calderoad", "name": "Calderoad", "resonance": "fire",
+    "base_stats": { "hp": 82, "power": 103, "guard": 75, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"scorch_fang"}, {"level":1,"chime":"blaze_rush"}, {"level":1,"chime":"magma_ball"}, {"level":32,"chime":"warm_nuzzle"}, {"level":36,"chime":"firestorm"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/calderoad.png",
+    "description": "A towering calderoad crowned in living fire."
+  },
+  {
+    "id": "sparkitten", "name": "Sparkitten", "resonance": "fire",
+    "base_stats": { "hp": 46, "power": 58, "guard": 42, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":5,"chime":"warm_nuzzle"}, {"level":9,"chime":"scorch_fang"}, {"level":13,"chime":"blaze_rush"} ],
+    "evolve_to": "flarecat", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/sparkitten.png",
+    "description": "An ember-warm sparkitten that smoulders quietly."
+  },
+  {
+    "id": "flarecat", "name": "Flarecat", "resonance": "fire",
+    "base_stats": { "hp": 62, "power": 78, "guard": 57, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":1,"chime":"scorch_fang"}, {"level":16,"chime":"blaze_rush"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"magma_ball"} ],
+    "evolve_to": "pyrelynx", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/flarecat.png",
+    "description": "A blazing flarecat wreathed in restless heat."
+  },
+  {
+    "id": "pyrelynx", "name": "Pyrelynx", "resonance": "fire",
+    "base_stats": { "hp": 82, "power": 103, "guard": 75, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"scorch_fang"}, {"level":1,"chime":"blaze_rush"}, {"level":1,"chime":"magma_ball"}, {"level":32,"chime":"warm_nuzzle"}, {"level":36,"chime":"firestorm"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/pyrelynx.png",
+    "description": "A towering pyrelynx crowned in living fire."
+  },
+  {
+    "id": "coalkin", "name": "Coalkin", "resonance": "fire",
+    "base_stats": { "hp": 46, "power": 58, "guard": 42, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":5,"chime":"warm_nuzzle"}, {"level":9,"chime":"scorch_fang"}, {"level":13,"chime":"blaze_rush"} ],
+    "evolve_to": "charhound", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/coalkin.png",
+    "description": "An ember-warm coalkin that smoulders quietly."
+  },
+  {
+    "id": "charhound", "name": "Charhound", "resonance": "fire",
+    "base_stats": { "hp": 62, "power": 78, "guard": 57, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"flame_dart"}, {"level":1,"chime":"scorch_fang"}, {"level":16,"chime":"blaze_rush"}, {"level":22,"chime":"focus"}, {"level":28,"chime":"magma_ball"} ],
+    "evolve_to": "hellhoof", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/charhound.png",
+    "description": "A blazing charhound wreathed in restless heat."
+  },
+  {
+    "id": "hellhoof", "name": "Hellhoof", "resonance": "fire",
+    "base_stats": { "hp": 82, "power": 103, "guard": 75, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"scorch_fang"}, {"level":1,"chime":"blaze_rush"}, {"level":1,"chime":"magma_ball"}, {"level":32,"chime":"warm_nuzzle"}, {"level":36,"chime":"firestorm"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/hellhoof.png",
+    "description": "A towering hellhoof crowned in living fire."
+  },
+  {
+    "id": "seedpup", "name": "Seedpup", "resonance": "grass",
+    "base_stats": { "hp": 50, "power": 50, "guard": 48, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":5,"chime":"mega_drain"}, {"level":9,"chime":"leaf_blade"}, {"level":13,"chime":"vine_whip"} ],
+    "evolve_to": "sprouthound", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/seedpup.png",
+    "description": "A sprouting seedpup humming with green life."
+  },
+  {
+    "id": "sprouthound", "name": "Sprouthound", "resonance": "grass",
+    "base_stats": { "hp": 68, "power": 68, "guard": 65, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":1,"chime":"leaf_blade"}, {"level":16,"chime":"vine_whip"}, {"level":22,"chime":"photosynth"}, {"level":28,"chime":"thorn_burst"} ],
+    "evolve_to": "bloomastiff", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/sprouthound.png",
+    "description": "A thorned sprouthound bound in coiling vines."
+  },
+  {
+    "id": "bloomastiff", "name": "Bloomastiff", "resonance": "grass",
+    "base_stats": { "hp": 89, "power": 89, "guard": 85, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"leaf_blade"}, {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":32,"chime":"mega_drain"}, {"level":36,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/bloomastiff.png",
+    "description": "An ancient bloomastiff rooted deep in old growth."
+  },
+  {
+    "id": "buddle", "name": "Buddle", "resonance": "grass",
+    "base_stats": { "hp": 50, "power": 50, "guard": 48, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":5,"chime":"mega_drain"}, {"level":9,"chime":"leaf_blade"}, {"level":13,"chime":"vine_whip"} ],
+    "evolve_to": "petallure", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/buddle.png",
+    "description": "A sprouting buddle humming with green life."
+  },
+  {
+    "id": "petallure", "name": "Petallure", "resonance": "grass",
+    "base_stats": { "hp": 68, "power": 68, "guard": 65, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":1,"chime":"leaf_blade"}, {"level":16,"chime":"vine_whip"}, {"level":22,"chime":"photosynth"}, {"level":28,"chime":"thorn_burst"} ],
+    "evolve_to": "floradiance", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/petallure.png",
+    "description": "A thorned petallure bound in coiling vines."
+  },
+  {
+    "id": "floradiance", "name": "Floradiance", "resonance": "grass",
+    "base_stats": { "hp": 89, "power": 89, "guard": 85, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"leaf_blade"}, {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":32,"chime":"mega_drain"}, {"level":36,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/floradiance.png",
+    "description": "An ancient floradiance rooted deep in old growth."
+  },
+  {
+    "id": "vinelet", "name": "Vinelet", "resonance": "grass",
+    "base_stats": { "hp": 50, "power": 50, "guard": 48, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":5,"chime":"mega_drain"}, {"level":9,"chime":"leaf_blade"}, {"level":13,"chime":"vine_whip"} ],
+    "evolve_to": "thornwhip", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/vinelet.png",
+    "description": "A sprouting vinelet humming with green life."
+  },
+  {
+    "id": "thornwhip", "name": "Thornwhip", "resonance": "grass",
+    "base_stats": { "hp": 68, "power": 68, "guard": 65, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":1,"chime":"leaf_blade"}, {"level":16,"chime":"vine_whip"}, {"level":22,"chime":"photosynth"}, {"level":28,"chime":"thorn_burst"} ],
+    "evolve_to": "bramblejaw", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/thornwhip.png",
+    "description": "A thorned thornwhip bound in coiling vines."
+  },
+  {
+    "id": "bramblejaw", "name": "Bramblejaw", "resonance": "grass",
+    "base_stats": { "hp": 89, "power": 89, "guard": 85, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"leaf_blade"}, {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":32,"chime":"mega_drain"}, {"level":36,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/bramblejaw.png",
+    "description": "An ancient bramblejaw rooted deep in old growth."
+  },
+  {
+    "id": "fungit", "name": "Fungit", "resonance": "grass",
+    "base_stats": { "hp": 50, "power": 50, "guard": 48, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":5,"chime":"mega_drain"}, {"level":9,"chime":"leaf_blade"}, {"level":13,"chime":"vine_whip"} ],
+    "evolve_to": "sporewalk", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/fungit.png",
+    "description": "A sprouting fungit humming with green life."
+  },
+  {
+    "id": "sporewalk", "name": "Sporewalk", "resonance": "grass",
+    "base_stats": { "hp": 68, "power": 68, "guard": 65, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":1,"chime":"leaf_blade"}, {"level":16,"chime":"vine_whip"}, {"level":22,"chime":"photosynth"}, {"level":28,"chime":"thorn_burst"} ],
+    "evolve_to": "mycelith", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/sporewalk.png",
+    "description": "A thorned sporewalk bound in coiling vines."
+  },
+  {
+    "id": "mycelith", "name": "Mycelith", "resonance": "grass",
+    "base_stats": { "hp": 89, "power": 89, "guard": 85, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"leaf_blade"}, {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":32,"chime":"mega_drain"}, {"level":36,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/mycelith.png",
+    "description": "An ancient mycelith rooted deep in old growth."
+  },
+  {
+    "id": "cactopup", "name": "Cactopup", "resonance": "grass",
+    "base_stats": { "hp": 50, "power": 50, "guard": 48, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":5,"chime":"mega_drain"}, {"level":9,"chime":"leaf_blade"}, {"level":13,"chime":"vine_whip"} ],
+    "evolve_to": "needloom", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/cactopup.png",
+    "description": "A sprouting cactopup humming with green life."
+  },
+  {
+    "id": "needloom", "name": "Needloom", "resonance": "grass",
+    "base_stats": { "hp": 68, "power": 68, "guard": 65, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":1,"chime":"leaf_blade"}, {"level":16,"chime":"vine_whip"}, {"level":22,"chime":"photosynth"}, {"level":28,"chime":"thorn_burst"} ],
+    "evolve_to": "saguaroth", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/needloom.png",
+    "description": "A thorned needloom bound in coiling vines."
+  },
+  {
+    "id": "saguaroth", "name": "Saguaroth", "resonance": "grass",
+    "base_stats": { "hp": 89, "power": 89, "guard": 85, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"leaf_blade"}, {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":32,"chime":"mega_drain"}, {"level":36,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/saguaroth.png",
+    "description": "An ancient saguaroth rooted deep in old growth."
+  },
+  {
+    "id": "mosskit", "name": "Mosskit", "resonance": "grass",
+    "base_stats": { "hp": 50, "power": 50, "guard": 48, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":5,"chime":"mega_drain"}, {"level":9,"chime":"leaf_blade"}, {"level":13,"chime":"vine_whip"} ],
+    "evolve_to": "lichenous", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/mosskit.png",
+    "description": "A sprouting mosskit humming with green life."
+  },
+  {
+    "id": "lichenous", "name": "Lichenous", "resonance": "grass",
+    "base_stats": { "hp": 68, "power": 68, "guard": 65, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":1,"chime":"leaf_blade"}, {"level":16,"chime":"vine_whip"}, {"level":22,"chime":"photosynth"}, {"level":28,"chime":"thorn_burst"} ],
+    "evolve_to": "verdammoth", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/lichenous.png",
+    "description": "A thorned lichenous bound in coiling vines."
+  },
+  {
+    "id": "verdammoth", "name": "Verdammoth", "resonance": "grass",
+    "base_stats": { "hp": 89, "power": 89, "guard": 85, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"leaf_blade"}, {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":32,"chime":"mega_drain"}, {"level":36,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/verdammoth.png",
+    "description": "An ancient verdammoth rooted deep in old growth."
+  },
+  {
+    "id": "leaflit", "name": "Leaflit", "resonance": "grass",
+    "base_stats": { "hp": 50, "power": 50, "guard": 48, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":5,"chime":"mega_drain"}, {"level":9,"chime":"leaf_blade"}, {"level":13,"chime":"vine_whip"} ],
+    "evolve_to": "frondancer", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/leaflit.png",
+    "description": "A sprouting leaflit humming with green life."
+  },
+  {
+    "id": "frondancer", "name": "Frondancer", "resonance": "grass",
+    "base_stats": { "hp": 68, "power": 68, "guard": 65, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":1,"chime":"leaf_blade"}, {"level":16,"chime":"vine_whip"}, {"level":22,"chime":"photosynth"}, {"level":28,"chime":"thorn_burst"} ],
+    "evolve_to": "canopyre", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/frondancer.png",
+    "description": "A thorned frondancer bound in coiling vines."
+  },
+  {
+    "id": "canopyre", "name": "Canopyre", "resonance": "grass",
+    "base_stats": { "hp": 89, "power": 89, "guard": 85, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"leaf_blade"}, {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":32,"chime":"mega_drain"}, {"level":36,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/canopyre.png",
+    "description": "An ancient canopyre rooted deep in old growth."
+  },
+  {
+    "id": "berrybop", "name": "Berrybop", "resonance": "grass",
+    "base_stats": { "hp": 50, "power": 50, "guard": 48, "swift": 44 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":5,"chime":"mega_drain"}, {"level":9,"chime":"leaf_blade"}, {"level":13,"chime":"vine_whip"} ],
+    "evolve_to": "orchardon", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/berrybop.png",
+    "description": "A sprouting berrybop humming with green life."
+  },
+  {
+    "id": "orchardon", "name": "Orchardon", "resonance": "grass",
+    "base_stats": { "hp": 68, "power": 68, "guard": 65, "swift": 59 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"seed_bomb"}, {"level":1,"chime":"leaf_blade"}, {"level":16,"chime":"vine_whip"}, {"level":22,"chime":"photosynth"}, {"level":28,"chime":"thorn_burst"} ],
+    "evolve_to": "harvestide", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/orchardon.png",
+    "description": "A thorned orchardon bound in coiling vines."
+  },
+  {
+    "id": "harvestide", "name": "Harvestide", "resonance": "grass",
+    "base_stats": { "hp": 89, "power": 89, "guard": 85, "swift": 78 },
+    "learnset": [ {"level":1,"chime":"leaf_blade"}, {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":32,"chime":"mega_drain"}, {"level":36,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/harvestide.png",
+    "description": "An ancient harvestide rooted deep in old growth."
+  },
+  {
+    "id": "pebblepup", "name": "Pebblepup", "resonance": "rock",
+    "base_stats": { "hp": 56, "power": 46, "guard": 64, "swift": 26 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":5,"chime":"harden"}, {"level":9,"chime":"boulder_toss"}, {"level":13,"chime":"crag_smash"} ],
+    "evolve_to": "cobbleton", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/pebblepup.png",
+    "description": "A pebbly pebblepup that dozes beneath ledges."
+  },
+  {
+    "id": "cobbleton", "name": "Cobbleton", "resonance": "rock",
+    "base_stats": { "hp": 76, "power": 62, "guard": 86, "swift": 35 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":1,"chime":"boulder_toss"}, {"level":16,"chime":"crag_smash"}, {"level":22,"chime":"guard_up"}, {"level":28,"chime":"quake_stomp"} ],
+    "evolve_to": "bastioth", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/cobbleton.png",
+    "description": "A craggy cobbleton sheathed in mossy stone."
+  },
+  {
+    "id": "bastioth", "name": "Bastioth", "resonance": "rock",
+    "base_stats": { "hp": 100, "power": 82, "guard": 114, "swift": 46 },
+    "learnset": [ {"level":1,"chime":"boulder_toss"}, {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":32,"chime":"harden"}, {"level":36,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/bastioth.png",
+    "description": "A colossal bastioth born of deep bedrock."
+  },
+  {
+    "id": "gravelisk", "name": "Gravelisk", "resonance": "rock",
+    "base_stats": { "hp": 56, "power": 46, "guard": 64, "swift": 26 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":5,"chime":"harden"}, {"level":9,"chime":"boulder_toss"}, {"level":13,"chime":"crag_smash"} ],
+    "evolve_to": "quarrywyrm", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/gravelisk.png",
+    "description": "A pebbly gravelisk that dozes beneath ledges."
+  },
+  {
+    "id": "quarrywyrm", "name": "Quarrywyrm", "resonance": "rock",
+    "base_stats": { "hp": 76, "power": 62, "guard": 86, "swift": 35 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":1,"chime":"boulder_toss"}, {"level":16,"chime":"crag_smash"}, {"level":22,"chime":"guard_up"}, {"level":28,"chime":"quake_stomp"} ],
+    "evolve_to": "tectonyx", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/quarrywyrm.png",
+    "description": "A craggy quarrywyrm sheathed in mossy stone."
+  },
+  {
+    "id": "tectonyx", "name": "Tectonyx", "resonance": "rock",
+    "base_stats": { "hp": 100, "power": 82, "guard": 114, "swift": 46 },
+    "learnset": [ {"level":1,"chime":"boulder_toss"}, {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":32,"chime":"harden"}, {"level":36,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/tectonyx.png",
+    "description": "A colossal tectonyx born of deep bedrock."
+  },
+  {
+    "id": "dustmite", "name": "Dustmite", "resonance": "rock",
+    "base_stats": { "hp": 56, "power": 46, "guard": 64, "swift": 26 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":5,"chime":"harden"}, {"level":9,"chime":"boulder_toss"}, {"level":13,"chime":"crag_smash"} ],
+    "evolve_to": "sandwurm", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/dustmite.png",
+    "description": "A pebbly dustmite that dozes beneath ledges."
+  },
+  {
+    "id": "sandwurm", "name": "Sandwurm", "resonance": "rock",
+    "base_stats": { "hp": 76, "power": 62, "guard": 86, "swift": 35 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":1,"chime":"boulder_toss"}, {"level":16,"chime":"crag_smash"}, {"level":22,"chime":"guard_up"}, {"level":28,"chime":"quake_stomp"} ],
+    "evolve_to": "dunecrag", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/sandwurm.png",
+    "description": "A craggy sandwurm sheathed in mossy stone."
+  },
+  {
+    "id": "dunecrag", "name": "Dunecrag", "resonance": "rock",
+    "base_stats": { "hp": 100, "power": 82, "guard": 114, "swift": 46 },
+    "learnset": [ {"level":1,"chime":"boulder_toss"}, {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":32,"chime":"harden"}, {"level":36,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/dunecrag.png",
+    "description": "A colossal dunecrag born of deep bedrock."
+  },
+  {
+    "id": "ironnib", "name": "Ironnib", "resonance": "rock",
+    "base_stats": { "hp": 56, "power": 46, "guard": 64, "swift": 26 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":5,"chime":"harden"}, {"level":9,"chime":"boulder_toss"}, {"level":13,"chime":"crag_smash"} ],
+    "evolve_to": "steelplate", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/ironnib.png",
+    "description": "A pebbly ironnib that dozes beneath ledges."
+  },
+  {
+    "id": "steelplate", "name": "Steelplate", "resonance": "rock",
+    "base_stats": { "hp": 76, "power": 62, "guard": 86, "swift": 35 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":1,"chime":"boulder_toss"}, {"level":16,"chime":"crag_smash"}, {"level":22,"chime":"guard_up"}, {"level":28,"chime":"quake_stomp"} ],
+    "evolve_to": "magnetron", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/steelplate.png",
+    "description": "A craggy steelplate sheathed in mossy stone."
+  },
+  {
+    "id": "magnetron", "name": "Magnetron", "resonance": "rock",
+    "base_stats": { "hp": 100, "power": 82, "guard": 114, "swift": 46 },
+    "learnset": [ {"level":1,"chime":"boulder_toss"}, {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":32,"chime":"harden"}, {"level":36,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/magnetron.png",
+    "description": "A colossal magnetron born of deep bedrock."
+  },
+  {
+    "id": "crystallit", "name": "Crystallit", "resonance": "rock",
+    "base_stats": { "hp": 56, "power": 46, "guard": 64, "swift": 26 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":5,"chime":"harden"}, {"level":9,"chime":"boulder_toss"}, {"level":13,"chime":"crag_smash"} ],
+    "evolve_to": "geodon", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/crystallit.png",
+    "description": "A pebbly crystallit that dozes beneath ledges."
+  },
+  {
+    "id": "geodon", "name": "Geodon", "resonance": "rock",
+    "base_stats": { "hp": 76, "power": 62, "guard": 86, "swift": 35 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":1,"chime":"boulder_toss"}, {"level":16,"chime":"crag_smash"}, {"level":22,"chime":"guard_up"}, {"level":28,"chime":"quake_stomp"} ],
+    "evolve_to": "prismshard", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/geodon.png",
+    "description": "A craggy geodon sheathed in mossy stone."
+  },
+  {
+    "id": "prismshard", "name": "Prismshard", "resonance": "rock",
+    "base_stats": { "hp": 100, "power": 82, "guard": 114, "swift": 46 },
+    "learnset": [ {"level":1,"chime":"boulder_toss"}, {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":32,"chime":"harden"}, {"level":36,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/prismshard.png",
+    "description": "A colossal prismshard born of deep bedrock."
+  },
+  {
+    "id": "claykin", "name": "Claykin", "resonance": "rock",
+    "base_stats": { "hp": 56, "power": 46, "guard": 64, "swift": 26 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":5,"chime":"harden"}, {"level":9,"chime":"boulder_toss"}, {"level":13,"chime":"crag_smash"} ],
+    "evolve_to": "terracottus", "evolve_level": 16, "catch_rate": 0.35,
+    "sprite": "res://assets/echoes/claykin.png",
+    "description": "A pebbly claykin that dozes beneath ledges."
+  },
+  {
+    "id": "terracottus", "name": "Terracottus", "resonance": "rock",
+    "base_stats": { "hp": 76, "power": 62, "guard": 86, "swift": 35 },
+    "learnset": [ {"level":1,"chime":"tackle"}, {"level":1,"chime":"rock_slide"}, {"level":1,"chime":"boulder_toss"}, {"level":16,"chime":"crag_smash"}, {"level":22,"chime":"guard_up"}, {"level":28,"chime":"quake_stomp"} ],
+    "evolve_to": "golemith", "evolve_level": 34, "catch_rate": 0.12,
+    "sprite": "res://assets/echoes/terracottus.png",
+    "description": "A craggy terracottus sheathed in mossy stone."
+  },
+  {
+    "id": "golemith", "name": "Golemith", "resonance": "rock",
+    "base_stats": { "hp": 100, "power": 82, "guard": 114, "swift": 46 },
+    "learnset": [ {"level":1,"chime":"boulder_toss"}, {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":32,"chime":"harden"}, {"level":36,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.05,
+    "sprite": "res://assets/echoes/golemith.png",
+    "description": "A colossal golemith born of deep bedrock."
+  },
+  {
+    "id": "leviathos", "name": "Leviathos", "resonance": "water",
+    "base_stats": { "hp": 107, "power": 96, "guard": 107, "swift": 84 },
+    "learnset": [ {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":1,"chime":"maelstrom_surge"}, {"level":1,"chime":"harden"}, {"level":45,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/leviathos.png",
+    "description": "A legendary water Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "maelstriden", "name": "Maelstriden", "resonance": "water",
+    "base_stats": { "hp": 107, "power": 96, "guard": 107, "swift": 84 },
+    "learnset": [ {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":1,"chime":"maelstrom_surge"}, {"level":1,"chime":"harden"}, {"level":45,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/maelstriden.png",
+    "description": "A legendary water Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "voltmonarch", "name": "Voltmonarch", "resonance": "air",
+    "base_stats": { "hp": 88, "power": 107, "guard": 80, "swift": 123 },
+    "learnset": [ {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":1,"chime":"storm_gale"}, {"level":1,"chime":"galvanize"}, {"level":45,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/voltmonarch.png",
+    "description": "A legendary air Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "skysovereign", "name": "Skysovereign", "resonance": "air",
+    "base_stats": { "hp": 88, "power": 107, "guard": 80, "swift": 123 },
+    "learnset": [ {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":1,"chime":"storm_gale"}, {"level":1,"chime":"galvanize"}, {"level":45,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/skysovereign.png",
+    "description": "A legendary air Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "aeonmind", "name": "Aeonmind", "resonance": "shadow",
+    "base_stats": { "hp": 92, "power": 115, "guard": 84, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":1,"chime":"nightmare"}, {"level":1,"chime":"focus"}, {"level":45,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/aeonmind.png",
+    "description": "A legendary shadow Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "nyxarch", "name": "Nyxarch", "resonance": "shadow",
+    "base_stats": { "hp": 92, "power": 115, "guard": 84, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":1,"chime":"nightmare"}, {"level":1,"chime":"focus"}, {"level":45,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/nyxarch.png",
+    "description": "A legendary shadow Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "mortarch", "name": "Mortarch", "resonance": "shadow",
+    "base_stats": { "hp": 92, "power": 115, "guard": 84, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":1,"chime":"nightmare"}, {"level":1,"chime":"focus"}, {"level":45,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/mortarch.png",
+    "description": "A legendary shadow Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "hallowraith", "name": "Hallowraith", "resonance": "shadow",
+    "base_stats": { "hp": 92, "power": 115, "guard": 84, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":1,"chime":"nightmare"}, {"level":1,"chime":"focus"}, {"level":45,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/hallowraith.png",
+    "description": "A legendary shadow Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "pyrothrone", "name": "Pyrothrone", "resonance": "fire",
+    "base_stats": { "hp": 96, "power": 119, "guard": 88, "swift": 92 },
+    "learnset": [ {"level":1,"chime":"blaze_rush"}, {"level":1,"chime":"magma_ball"}, {"level":1,"chime":"firestorm"}, {"level":1,"chime":"focus"}, {"level":45,"chime":"firestorm"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/pyrothrone.png",
+    "description": "A legendary fire Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "solarch", "name": "Solarch", "resonance": "fire",
+    "base_stats": { "hp": 96, "power": 119, "guard": 88, "swift": 92 },
+    "learnset": [ {"level":1,"chime":"blaze_rush"}, {"level":1,"chime":"magma_ball"}, {"level":1,"chime":"firestorm"}, {"level":1,"chime":"focus"}, {"level":45,"chime":"firestorm"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/solarch.png",
+    "description": "A legendary fire Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "sylvanking", "name": "Sylvanking", "resonance": "grass",
+    "base_stats": { "hp": 104, "power": 104, "guard": 100, "swift": 92 },
+    "learnset": [ {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":1,"chime":"bloom_beam"}, {"level":1,"chime":"photosynth"}, {"level":45,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/sylvanking.png",
+    "description": "A legendary grass Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "gaialith", "name": "Gaialith", "resonance": "grass",
+    "base_stats": { "hp": 104, "power": 104, "guard": 100, "swift": 92 },
+    "learnset": [ {"level":1,"chime":"vine_whip"}, {"level":1,"chime":"thorn_burst"}, {"level":1,"chime":"bloom_beam"}, {"level":1,"chime":"photosynth"}, {"level":45,"chime":"bloom_beam"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/gaialith.png",
+    "description": "A legendary grass Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "terralossus", "name": "Terralossus", "resonance": "rock",
+    "base_stats": { "hp": 115, "power": 96, "guard": 131, "swift": 57 },
+    "learnset": [ {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":1,"chime":"landslide"}, {"level":1,"chime":"guard_up"}, {"level":45,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/terralossus.png",
+    "description": "A legendary rock Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "orogenus", "name": "Orogenus", "resonance": "rock",
+    "base_stats": { "hp": 115, "power": 96, "guard": 131, "swift": 57 },
+    "learnset": [ {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":1,"chime":"landslide"}, {"level":1,"chime":"guard_up"}, {"level":45,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/orogenus.png",
+    "description": "A legendary rock Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "tempestria", "name": "Tempestria", "resonance": "air",
+    "base_stats": { "hp": 88, "power": 107, "guard": 80, "swift": 123 },
+    "learnset": [ {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":1,"chime":"storm_gale"}, {"level":1,"chime":"galvanize"}, {"level":45,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/tempestria.png",
+    "description": "A legendary air Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "abyssareign", "name": "Abyssareign", "resonance": "water",
+    "base_stats": { "hp": 107, "power": 96, "guard": 107, "swift": 84 },
+    "learnset": [ {"level":1,"chime":"torrent_wave"}, {"level":1,"chime":"geyser_blast"}, {"level":1,"chime":"maelstrom_surge"}, {"level":1,"chime":"harden"}, {"level":45,"chime":"maelstrom_surge"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/abyssareign.png",
+    "description": "A legendary water Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "grimsovereign", "name": "Grimsovereign", "resonance": "shadow",
+    "base_stats": { "hp": 92, "power": 115, "guard": 84, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":1,"chime":"nightmare"}, {"level":1,"chime":"focus"}, {"level":45,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/grimsovereign.png",
+    "description": "A legendary shadow Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "chorusprime", "name": "Chorusprime", "resonance": "air",
+    "base_stats": { "hp": 88, "power": 107, "guard": 80, "swift": 123 },
+    "learnset": [ {"level":1,"chime":"thunder_bolt"}, {"level":1,"chime":"discharge"}, {"level":1,"chime":"storm_gale"}, {"level":1,"chime":"galvanize"}, {"level":45,"chime":"storm_gale"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/chorusprime.png",
+    "description": "A legendary air Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "fracturael", "name": "Fracturael", "resonance": "rock",
+    "base_stats": { "hp": 115, "power": 96, "guard": 131, "swift": 57 },
+    "learnset": [ {"level":1,"chime":"crag_smash"}, {"level":1,"chime":"quake_stomp"}, {"level":1,"chime":"landslide"}, {"level":1,"chime":"guard_up"}, {"level":45,"chime":"landslide"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/fracturael.png",
+    "description": "A legendary rock Harmon spoken of only in old resonance-songs."
+  },
+  {
+    "id": "primordius", "name": "Primordius", "resonance": "shadow",
+    "base_stats": { "hp": 92, "power": 115, "guard": 84, "swift": 107 },
+    "learnset": [ {"level":1,"chime":"shadow_claw"}, {"level":1,"chime":"doom_beam"}, {"level":1,"chime":"nightmare"}, {"level":1,"chime":"focus"}, {"level":45,"chime":"nightmare"} ],
+    "evolve_to": "", "evolve_level": 0, "catch_rate": 0.02,
+    "sprite": "res://assets/echoes/primordius.png",
+    "description": "A legendary shadow Harmon spoken of only in old resonance-songs."
   }
 ]
 

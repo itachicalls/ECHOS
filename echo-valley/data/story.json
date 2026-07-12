@@ -10,7 +10,9 @@
     "veil": "The Veil believes restoring The Chorus could awaken a sealed Primordial — they may not be wrong.",
     "rangers": "Route Rangers are guardians who test whether you can restore a region's lost resonance.",
     "sigils": "Each Resonance Sigil you earn permanently changes the world — paths, weather, and hidden places.",
-    "archive": "The Memory Archive records every Harmon discovery and the history they remember."
+    "archive": "The Memory Archive records every Harmon discovery and the history they remember.",
+    "coast": "West of Harmona Rest the Fracture bled into the sea, drawing Harmons no archive ever named.",
+    "primordial": "Beneath the Hollow Barrows sleeps the first resonance itself — the dream older than the Chorus."
   },
   "stages": [
     {
@@ -50,9 +52,39 @@
       "flag": "trainer_j3_rival"
     },
     {
-      "id": "s6_champ", "title": "Valley Restored?",
-      "objective": "You hold every Sigil — but will you restore The Chorus, preserve The Fracture, or find a new balance?",
-      "hint": "Keep exploring. Record discoveries in your Memory Archive.",
+      "id": "s7_coast", "title": "Salt on the Wind",
+      "objective": "A new trail has opened west of town. Follow the Tidecross Shore to Saltwind Cove.",
+      "hint": "Leave Harmona Rest through the western gate onto the beach route.",
+      "flag": "greeter_beach_marisol"
+    },
+    {
+      "id": "s8_storm", "title": "The Second Stand",
+      "objective": "Cross the Voltmarsh and repel the factions' bolder ambush.",
+      "hint": "The Veil, Rangers, and Archive regroup on the storm route north of Saltwind Cove.",
+      "flag": "faction_ambush_storm1"
+    },
+    {
+      "id": "s9_bolt", "title": "Charge of the Marsh",
+      "objective": "Defeat Ranger Bolt to earn the Charge Sigil and reach Mirage Hollow.",
+      "hint": "Bolt guards the northern pass of the Voltmarsh.",
+      "flag": "trainer_gym_storm"
+    },
+    {
+      "id": "s10_dream", "title": "Through the Dream Reach",
+      "objective": "Best Ranger Sable and steady your mind to open the Hollow Barrows.",
+      "hint": "Sable guards the causeway north of Mirage Hollow. A legend meditates on the way.",
+      "flag": "trainer_gym_psychic"
+    },
+    {
+      "id": "s11_barrows", "title": "The Final Stand",
+      "objective": "Face all three factions together in the Hollow Barrows.",
+      "hint": "They block the processional to the barrow-mound where the Primordial sleeps.",
+      "flag": "faction_ambush_graveyard"
+    },
+    {
+      "id": "s6_champ", "title": "The Dream Older Than the Chorus",
+      "objective": "Wake and face PRIMORDIUS at the barrow-mound — then decide the valley's fate: restore The Chorus, preserve The Fracture, or forge a new balance.",
+      "hint": "The mound splits at the north end of the Hollow Barrows. Bring your strongest team.",
       "flag": "__complete__"
     }
   ]

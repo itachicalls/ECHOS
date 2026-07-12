@@ -24,13 +24,14 @@ func _build_map() -> void:
 
 	fill_ground(0, 0, map_w - 1, map_h - 1, Tiles.GRASS)
 
-	# tree-lined border with a 2-wide north gate to Route 1
+	# tree-lined border with a 2-wide north gate to Route 1 and a west gate to the coast
 	for x in map_w:
 		if x != 12 and x != 13:
 			place_tree(Vector2i(x, 0), Tiles.TREE_GREEN_COL)
 		place_tree(Vector2i(x, map_h - 1), Tiles.TREE_GREEN_COL)
 	for y in range(1, map_h - 1):
-		place_tree(Vector2i(0, y), Tiles.TREE_GREEN_COL)
+		if y != 14 and y != 15:
+			place_tree(Vector2i(0, y), Tiles.TREE_GREEN_COL)
 		place_tree(Vector2i(map_w - 1, y), Tiles.TREE_GREEN_COL)
 
 	# north path -> Route 1
@@ -40,9 +41,14 @@ func _build_map() -> void:
 	add_warp(Vector2i(12, 0), "route1", Vector2i(9, 22), "up")
 	add_warp(Vector2i(13, 0), "route1", Vector2i(10, 22), "up")
 
-	# main east-west path
-	for x in range(3, 23):
+	# main east-west path (extended west to the coast gate)
+	for x in range(0, 23):
 		set_ground(Vector2i(x, 15), Tiles.PATH)
+	for x in range(0, 4):
+		set_ground(Vector2i(x, 14), Tiles.PATH)
+	add_warp(Vector2i(0, 14), "beach1", Vector2i(18, 10), "left")
+	add_warp(Vector2i(0, 15), "beach1", Vector2i(18, 11), "left")
+	add_interact(Vector2i(2, 16), { "type": "sign", "text": "TIDECROSS TRAIL - west to the shore. Rumor says stranger Harmons wash up along the coast..." })
 
 	# cobble plaza in the center
 	fill_ground(11, 14, 15, 16, Tiles.STONE)

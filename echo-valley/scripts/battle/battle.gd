@@ -1243,6 +1243,20 @@ func _animate_attack(
 			await _atk_wave(attacker, target, col)
 		"drain":
 			await _atk_drain(attacker, target, col, resonance)
+		"storm":
+			await _atk_storm(target, col)
+		"psy":
+			await _atk_psy(attacker, target, col)
+		"curse":
+			await _atk_curse(target, col)
+		"geyser":
+			await _atk_geyser(target, col)
+		"ice":
+			await _atk_ice(attacker, target, col)
+		"meteor":
+			await _atk_meteor(target, col)
+		"spore":
+			await _atk_spore(target, col)
 		_:
 			await _fire_projectile(_sprite_center(attacker), _sprite_center(target), col, resonance)
 
@@ -1272,21 +1286,36 @@ func _animate_attack(
 
 func _attack_style(name_lc: String, lifesteal: float, power: int) -> String:
 	# Pick a move-appropriate motion. Keyword-first so each attack reads uniquely.
-	if lifesteal > 0.0 or _has_any(name_lc, ["drain", "leech", "hug", "nuzzle", "bubble"]):
+	# Themed styles are checked before the generic ones so new moves look new.
+	if lifesteal > 0.0 or _has_any(name_lc, ["drain", "leech"]):
 		return "drain"
+	if _has_any(name_lc, ["bolt", "volt", "thunder", "spark", "shock", "zap", "discharge", "static", "plasma", "arc ", "lightning", "voltage", "electro", "ion ", "galvan", "charge"]):
+		return "storm"
+	if _has_any(name_lc, ["psy", "mind", "hypno", "dream", "confus", "mystic", "aura", "telekin", "cosmic", "astral", "rune", "warp"]):
+		return "psy"
+	if _has_any(name_lc, ["curse", "hex", "haunt", "doom", "spirit", "phantom", "wail", "tomb", "soul", "dread", "nightmare", "reaper", "wraith", "bone", "grave", "banshee", "eclipse"]):
+		return "curse"
+	if _has_any(name_lc, ["geyser", "splash", "torrent", "whirl", "maelstrom", "cascade", "hydro", "deluge", "riptide", "foam", "aqua"]):
+		return "geyser"
+	if _has_any(name_lc, ["frost", "ice", "blizzard", "glacier", "snow", "hail", "freeze"]):
+		return "ice"
+	if _has_any(name_lc, ["meteor", "magma", "lava", "flare", "molten", "volcano", "comet", "wildfire", "phoenix", "pyre", "firestorm"]):
+		return "meteor"
+	if _has_any(name_lc, ["spore", "pollen", "petal", "bloom", "blossom", "seed"]):
+		return "spore"
 	if _has_any(name_lc, ["dive", "sky"]):
 		return "dive"
-	if _has_any(name_lc, ["edge", "boulder", "canopy", "quake", "eruption"]):
+	if _has_any(name_lc, ["edge", "boulder", "canopy", "quake", "eruption", "crag", "tremor", "landslide"]):
 		return "eruption"
-	if _has_any(name_lc, ["pulse", "inferno", "eclipse", "solar", "tsunami", "cyclone"]) or power >= 80:
+	if _has_any(name_lc, ["pulse", "inferno", "tsunami", "cyclone"]) or power >= 82:
 		return "beam"
 	if _has_any(name_lc, ["fang", "nip", "bite"]):
 		return "bite"
 	if _has_any(name_lc, ["slash", "claw"]):
 		return "slash"
-	if _has_any(name_lc, ["wave", "surge", "tide", "gust", "gale", "flame wave"]):
+	if _has_any(name_lc, ["wave", "surge", "tide", "gust", "gale", "clap"]):
 		return "wave"
-	if _has_any(name_lc, ["tackle", "scratch", "jab", "slap", "tail", "tug", "whip", "lash", "bash", "frond", "vine", "root"]):
+	if _has_any(name_lc, ["tackle", "scratch", "jab", "slap", "tail", "tug", "whip", "lash", "bash", "frond", "vine", "root", "rush", "stomp", "slam", "kick", "toss", "smash", "crush", "knot"]):
 		return "melee"
 	return "projectile"
 
@@ -1416,6 +1445,206 @@ func _atk_drain(attacker: TextureRect, target: TextureRect, col: Color, resonanc
 		t.parallel().tween_property(s, "modulate:a", 0.0, 0.3)
 		t.chain().tween_callback(s.queue_free)
 	await get_tree().create_timer(0.16).timeout
+
+
+func _atk_storm(target: TextureRect, col: Color) -> void:
+	# A jagged lightning bolt strikes down from above the target.
+	var c := _sprite_center(target)
+	var top := Vector2(c.x, c.y - 70.0)
+	var pts := [top]
+	var segs := 6
+	for i in range(1, segs + 1):
+		var t := float(i) / float(segs)
+		var jitter := 0.0 if i == segs else randf_range(-9.0, 9.0)
+		pts.append(Vector2(c.x + jitter, top.y + (c.y - top.y) * t))
+	for i in range(pts.size() - 1):
+		var a: Vector2 = pts[i]
+		var b: Vector2 = pts[i + 1]
+		var seg := ColorRect.new()
+		var dir: Vector2 = b - a
+		seg.color = Color(1, 1, 1, 0.0)
+		seg.size = Vector2(dir.length(), 3)
+		seg.pivot_offset = Vector2(0, 1.5)
+		seg.position = a - Vector2(0, 1.5)
+		seg.rotation = dir.angle()
+		seg.z_index = 24
+		_stage.add_child(seg)
+		var tw := create_tween()
+		tw.tween_interval(float(i) * 0.02)
+		tw.tween_property(seg, "color", Color(0.85, 0.9, 1.0, 0.95), 0.03)
+		tw.tween_interval(0.12)
+		tw.tween_property(seg, "color:a", 0.0, 0.12)
+		tw.chain().tween_callback(seg.queue_free)
+	await get_tree().create_timer(0.22).timeout
+	_flash_ring(c, col)
+	_impact_spark(c, Color(1, 1, 0.7))
+	_stage_shake()
+	await get_tree().create_timer(0.1).timeout
+
+
+func _atk_psy(attacker: TextureRect, target: TextureRect, col: Color) -> void:
+	# Concentric psychic rings pulse out and squeeze the target.
+	await _fire_projectile(_sprite_center(attacker), _sprite_center(target), col, 6)
+	var c := _sprite_center(target)
+	for i in 3:
+		var ring := ColorRect.new()
+		ring.color = Color(col.r, col.g, col.b, 0.0)
+		ring.size = Vector2(6, 6)
+		ring.pivot_offset = Vector2(3, 3)
+		ring.position = c - Vector2(3, 3)
+		ring.z_index = 23
+		_stage.add_child(ring)
+		var tw := create_tween()
+		tw.tween_interval(float(i) * 0.08)
+		tw.set_parallel(true)
+		tw.tween_property(ring, "scale", Vector2(6.0, 6.0), 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tw.tween_property(ring, "color", Color(col.r, col.g, col.b, 0.7), 0.12)
+		tw.chain().tween_property(ring, "color:a", 0.0, 0.18)
+		tw.chain().tween_callback(ring.queue_free)
+	var wob := create_tween()
+	var home_t := _home_pos(target)
+	wob.tween_property(target, "position", home_t + Vector2(0, -6), 0.12)
+	wob.tween_property(target, "position", home_t, 0.12)
+	await get_tree().create_timer(0.34).timeout
+
+
+func _atk_curse(target: TextureRect, col: Color) -> void:
+	# Spectral wisps rise from beneath the target.
+	var c := _sprite_center(target)
+	for i in 8:
+		var wisp := ColorRect.new()
+		wisp.color = Color(col.r, col.g, col.b, 0.85)
+		wisp.size = Vector2(3, 3)
+		var x := c.x + randf_range(-14.0, 14.0)
+		wisp.position = Vector2(x, c.y + 16.0)
+		wisp.z_index = 24
+		_stage.add_child(wisp)
+		var tw := create_tween()
+		tw.tween_interval(float(i) * 0.03)
+		tw.set_parallel(true)
+		tw.tween_property(wisp, "position:y", c.y - 22.0, 0.5).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(wisp, "position:x", x + randf_range(-6.0, 6.0), 0.5)
+		tw.tween_property(wisp, "modulate:a", 0.0, 0.5)
+		tw.chain().tween_callback(wisp.queue_free)
+	_flash_ring(c, col)
+	await get_tree().create_timer(0.34).timeout
+
+
+func _atk_geyser(target: TextureRect, col: Color) -> void:
+	# A column of water bursts up from under the target.
+	var c := _sprite_center(target)
+	var column := ColorRect.new()
+	column.color = Color(col.r, col.g, col.b, 0.7)
+	column.size = Vector2(14, 4)
+	column.pivot_offset = Vector2(7, 4)
+	column.position = Vector2(c.x - 7, c.y + 16.0)
+	column.z_index = 23
+	_stage.add_child(column)
+	var t := create_tween()
+	t.tween_property(column, "size", Vector2(14, 52), 0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(column, "position:y", c.y - 34.0, 0.14)
+	t.tween_property(column, "modulate:a", 0.0, 0.16)
+	for i in 6:
+		var drop := ColorRect.new()
+		drop.color = col
+		drop.size = Vector2(3, 3)
+		drop.position = c
+		drop.z_index = 24
+		_stage.add_child(drop)
+		var ang := -PI * 0.5 + randf_range(-0.9, 0.9)
+		var dest := c + Vector2(cos(ang), sin(ang)) * randf_range(16.0, 30.0)
+		var dt := create_tween()
+		dt.set_parallel(true)
+		dt.tween_property(drop, "position", dest, 0.3).set_trans(Tween.TRANS_QUAD)
+		dt.tween_property(drop, "modulate:a", 0.0, 0.3)
+		dt.chain().tween_callback(drop.queue_free)
+	await t.finished
+	column.queue_free()
+
+
+func _atk_ice(attacker: TextureRect, target: TextureRect, col: Color) -> void:
+	# Sharp ice shards fly to the target and shatter.
+	var from := _sprite_center(attacker)
+	var to := _sprite_center(target)
+	for i in 3:
+		var shard := ColorRect.new()
+		shard.color = Color(0.75, 0.9, 1.0, 0.95)
+		shard.size = Vector2(6, 6)
+		shard.pivot_offset = Vector2(3, 3)
+		shard.rotation_degrees = 45.0
+		shard.position = from - Vector2(3, 3)
+		shard.z_index = 22
+		_stage.add_child(shard)
+		var off := Vector2(randf_range(-6, 6), randf_range(-6, 6))
+		var tw := create_tween()
+		tw.tween_interval(float(i) * 0.05)
+		tw.tween_property(shard, "position", to + off - Vector2(3, 3), 0.16).set_trans(Tween.TRANS_LINEAR)
+		tw.tween_callback(shard.queue_free)
+	await get_tree().create_timer(0.28).timeout
+	_flash_ring(to, Color(0.8, 0.92, 1.0))
+	for i in 6:
+		var frag := ColorRect.new()
+		frag.color = Color(0.85, 0.95, 1.0, 0.9)
+		frag.size = Vector2(3, 3)
+		frag.position = to
+		frag.z_index = 25
+		_stage.add_child(frag)
+		var ang := i * TAU / 6.0
+		var dest := to + Vector2(cos(ang), sin(ang)) * 16.0
+		var t := create_tween()
+		t.set_parallel(true)
+		t.tween_property(frag, "position", dest, 0.22)
+		t.tween_property(frag, "modulate:a", 0.0, 0.22)
+		t.chain().tween_callback(frag.queue_free)
+	await get_tree().create_timer(0.12).timeout
+
+
+func _atk_meteor(target: TextureRect, col: Color) -> void:
+	# A blazing meteor falls diagonally onto the target.
+	var c := _sprite_center(target)
+	var start := c + Vector2(48, -64)
+	var meteor := ColorRect.new()
+	meteor.color = col
+	meteor.size = Vector2(10, 10)
+	meteor.pivot_offset = Vector2(5, 5)
+	meteor.rotation_degrees = 45.0
+	meteor.position = start - Vector2(5, 5)
+	meteor.z_index = 23
+	_stage.add_child(meteor)
+	var steps := 8
+	var t := create_tween()
+	for i in range(1, steps + 1):
+		var p := start.lerp(c, float(i) / float(steps))
+		t.tween_callback(_spawn_trail.bind(p, col))
+		t.tween_property(meteor, "position", p - meteor.size * 0.5, 0.03)
+	await t.finished
+	meteor.queue_free()
+	_impact_burst(c, col, 1.3)
+	_stage_shake()
+	await get_tree().create_timer(0.1).timeout
+
+
+func _atk_spore(target: TextureRect, col: Color) -> void:
+	# A drifting cloud of spores envelops the target.
+	var c := _sprite_center(target)
+	for i in 12:
+		var s := ColorRect.new()
+		s.color = Color(col.r, col.g, col.b, 0.8)
+		s.size = Vector2(3, 3)
+		var ang := randf() * TAU
+		var r := randf_range(4.0, 10.0)
+		s.position = c + Vector2(cos(ang), sin(ang)) * r
+		s.z_index = 24
+		_stage.add_child(s)
+		var dest := c + Vector2(cos(ang), sin(ang)) * randf_range(16.0, 24.0)
+		var tw := create_tween()
+		tw.tween_interval(float(i) * 0.015)
+		tw.set_parallel(true)
+		tw.tween_property(s, "position", dest, 0.4).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(s, "modulate:a", 0.0, 0.4)
+		tw.chain().tween_callback(s.queue_free)
+	_flash_ring(c, col)
+	await get_tree().create_timer(0.32).timeout
 
 
 func _slash_marks(center: Vector2, _col: Color) -> void:

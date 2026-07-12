@@ -51,6 +51,14 @@ func configure(map_id: String, is_ranger: bool, kind: String, is_boss: bool = fa
 		_theme = "jungle"
 	elif map_id.begins_with("cave"):
 		_theme = "cave"
+	elif map_id.begins_with("beach") or map_id.begins_with("tide"):
+		_theme = "beach"
+	elif map_id.begins_with("storm"):
+		_theme = "storm"
+	elif map_id.begins_with("psychic"):
+		_theme = "psychic"
+	elif map_id.begins_with("graveyard"):
+		_theme = "graveyard"
 	elif map_id == "route2":
 		_theme = "wood"
 	else:
@@ -73,6 +81,10 @@ func _draw() -> void:
 		"jungle": _draw_jungle()
 		"cave": _draw_cave()
 		"wood": _draw_wood()
+		"beach": _draw_beach()
+		"storm": _draw_storm()
+		"psychic": _draw_psychic()
+		"graveyard": _draw_graveyard()
 		"ranger": _draw_ranger()
 		"arena": _draw_arena()
 		"fishing": _draw_fishing()
@@ -268,6 +280,136 @@ func _boss_spot(feet: Vector2, col: Color) -> void:
 			var ang := float(i) / 20.0 * TAU
 			pts.append(feet + Vector2(cos(ang) * rx, sin(ang) * rx * 0.3))
 		draw_colored_polygon(pts, Color(col.r, col.g, col.b, a))
+
+
+func _draw_beach() -> void:
+	_paint_sky(func(t): return Color("58b0e8").lerp(Color("bfeaf5"), t))
+	_draw_sun(Vector2(198, 20), Color("fff3c8"))
+	_draw_cloud(Vector2(20 + _cloud_drift * 0.3, 16), 0, 0.7)
+	_draw_cloud(Vector2(150 + _cloud_drift * 0.4, 26), 2, 0.6)
+	# distant sea
+	draw_rect(Rect2(0, HORIZON - 6, VIEW_W, 30), Color("2f88b8"))
+	for y in range(HORIZON - 4, HORIZON + 22, 3):
+		var w := sin(_time * 1.8 + y * 0.2) * 1.6
+		draw_rect(Rect2(0, y + int(w), VIEW_W, 1), Color("5ab8d8", 0.4))
+	# foam line
+	draw_rect(Rect2(0, HORIZON + 20, VIEW_W, 2), Color("eafcff", 0.7))
+	# palm silhouettes
+	for i in 3:
+		var px := 26 + i * 92
+		draw_rect(Rect2(px, 52, 3, 24), Color("6a4a2a"))
+		for f in 5:
+			var ang := PI + f * (PI / 4.0)
+			var tip := Vector2(px + 1 + cos(ang) * 12, 52 + sin(ang) * 8)
+			draw_line(Vector2(px + 1, 52), tip, Color("3a8a52"), 2.0)
+	# sand
+	_tile_ground(90, Color("e6d29a"))
+	draw_rect(Rect2(0, 90, VIEW_W, VIEW_H - 90), Color("e6d29a"))
+	for i in 8:
+		draw_rect(Rect2(10 + i * 30, 96 + (i % 3) * 4, 3, 2), Color("cbb277"))  # shells/pebbles
+	_draw_battle_floor()
+
+
+func _draw_storm() -> void:
+	# dark charged sky
+	for y in HORIZON:
+		var t := float(y) / float(HORIZON - 1)
+		draw_rect(Rect2(0, y, VIEW_W, 1), Color("1c2436").lerp(Color("46506e"), t))
+	_draw_cloud(Vector2(10 + _cloud_drift * 0.5, 12), 1, 0.85)
+	_draw_cloud(Vector2(120 + _cloud_drift * 0.6, 22), 0, 0.8)
+	# periodic lightning flash
+	var flash := maxf(0.0, sin(_time * 0.9) - 0.93) * 14.0
+	if flash > 0.0:
+		draw_rect(Rect2(0, 0, VIEW_W, HORIZON), Color(0.9, 0.95, 1.0, clampf(flash, 0.0, 0.5)))
+		var bx := 60 + int(_time * 37) % 120
+		var by := 6
+		for s in 6:
+			var nx := bx + (s % 2) * 6 - 3
+			draw_line(Vector2(bx, by), Vector2(nx, by + 10), Color("eaf2ff", 0.9), 1.5)
+			bx = nx; by += 10
+	_draw_hill(60, 74, 70, Color("2a3450"), Color("3a4668"))
+	_draw_hill(180, 72, 66, Color("2a3450"), Color("3a4668"))
+	# glowing crystal pylons
+	for i in 4:
+		var cx := 26 + i * 60
+		var pulse := 0.5 + sin(_time * 3.0 + i) * 0.3
+		draw_rect(Rect2(cx, 62, 3, 18), Color("5a6a9a"))
+		draw_rect(Rect2(cx - 1, 58, 5, 6), Color("8fe4ff", pulse))
+	_tile_ground(88, Color("46506e"))
+	_scatter_tufts(92, 6)
+	# static sparks near ground
+	for i in 10:
+		var sx := fmod(_time * 40 + i * 24, VIEW_W)
+		draw_rect(Rect2(sx, 96 + (i % 3) * 4, 1, 1), Color("bfe6ff", 0.5 + sin(_time * 6 + i) * 0.4))
+	_draw_battle_floor()
+
+
+func _draw_psychic() -> void:
+	# dreamy gradient
+	for y in VIEW_H:
+		var t := float(y) / float(VIEW_H - 1)
+		draw_rect(Rect2(0, y, VIEW_W, 1), Color("2a1846").lerp(Color("6a4a9a"), t * 0.9))
+	# swirling nebula rings
+	var c := Vector2(120, 46)
+	for r in [54, 42, 30, 18]:
+		var a := 0.08 + sin(_time * 1.2 + r * 0.05) * 0.05
+		draw_arc(c, float(r), 0, TAU, 40, Color("c49bff", a), 1.5, true)
+	# floating orbs
+	for i in 8:
+		var phase := float(i) / 8.0
+		var ox := 30 + phase * 180 + sin(_time * 0.8 + i) * 10
+		var oy := 24 + sin(_time * 1.1 + i * 1.4) * 12
+		var pulse := 0.4 + sin(_time * 2.5 + i) * 0.3
+		draw_circle(Vector2(ox, oy), 3.0, Color("e0c0ff", pulse))
+		draw_circle(Vector2(ox, oy), 1.5, Color("ffffff", pulse))
+	# stars
+	for i in _stars.size():
+		var tw := 0.5 + 0.5 * sin(_time * 2.0 + _star_phase[i])
+		draw_rect(Rect2(_stars[i].x, _stars[i].y, 1, 1), Color("ffffff", tw * 0.4))
+	# reflective floor
+	draw_rect(Rect2(0, 92, VIEW_W, VIEW_H - 92), Color("34205a"))
+	for i in 6:
+		var lx := 12 + i * 40
+		draw_rect(Rect2(lx, 96, 2, VIEW_H - 96), Color("c49bff", 0.12))
+	draw_rect(Rect2(0, 92, VIEW_W, 2), Color("a888e0", 0.5))
+	_draw_battle_floor()
+
+
+func _draw_graveyard() -> void:
+	# grim night sky
+	for y in HORIZON:
+		var t := float(y) / float(HORIZON - 1)
+		draw_rect(Rect2(0, y, VIEW_W, 1), Color("0c1018").lerp(Color("28324a"), t))
+	# sickly moon
+	draw_circle(Vector2(190, 24), 12.0, Color("cfe6d0", 0.15))
+	draw_circle(Vector2(190, 24), 8.0, Color("dff0dc"))
+	draw_circle(Vector2(186, 22), 3.0, Color("b8ccb8", 0.6))
+	for i in _stars.size():
+		if i % 2 != 0:
+			continue
+		var tw := 0.4 + 0.5 * sin(_time * 1.5 + _star_phase[i])
+		draw_rect(Rect2(_stars[i].x, _stars[i].y, 1, 1), Color("cfe6d0", tw * 0.3))
+	# gnarled tree silhouettes
+	_draw_hill(50, 76, 66, Color("101620"), Color("1a2230"))
+	_draw_hill(180, 74, 70, Color("101620"), Color("1a2230"))
+	# tombstones
+	for i in 5:
+		var tx := 18 + i * 46
+		var th := 12 + (i % 3) * 4
+		draw_rect(Rect2(tx, 82 - th, 8, th), Color("39414f"))
+		draw_rect(Rect2(tx + 1, 82 - th, 6, 4), Color("4a5464"))
+		draw_rect(Rect2(tx + 3, 82 - th + 4, 2, 4), Color("20262f"))  # cross groove
+	# drifting spirit wisps
+	for i in 6:
+		var phase := float(i) / 6.0
+		var wx := 24 + phase * 190 + sin(_time * 0.7 + i) * 8
+		var wy := 60 + fmod(_time * (8 + phase * 6) + phase * 40, 40)
+		draw_circle(Vector2(wx, 90 - wy), 2.0, Color("8fe6b0", 0.25 + sin(_time * 3 + i) * 0.2))
+	# fog band
+	draw_rect(Rect2(0, 80, VIEW_W, 12), Color("6a7a8a", 0.1))
+	_tile_ground(94, Color("2a3040"))
+	_draw_rock_floor(96)
+	_draw_battle_floor()
 
 
 func _draw_ranger() -> void:

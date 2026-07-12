@@ -359,6 +359,46 @@ func add_prop(sprite_path: String, cell: Vector2i, blocks: bool = false) -> Spri
 	return spr
 
 
+## Places a standing prop whose BASE sits on `cell` (tall props extend upward).
+func add_ground_prop(sprite_path: String, cell: Vector2i, blocks: bool = true) -> Sprite2D:
+	var tex := load(sprite_path)
+	var h: int = tex.get_height() if tex else TILE
+	var spr := Sprite2D.new()
+	spr.texture = tex
+	spr.centered = false
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.position = Vector2(cell.x * TILE, cell.y * TILE - (h - TILE))
+	spr.z_index = 3
+	add_child(spr)
+	if blocks:
+		block(cell)
+	return spr
+
+
+## A one-time legendary encounter: the creature stands on the map until caught.
+## Interacting launches a catchable wild battle; once caught it vanishes.
+func add_legend_encounter(cell: Vector2i, def_id: String, level: int, intro: String = "") -> void:
+	if bool(GameState.caught.get(def_id, false)):
+		return
+	var spr := Sprite2D.new()
+	spr.texture = load("res://assets/echoes/%s.png" % def_id)
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	spr.centered = true
+	spr.scale = Vector2(0.42, 0.42)
+	spr.position = Vector2(cell.x * TILE + 8, cell.y * TILE + 4)
+	spr.z_index = 4
+	add_child(spr)
+	# gentle idle bob so it reads as alive
+	var bob := create_tween().set_loops()
+	bob.tween_property(spr, "position:y", spr.position.y - 3.0, 1.1).set_trans(Tween.TRANS_SINE)
+	bob.tween_property(spr, "position:y", spr.position.y, 1.1).set_trans(Tween.TRANS_SINE)
+	block(cell)
+	add_interact(cell, {
+		"type": "legend", "id": def_id, "level": level,
+		"text": intro if intro != "" else "A legendary presence resonates before you...",
+	})
+
+
 func add_heal_station(nurse_cell: Vector2i, emblem_cell: Vector2i, facing: String = "down") -> Node2D:
 	# Echo Rest clinic: small red medical cross (+) above the nurse — not a big X icon.
 	var cross := add_prop(Tiles.HEAL_CROSS, emblem_cell, false)
@@ -572,9 +612,26 @@ func _handle_interact(data: Dictionary) -> void:
 			EventBus.dialogue_requested.emit(lines)
 		"trainer":
 			_on_trainer_interact(data.get("trainer", {}))
+		"legend":
+			_on_legend_interact(data)
 		"greeter":
 			var gid := String(data.get("greeter", {}).get("id", ""))
 			await _on_greeter_interact(data.get("greeter", {}), _npc_gift_pos(gid))
+
+
+func _on_legend_interact(data: Dictionary) -> void:
+	var did := String(data.get("id", ""))
+	if bool(GameState.caught.get(did, false)):
+		EventBus.dialogue_requested.emit(["The resonance here has fallen silent."])
+		return
+	if GameState.living_party().is_empty():
+		EventBus.dialogue_requested.emit(["Your %s are too weary to face this..." % GameStrings.CREATURE_PLURAL_LOWER])
+		return
+	var lvl := int(data.get("level", 45))
+	EventBus.dialogue_closed.connect(func() -> void:
+		SceneRouter.start_wild_battle(did, lvl)
+	, CONNECT_ONE_SHOT)
+	EventBus.dialogue_requested.emit([String(data.get("text", "A legendary presence stirs!"))])
 
 
 func _npc_gift_pos(npc_id: String) -> Vector2:

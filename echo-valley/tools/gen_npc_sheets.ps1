@@ -53,6 +53,17 @@ $schemes = @(
   @{ n="npc_night";  shirt=@(74,74,132);   hair=@(26,26,32);    pants=@(30,30,40);  skin=@(150,108,80);  accent=@(120,120,200) }
   # medical: white coat, pink hair, red accent
   @{ n="nurse";      shirt=@(238,238,244); hair=@(236,150,178); pants=@(220,220,228); skin=$null;        accent=@(210,60,60) }
+  # --- expansion trainer variants (10) ---
+  @{ n="npc_tide";    shirt=@(64,196,208);  hair=@(28,60,80);    pants=@(30,70,96);   skin=$null;          accent=@(240,246,255) }
+  @{ n="npc_storm";   shirt=@(240,206,64);  hair=@(40,44,66);    pants=@(36,40,60);   skin=$null;          accent=@(150,200,255) }
+  @{ n="npc_psy";     shirt=@(168,96,220);  hair=@(90,220,220);  pants=@(48,40,72);   skin=$null;          accent=@(220,180,255) }
+  @{ n="npc_grave";   shirt=@(72,78,92);    hair=@(200,205,215); pants=@(38,40,50);   skin=@(178,168,158); accent=@(120,200,150) }
+  @{ n="npc_ember";   shirt=@(226,86,52);   hair=@(60,36,28);    pants=@(70,42,36);   skin=@(214,164,124); accent=@(255,190,90) }
+  @{ n="npc_frost";   shirt=@(206,232,248); hair=@(120,170,210); pants=@(70,96,128);  skin=$null;          accent=@(120,200,255) }
+  @{ n="npc_jade";    shirt=@(48,168,120);  hair=@(34,54,44);    pants=@(40,72,58);   skin=$null;          accent=@(210,240,180) }
+  @{ n="npc_crimson"; shirt=@(178,40,56);   hair=@(30,26,30);    pants=@(52,30,36);   skin=$null;          accent=@(240,200,120) }
+  @{ n="npc_dusk";    shirt=@(96,70,150);   hair=@(24,22,34);    pants=@(34,30,52);   skin=@(160,116,86);  accent=@(180,150,240) }
+  @{ n="npc_coral";   shirt=@(240,128,140); hair=@(70,40,44);    pants=@(96,64,72);   skin=$null;          accent=@(255,210,190) }
 )
 
 $hero = [System.Drawing.Bitmap]::FromFile($heroPath)
