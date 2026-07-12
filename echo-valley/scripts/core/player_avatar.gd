@@ -18,9 +18,9 @@ const LABELS := {
 }
 
 const BLURBS := {
-	"keeper": "Red shirt — classic valley look",
-	"curly": "Pink dress — warm & spirited",
-	"cap": "Street cap — cool & confident",
+	"keeper": "Classic valley look",
+	"curly": "Warm & spirited",
+	"cap": "Cool & confident",
 }
 
 const DEFAULT_NAMES := {

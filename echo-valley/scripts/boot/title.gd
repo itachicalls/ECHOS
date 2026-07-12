@@ -20,6 +20,15 @@ var _chrome: Control
 var _picked_avatar: String = "keeper"
 var _name_field: LineEdit
 var _avatar_frames: Dictionary = {}
+var _avatar_detail: Label
+
+const CREATE_PAD := 6
+const CREATE_W := VIEW_W - CREATE_PAD * 2
+const C_CREATE_GOLD := Color("ffe08a")
+const C_CREATE_MINT := Color("52b788")
+const C_CREATE_ICE := Color("cfe8ff")
+const C_CREATE_LINE := Color("3a5a78", 0.55)
+const C_CREATE_PANEL := Color("101a2c", 0.78)
 
 
 func _ready() -> void:
@@ -187,58 +196,67 @@ func _show_character_create() -> void:
 		_chrome.visible = false
 	_picked_avatar = "keeper"
 	_avatar_frames.clear()
+	_avatar_detail = null
 
 	_create_panel = Panel.new()
 	_create_panel.position = Vector2.ZERO
 	_create_panel.size = Vector2(VIEW_W, VIEW_H)
 	_create_panel.z_index = 20
 	_create_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_create_panel.clip_contents = true
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color("060c18", 0.97)
 	sb.set_border_width_all(0)
 	_create_panel.add_theme_stylebox_override("panel", sb)
 	add_child(_create_panel)
 
-	TitleFonts.shadow_label(
-		_create_panel, "Create your Keeper", 7, Color("fff0b0"),
-		Vector2(8, 8), Vector2(VIEW_W - 16, 14),
-		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
-	)
-	TitleFonts.shadow_label(
-		_create_panel, "Choose your look", 5, Color("a8e8dc"),
-		Vector2(8, 22), Vector2(VIEW_W - 16, 10),
-		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
-	)
+	var backdrop := preload("res://scripts/boot/versus_draft_backdrop.gd").new()
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.z_index = -1
+	_create_panel.add_child(backdrop)
+
+	_create_soft_title("CREATE YOUR KEEPER", "choose your look")
+
+	const CARD_W := 72
+	const CARD_H := 56
+	const CARD_GAP := 4
+	var row_w := PlayerAvatarScript.IDS.size() * CARD_W + (PlayerAvatarScript.IDS.size() - 1) * CARD_GAP
+	var row_x := (VIEW_W - row_w) / 2
+	var row_y := 24
 
 	for i in PlayerAvatarScript.IDS.size():
 		var id: String = PlayerAvatarScript.IDS[i]
-		_avatar_column(id, 14 + i * 72)
+		var pos := Vector2(row_x + i * (CARD_W + CARD_GAP), row_y)
+		_avatar_card(id, pos, Vector2(CARD_W, CARD_H))
 
 	_update_avatar_selection()
 
-	TitleFonts.shadow_label(
-		_create_panel, "Your name", 5, Color("cfe8ff"),
-		Vector2(8, 104), Vector2(VIEW_W - 16, 10),
-		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
-	)
+	_avatar_detail = Label.new()
+	_create_pin(_avatar_detail, Vector2(CREATE_PAD, 84), Vector2(CREATE_W, 10))
+	_avatar_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_avatar_detail.clip_text = true
+	_avatar_detail.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_create_panel.add_child(_avatar_detail)
 
-	_name_field = _name_field_box()
+	_create_label(Vector2(CREATE_PAD, 100), Vector2(CREATE_W, 8), "YOUR NAME", 5, Color("7c8aa0"), true)
+
+	_name_field = _create_name_field()
 	_name_field.text = PlayerAvatarScript.DEFAULT_NAMES[_picked_avatar]
 	_name_field.placeholder_text = "Enter a name..."
 	_create_panel.add_child(_name_field)
 
-	var go := _button("Continue", _on_confirm_character)
-	go.position = Vector2(75, 136)
-	go.size = Vector2(90, 18)
+	var btn_h := 18
 	if TouchUtil != null and TouchUtil.is_touch_ui_enabled():
-		go.size = Vector2(90, 22)
+		btn_h = 22
+	var go := _create_action_btn("Continue", _on_confirm_character, Vector2(75, 140), Vector2(90, btn_h))
 	_create_panel.add_child(go)
 
 
-func _avatar_column(id: String, x: int) -> void:
+func _avatar_card(id: String, pos: Vector2, sz: Vector2) -> void:
 	var frame := Panel.new()
-	frame.position = Vector2(x, 34)
-	frame.size = Vector2(64, 66)
+	frame.position = pos
+	frame.size = sz
+	frame.clip_contents = true
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_create_panel.add_child(frame)
 	_avatar_frames[id] = frame
@@ -248,59 +266,102 @@ func _avatar_column(id: String, x: int) -> void:
 	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	preview.expand_mode = TextureRect.EXPAND_KEEP_SIZE
-	preview.custom_minimum_size = Vector2(28, 56)
-	preview.size = Vector2(28, 56)
-	preview.position = Vector2(18, 4)
+	preview.position = Vector2((sz.x - 24) / 2, 6)
+	preview.size = Vector2(24, 36)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.add_child(preview)
 
 	var nm := Label.new()
-	nm.text = PlayerAvatarScript.LABELS.get(id, id)
-	nm.position = Vector2(0, 46)
-	nm.size = Vector2(64, 8)
+	nm.position = Vector2(2, sz.y - 14)
+	nm.size = Vector2(sz.x - 4, 12)
 	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	TitleFonts.apply(nm, 6, Color("f0f8ff"))
+	nm.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	nm.clip_text = true
+	nm.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	TitleFonts.fit_label(nm, PlayerAvatarScript.LABELS.get(id, id), sz.x - 4, Color("e8f4ff"), 5, 4)
 	frame.add_child(nm)
-
-	var blurb := Label.new()
-	blurb.text = PlayerAvatarScript.BLURBS.get(id, "")
-	blurb.position = Vector2(2, 54)
-	blurb.size = Vector2(60, 10)
-	blurb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	blurb.autowrap_mode = TextServer.AUTOWRAP_WORD
-	blurb.clip_text = true
-	TitleFonts.apply(blurb, 4, Color("8ec8ff"))
-	frame.add_child(blurb)
 
 	var hit := Button.new()
 	hit.position = Vector2.ZERO
-	hit.size = frame.size
+	hit.size = sz
 	hit.focus_mode = Control.FOCUS_NONE
 	hit.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
-	hit.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
-	hit.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+	hit.add_theme_stylebox_override("hover", _create_box(Color("ffe08a", 0.12), Color("ffe08a")))
+	hit.add_theme_stylebox_override("pressed", _create_box(Color(0, 0, 0, 0.2), C_CREATE_MINT))
 	hit.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	hit.pressed.connect(_on_pick_avatar.bind(id))
 	frame.add_child(hit)
 
 
-func _name_field_box() -> LineEdit:
+func _create_name_field() -> LineEdit:
 	var f := LineEdit.new()
-	f.position = Vector2(52, 116)
-	f.size = Vector2(136, 16)
+	_create_pin(f, Vector2(52, 110), Vector2(136, 18))
 	f.max_length = PlayerAvatarScript.MAX_NAME_LEN
 	f.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	f.virtual_keyboard_enabled = true
 	f.focus_mode = Control.FOCUS_ALL
 	f.add_theme_font_size_override("font_size", 7)
-	f.add_theme_stylebox_override("normal", _field_style(Color("0c141c", 0.92), Color("3a5f8f")))
-	f.add_theme_stylebox_override("focus", _field_style(Color("14202b"), Color("8ec8ff")))
+	f.add_theme_stylebox_override("normal", _create_box(Color("0c141c", 0.9), Color("3a5f8f")))
+	f.add_theme_stylebox_override("focus", _create_box(Color("14202b"), Color("8ec8ff")))
 	f.add_theme_color_override("font_color", Color("e8f4ff"))
 	f.add_theme_color_override("font_placeholder_color", Color("5a7088"))
 	return f
 
 
-func _field_style(bg: Color, border: Color) -> StyleBoxFlat:
+func _create_soft_title(text: String, sub: String) -> void:
+	var title := Label.new()
+	title.text = text
+	_create_pin(title, Vector2(0, 2), Vector2(VIEW_W, 12))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	TitleFonts.apply(title, 7, C_CREATE_GOLD, Color("1a1030"), 1)
+	_create_panel.add_child(title)
+	if sub != "":
+		var s := Label.new()
+		s.text = sub
+		_create_pin(s, Vector2(0, 12), Vector2(VIEW_W, 8))
+		s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		s.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		TitleFonts.apply(s, 5, Color("8ab0c8"))
+		_create_panel.add_child(s)
+
+
+func _create_label(pos: Vector2, sz: Vector2, text: String, font: int, col: Color, center: bool) -> Label:
+	var l := Label.new()
+	l.text = text
+	_create_pin(l, pos, sz)
+	l.clip_text = true
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	TitleFonts.apply(l, font, col)
+	if center:
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_create_panel.add_child(l)
+	return l
+
+
+func _create_action_btn(text: String, cb: Callable, pos: Vector2, sz: Vector2) -> Button:
+	var b := Button.new()
+	b.text = text
+	_create_pin(b, pos, sz)
+	b.clip_text = true
+	b.focus_mode = Control.FOCUS_NONE
+	TitleFonts.fit_label(b, text, sz.x - 4, Color("f2f7ff"), 6, 5)
+	b.add_theme_stylebox_override("normal", _create_box(Color("1a3050", 0.92), C_CREATE_MINT))
+	b.add_theme_stylebox_override("hover", _create_box(Color(C_CREATE_MINT.r, C_CREATE_MINT.g, C_CREATE_MINT.b, 0.25), Color.WHITE))
+	b.add_theme_stylebox_override("pressed", _create_box(Color("0a1220"), C_CREATE_GOLD))
+	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	b.pressed.connect(cb)
+	return b
+
+
+func _create_pin(node: Control, pos: Vector2, sz: Vector2) -> void:
+	node.position = pos
+	node.size = sz
+	node.custom_minimum_size = sz
+
+
+func _create_box(bg: Color, border: Color) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = bg
 	sb.border_color = border
@@ -308,6 +369,8 @@ func _field_style(bg: Color, border: Color) -> StyleBoxFlat:
 	sb.set_corner_radius_all(3)
 	sb.content_margin_left = 4
 	sb.content_margin_right = 4
+	sb.content_margin_top = 2
+	sb.content_margin_bottom = 2
 	return sb
 
 
@@ -331,12 +394,25 @@ func _update_avatar_selection() -> void:
 		if frame == null:
 			continue
 		var sel := id == _picked_avatar
+		var accent := C_CREATE_GOLD if sel else C_CREATE_LINE
 		var box := StyleBoxFlat.new()
-		box.bg_color = Color("1a3050", 0.88) if sel else Color("0c1428", 0.55)
-		box.border_color = Color("fff0b0") if sel else Color("3a5f8f", 0.6)
+		box.bg_color = Color("1a3a30", 0.85) if sel else Color("0c1420", 0.72)
+		box.border_color = accent
 		box.set_border_width_all(2 if sel else 1)
 		box.set_corner_radius_all(4)
+		if sel:
+			box.shadow_color = Color(C_CREATE_GOLD.r, C_CREATE_GOLD.g, C_CREATE_GOLD.b, 0.35)
+			box.shadow_size = 2
 		frame.add_theme_stylebox_override("panel", box)
+	if _avatar_detail:
+		TitleFonts.fit_label(
+			_avatar_detail,
+			PlayerAvatarScript.BLURBS.get(_picked_avatar, ""),
+			CREATE_W,
+			Color("8ab0c8"),
+			5,
+			4
+		)
 
 
 func _on_confirm_character() -> void:
