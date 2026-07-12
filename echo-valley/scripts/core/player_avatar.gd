@@ -24,9 +24,9 @@ const BLURBS := {
 }
 
 const DEFAULT_NAMES := {
-	"keeper": "Ash",
-	"curly": "Luna",
-	"cap": "Kai",
+	"keeper": "Floki",
+	"curly": "Dasha",
+	"cap": "Kroiv",
 }
 
 const MAX_NAME_LEN := 12

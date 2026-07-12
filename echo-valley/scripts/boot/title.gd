@@ -188,7 +188,7 @@ func _reset_state() -> void:
 	GameState.player_cell = Vector2i(12, 16)
 	GameState.player_facing = "up"
 	GameState.play_mode = "solo"
-	GameState.player_name = "Ash"
+	GameState.player_name = "Floki"
 	GameState.player_avatar = "keeper"
 
 
@@ -255,22 +255,8 @@ func _show_character_create() -> void:
 			accents.get(id, C_CREATE_GOLD)
 		)
 
-	for i in PlayerAvatarScript.IDS.size():
-		var id2: String = PlayerAvatarScript.IDS[i]
-		var nl := Label.new()
-		nl.position = Vector2(x0 + i * (SLOT_W + GAP) - 2, y0 + SLOT_H + 2)
-		nl.size = Vector2(SLOT_W + 4, 10)
-		nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		nl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		nl.clip_text = true
-		nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		TitleFonts.apply(nl, 5, Color("f0f8ff"))
-		nl.text = PlayerAvatarScript.LABELS.get(id2, id2)
-		_create_panel.add_child(nl)
-		_avatar_frames[id2].set_meta("name_label", nl)
-
 	_avatar_detail = Label.new()
-	_avatar_detail.position = Vector2(8, 98)
+	_avatar_detail.position = Vector2(8, 88)
 	_avatar_detail.size = Vector2(VIEW_W - 16, 10)
 	_avatar_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_avatar_detail.clip_text = true
@@ -280,26 +266,26 @@ func _show_character_create() -> void:
 
 	var name_lbl := Label.new()
 	name_lbl.text = "Your name"
-	name_lbl.position = Vector2(0, 110)
+	name_lbl.position = Vector2(0, 100)
 	name_lbl.size = Vector2(VIEW_W, 10)
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	TitleFonts.apply(name_lbl, 5, Color("fff0b0"))
 	_create_panel.add_child(name_lbl)
 
+	const FIELD_W := 72
+	const FIELD_H := 12
 	_name_field = LineEdit.new()
-	_name_field.position = Vector2(60, 122)
-	_name_field.size = Vector2(120, 14)
-	_name_field.custom_minimum_size = Vector2(120, 14)
-	_name_field.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	_name_field.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_name_field.position = Vector2((VIEW_W - FIELD_W) / 2, 112)
+	_name_field.size = Vector2(FIELD_W, FIELD_H)
+	_name_field.custom_minimum_size = Vector2(FIELD_W, FIELD_H)
 	_name_field.max_length = PlayerAvatarScript.MAX_NAME_LEN
 	_name_field.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_name_field.virtual_keyboard_enabled = true
 	_name_field.focus_mode = Control.FOCUS_ALL
 	_name_field.text = PlayerAvatarScript.DEFAULT_NAMES[_picked_avatar]
 	_name_field.placeholder_text = "Name"
-	TitleFonts.apply(_name_field, 6, Color("fff8e8"))
+	TitleFonts.apply(_name_field, 5, Color("fff8e8"))
 	_name_field.add_theme_stylebox_override("normal", _create_box(Color("102030", 0.95), Color("5ad4c8")))
 	_name_field.add_theme_stylebox_override("focus", _create_box(Color("183848", 0.98), Color("fff0b0")))
 	_name_field.add_theme_color_override("font_color", Color("fff8e8"))
@@ -307,10 +293,12 @@ func _show_character_create() -> void:
 	_name_field.add_theme_color_override("caret_color", Color("fff0b0"))
 	_create_panel.add_child(_name_field)
 
+	const BTN_W := 84
+	const BTN_H := 14
 	var go := Button.new()
-	go.position = Vector2(70, 140)
-	go.size = Vector2(100, 16)
-	go.custom_minimum_size = Vector2(100, 16)
+	go.position = Vector2((VIEW_W - BTN_W) / 2, 128)
+	go.size = Vector2(BTN_W, BTN_H)
+	go.custom_minimum_size = Vector2(BTN_W, BTN_H)
 	go.focus_mode = Control.FOCUS_NONE
 	go.clip_text = true
 	TitleFonts.apply(go, 6, Color("1a2030"))
@@ -447,10 +435,6 @@ func _update_avatar_selection() -> void:
 			box.set_border_width_all(2)
 		box.set_corner_radius_all(5)
 		frame.add_theme_stylebox_override("panel", box)
-		var nm: Label = frame.get_meta("name_label", null)
-		if nm:
-			nm.text = PlayerAvatarScript.LABELS.get(id, id)
-			TitleFonts.apply(nm, 5, Color("fff0b0") if sel else Color("e8f4ff"))
 	if _avatar_detail:
 		_avatar_detail.text = PlayerAvatarScript.BLURBS.get(_picked_avatar, "")
 		TitleFonts.apply(_avatar_detail, 5, Color("cfe8ff"))

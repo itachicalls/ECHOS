@@ -6,7 +6,7 @@ const PlayerAvatarScript := preload("res://scripts/core/player_avatar.gd")
 
 const STARTERS := ["emberkit", "tideling", "mossling"]
 
-var player_name: String = "Ash"
+var player_name: String = "Floki"
 var player_avatar: String = "keeper"
 var party: Array[EchoInstance] = []
 var pc_box: Array[EchoInstance] = []
@@ -167,7 +167,7 @@ func to_dict() -> Dictionary:
 
 
 func from_dict(data: Dictionary) -> void:
-	player_name = PlayerAvatarScript.sanitize_name(String(data.get("player_name", "Ash")), String(data.get("player_avatar", "keeper")))
+	player_name = PlayerAvatarScript.sanitize_name(String(data.get("player_name", "Floki")), String(data.get("player_avatar", "keeper")))
 	player_avatar = PlayerAvatarScript.normalize_id(String(data.get("player_avatar", "keeper")))
 	inventory = data.get("inventory", inventory).duplicate(true)
 	if inventory.has("echo_charm") and not inventory.has("echo_capsule"):
