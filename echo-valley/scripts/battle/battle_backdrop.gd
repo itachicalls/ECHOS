@@ -9,6 +9,7 @@ const C_ARENA_PURPLE := Color("c49bff")
 const ARENA_FLOOR_Y := 86
 
 var _theme := "meadow"
+var _is_boss := false
 var _time := 0.0
 var _cloud_drift := 0.0
 var _grass_tex: Texture2D
@@ -34,11 +35,14 @@ func _seed_stars(count: int) -> void:
 		_star_phase.append(rng.randf_range(0.0, TAU))
 
 
-func configure(map_id: String, is_ranger: bool, kind: String) -> void:
+func configure(map_id: String, is_ranger: bool, kind: String, is_boss: bool = false) -> void:
+	_is_boss = is_boss
 	if kind == "versus":
 		_theme = "arena"
 	elif kind == "fishing":
 		_theme = "fishing"
+	elif is_boss:
+		_theme = "boss"
 	elif is_ranger:
 		_theme = "ranger"
 	elif map_id.begins_with("desert"):
@@ -64,6 +68,7 @@ func _draw() -> void:
 	# Always paint the full frame so nothing shows the engine clear color.
 	draw_rect(Rect2(0, 0, VIEW_W, VIEW_H), Color("1a2030"))
 	match _theme:
+		"boss": _draw_boss_trial()
 		"desert": _draw_desert()
 		"jungle": _draw_jungle()
 		"cave": _draw_cave()
@@ -174,6 +179,95 @@ func _draw_cave() -> void:
 	_tile_ground(104, Color("3a3848"))
 	_draw_rock_floor(106)
 	_draw_battle_floor()
+
+
+func _draw_boss_trial() -> void:
+	# Twilight sky — deep indigo to ember horizon.
+	for y in HORIZON:
+		var t := float(y) / float(HORIZON - 1)
+		var sky := Color("12182e").lerp(Color("4a2858"), t * 0.55)
+		sky = sky.lerp(Color("c87848"), maxf(0.0, (t - 0.72) / 0.28) * 0.45)
+		draw_rect(Rect2(0, y, VIEW_W, 1), sky)
+
+	# Aurora ribbons (smooth curves, not blocky rects).
+	for band in 3:
+		var pts := PackedVector2Array()
+		var base_y := 18.0 + band * 10.0
+		for x in range(0, VIEW_W + 1, 4):
+			var wave := sin(_time * 0.7 + float(x) * 0.04 + band) * 5.0
+			pts.append(Vector2(x, base_y + wave))
+		pts.append(Vector2(VIEW_W, HORIZON))
+		pts.append(Vector2(0, HORIZON))
+		var aurora := Color("5ad4c8") if band == 0 else (Color("c49bff") if band == 1 else Color("ffe08a"))
+		draw_colored_polygon(pts, Color(aurora.r, aurora.g, aurora.b, 0.07 + band * 0.02))
+
+	# Distant mountain silhouettes.
+	_draw_hill(52, 70, 62, Color("1a2838"), Color("2a3848"))
+	_draw_hill(188, 68, 58, Color("1a2838"), Color("2a3848"))
+	_draw_hill(120, 74, 92, Color("243040"), Color("344858"))
+
+	# Massive stone arch framing the trial.
+	var arch_c := Vector2(120, 52)
+	draw_rect(Rect2(arch_c.x - 58, arch_c.y - 6, 8, 58), Color("4a5068"))
+	draw_rect(Rect2(arch_c.x + 50, arch_c.y - 6, 8, 58), Color("4a5068"))
+	for i in 14:
+		var ang := PI + float(i) / 13.0 * PI
+		var p := arch_c + Vector2(cos(ang) * 54, sin(ang) * 22)
+		draw_rect(Rect2(p.x - 2, p.y - 2, 4, 4), Color("6a7088" if i % 2 == 0 else Color("5a6078")))
+	# Arch glow seam.
+	var seam_a := 0.35 + sin(_time * 1.8) * 0.15
+	draw_arc(arch_c, 52.0, PI, 0, 24, Color("ffe08a", seam_a), 2.0, true)
+
+	# Corner obelisks with flame caps.
+	for obelisk in [Vector2(18, 78), Vector2(222, 78), Vector2(34, 62), Vector2(206, 62)]:
+		draw_rect(Rect2(obelisk.x - 3, obelisk.y, 6, 22), Color("3a4058"))
+		draw_rect(Rect2(obelisk.x - 4, obelisk.y + 20, 8, 3), Color("5a6078"))
+		var flick := 0.6 + sin(_time * 5.0 + obelisk.x) * 0.25
+		draw_circle(obelisk + Vector2(0, -4), 4.0, Color("ff9040", flick * 0.35))
+		draw_rect(Rect2(obelisk.x - 1, obelisk.y - 7, 2, 4), Color("ffe08a", flick))
+
+	# Sacred trial circle on the ground.
+	var floor_c := Vector2(120, 96)
+	for r in [58, 48, 38, 28]:
+		var ring_a := 0.12 + sin(_time * 1.4 + r * 0.02) * 0.06
+		draw_arc(floor_c, float(r), 0, TAU, 40, Color("5ad4c8", ring_a), 1.0, true)
+	draw_arc(floor_c, 56.0, 0, TAU, 48, Color("ffe08a", 0.45 + sin(_time * 2.0) * 0.12), 2.0, true)
+
+	# Rotating sigil nodes on the outer ring.
+	for i in 6:
+		var ang := float(i) / 6.0 * TAU + _time * 0.25
+		var p := floor_c + Vector2(cos(ang), sin(ang) * 0.42) * 50
+		draw_circle(p, 2.0, Color("ffe08a", 0.55 + sin(_time * 3.5 + i) * 0.3))
+		draw_line(p, floor_c, Color("5ad4c8", 0.08), 1.0)
+
+	# Meadow floor inside the circle.
+	_tile_ground(88, Color("3a6848", 0.55))
+	_scatter_tufts(92, 5)
+	_scatter_flowers(94, 3)
+
+	# Drifting resonance motes.
+	for i in 10:
+		var phase := float(i) / 10.0
+		var mx := 20.0 + phase * 200.0 + sin(_time * 1.2 + i * 0.7) * 12.0
+		var my := 40.0 + fmod(_time * (14.0 + phase * 10.0) + phase * 60.0, 58.0)
+		draw_rect(Rect2(mx, 86.0 - my, 1, 1), Color("ffe08a", 0.25 + sin(_time * 2.0 + i) * 0.2))
+
+	# Side spotlight pools under Harmon positions.
+	_boss_spot(Vector2(48, 98), Color("5ad4c8"))
+	_boss_spot(Vector2(192, 60), Color("ff8060"))
+
+	_draw_battle_floor()
+
+
+func _boss_spot(feet: Vector2, col: Color) -> void:
+	for k in 4:
+		var rx := 26.0 - k * 5.0
+		var a := (0.16 - k * 0.03) * (0.7 + sin(_time * 2.5 + k) * 0.3)
+		var pts := PackedVector2Array()
+		for i in 20:
+			var ang := float(i) / 20.0 * TAU
+			pts.append(feet + Vector2(cos(ang) * rx, sin(ang) * rx * 0.3))
+		draw_colored_polygon(pts, Color(col.r, col.g, col.b, a))
 
 
 func _draw_ranger() -> void:

@@ -40,6 +40,7 @@ var _msg_tap_hint: Label
 var _home: Dictionary = {}
 var _visual_active: Dictionary = {}  # stage index per side — may lag state.active during animations
 var _idle_tweens: Dictionary = {}
+var _is_boss: bool = false
 signal _forced_switch_picked(index: int)
 
 
@@ -102,9 +103,10 @@ func _begin_intro() -> void:
 func _build_ui() -> void:
 	var map_id := String(request.get("return_map", GameState.current_map))
 	var is_ranger := bool(request.get("gym", false)) or bool(request.get("ranger", false))
+	_is_boss = bool(request.get("gym", false))
 	var backdrop := preload("res://scripts/battle/battle_backdrop.gd").new()
 	backdrop.z_index = -1
-	backdrop.configure(map_id, is_ranger, String(request.get("kind", "wild")))
+	backdrop.configure(map_id, is_ranger, String(request.get("kind", "wild")), _is_boss)
 	add_child(backdrop)
 
 	_stage = Control.new()
@@ -117,6 +119,9 @@ func _build_ui() -> void:
 	if is_versus:
 		enemy_base = _versus_pad(Vector2(146, 50), Vector2(86, 16))
 		player_base = _versus_pad(Vector2(4, 88), Vector2(92, 18))
+	elif _is_boss:
+		enemy_base = _boss_platform(Vector2(146, 50), Vector2(86, 18), Color("ff8060"))
+		player_base = _boss_platform(Vector2(4, 88), Vector2(92, 20), Color("5ad4c8"))
 	else:
 		enemy_base = _terrain_base(Vector2(146, 50), Vector2(86, 16))
 		player_base = _terrain_base(Vector2(4, 88), Vector2(92, 18))
@@ -264,7 +269,9 @@ func _info_panel(pos: Vector2, show_xp: bool = false) -> Dictionary:
 	var hp_lbl := Label.new()
 	hp_lbl.add_theme_font_size_override("font_size", 6)
 	hp_lbl.add_theme_color_override("font_color", Color("cfe8ff"))
-	hp_lbl.position = Vector2(58, 20)
+	hp_lbl.position = Vector2(5, 21)
+	hp_lbl.size = Vector2(94, 8)
+	hp_lbl.clip_text = true
 	panel.add_child(hp_lbl)
 
 	var out := { "panel": panel, "name": name_lbl, "level": level_lbl, "type_badge": type_badge, "bar": bar, "hp": hp_lbl, "show_xp": show_xp }
@@ -347,6 +354,17 @@ func _versus_pad(pos: Vector2, sz: Vector2) -> Control:
 	var base := Control.new()
 	base.position = pos
 	base.size = sz
+	base.z_index = 0
+	base.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stage.add_child(base)
+	return base
+
+
+func _boss_platform(pos: Vector2, sz: Vector2, accent: Color) -> Control:
+	var base := preload("res://scripts/battle/boss_platform.gd").new()
+	base.position = pos
+	base.size = sz
+	base.accent = accent
 	base.z_index = 0
 	base.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(base)
@@ -484,7 +502,7 @@ func _refresh_side(side: String, info: Dictionary, spr: TextureRect, index: int 
 	info.level.text = "Lv%d" % int(u.level)
 	_swap_type_badge(info, int(u.get("resonance", 0)))
 	var base := player_base if side == "player" else enemy_base
-	if String(request.get("kind", "")) != "versus":
+	if String(request.get("kind", "")) != "versus" and not _is_boss:
 		_paint_terrain(base, int(u.get("resonance", 0)), base.size)
 	var hp := hp_display if hp_display >= 0 else int(u.current_hp)
 	_set_hp_bar(info, hp, int(u.max_hp))
@@ -627,6 +645,9 @@ func _intro() -> void:
 
 
 func _entry_animation() -> void:
+	if _is_boss:
+		await _boss_entry_animation()
+		return
 	# opening wipe + sprites slide/pop in from the sides
 	var enemy_home := _home_pos(enemy_sprite)
 	var player_home := _home_pos(player_sprite)
@@ -654,6 +675,65 @@ func _entry_animation() -> void:
 	await t2.finished
 
 
+func _boss_entry_animation() -> void:
+	var enemy_home := _home_pos(enemy_sprite)
+	var player_home := _home_pos(player_sprite)
+	enemy_sprite.position = enemy_home + Vector2(0, -72)
+	enemy_sprite.modulate = Color(1, 1, 1, 0)
+	enemy_sprite.scale = Vector2(1.4, 1.4)
+	player_sprite.position = player_home - Vector2(24, 0)
+	player_sprite.modulate = Color(0.55, 0.6, 0.7, 0.45)
+	msg.text = ""
+	await get_tree().process_frame
+
+	var flash := ColorRect.new()
+	flash.color = Color("ffe08a", 0.0)
+	flash.position = Vector2.ZERO
+	flash.size = Vector2(VIEW_W, VIEW_H)
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash.z_index = 40
+	add_child(flash)
+
+	var herald := Label.new()
+	herald.text = "RESONANCE TRIAL"
+	herald.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	herald.position = Vector2(0, 38)
+	herald.size = Vector2(VIEW_W, 14)
+	herald.add_theme_font_size_override("font_size", 8)
+	herald.add_theme_color_override("font_color", Color("ffe08a"))
+	herald.add_theme_color_override("font_outline_color", Color("1a1030"))
+	herald.add_theme_constant_override("outline_size", 2)
+	herald.modulate.a = 0.0
+	herald.z_index = 41
+	herald.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(herald)
+
+	var pulse := create_tween()
+	pulse.tween_property(herald, "modulate:a", 1.0, 0.18)
+	pulse.tween_property(herald, "modulate:a", 0.0, 0.35).set_delay(0.25)
+
+	var flash_tw := create_tween()
+	flash_tw.tween_property(flash, "color:a", 0.5, 0.1)
+	flash_tw.tween_property(flash, "color:a", 0.0, 0.4)
+
+	var slam := create_tween()
+	slam.set_parallel(true)
+	slam.tween_property(enemy_sprite, "position", enemy_home, 0.55).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	slam.tween_property(enemy_sprite, "modulate:a", 1.0, 0.28)
+	slam.tween_property(enemy_sprite, "scale", Vector2(1.0, 1.0), 0.5).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	await slam.finished
+	_stage_shake()
+
+	var player_in := create_tween()
+	player_in.set_parallel(true)
+	player_in.tween_property(player_sprite, "position", player_home, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	player_in.tween_property(player_sprite, "modulate", Color.WHITE, 0.3)
+	await player_in.finished
+
+	flash.queue_free()
+	herald.queue_free()
+
+
 func _start_idle_bob(spr: TextureRect) -> void:
 	var id := spr.get_instance_id()
 	if _idle_tweens.has(id):
@@ -662,8 +742,14 @@ func _start_idle_bob(spr: TextureRect) -> void:
 			old.kill()
 	var home := _home_pos(spr)
 	var tw := create_tween().set_loops()
-	tw.tween_property(spr, "position:y", home.y - 2.0, 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var is_boss_enemy := _is_boss and spr == enemy_sprite
+	var bob_h := 3.0 if is_boss_enemy else 2.0
+	tw.tween_property(spr, "position:y", home.y - bob_h, 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	if is_boss_enemy:
+		tw.parallel().tween_property(spr, "scale", Vector2(1.05, 1.05), 0.55).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(spr, "position:y", home.y, 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	if is_boss_enemy:
+		tw.parallel().tween_property(spr, "scale", Vector2(1.0, 1.0), 0.55).set_trans(Tween.TRANS_SINE)
 	_idle_tweens[id] = tw
 
 
