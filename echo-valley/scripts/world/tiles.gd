@@ -60,24 +60,23 @@ const HOUSE_W := 3
 const HOUSE_H := 3
 
 # --- character / prop / item sprite paths ---
-# Clean, readable 16x16 Kenney dungeon trainers (uniform style).
-# Blob/blank extractions (ranger, hood, merchant) and the mismatched 16x32
-# procedural clones are intentionally excluded.
+# Player-resolution NPC trainers: full 64x128 hero-layout sheets (4 walk frames x
+# 4 facing rows) recolored with distinct outfits/hair/skin. They match the hero's
+# silhouette & resolution exactly and support directional facing.
 const TRAINER_PATHS := [
-	"res://assets/kenney/chars/trainer_wizard.png",
-	"res://assets/kenney/chars/trainer_monk.png",
-	"res://assets/kenney/chars/trainer_smith.png",
-	"res://assets/kenney/chars/trainer_viking.png",
-	"res://assets/kenney/chars/trainer_scout.png",
-	"res://assets/kenney/chars/trainer_knight.png",
-	"res://assets/kenney/chars/trainer_guard.png",
-	"res://assets/kenney/chars/trainer_soldier.png",
-	"res://assets/kenney/chars/trainer_fighter.png",
-	"res://assets/kenney/chars/trainer_elder.png",
-	"res://assets/kenney/chars/trainer_squire.png",
+	"res://assets/sprites/npc/npc_aqua.png",
+	"res://assets/sprites/npc/npc_forest.png",
+	"res://assets/sprites/npc/npc_gold.png",
+	"res://assets/sprites/npc/npc_mint.png",
+	"res://assets/sprites/npc/npc_night.png",
+	"res://assets/sprites/npc/npc_orange.png",
+	"res://assets/sprites/npc/npc_rose.png",
+	"res://assets/sprites/npc/npc_sand.png",
+	"res://assets/sprites/npc/npc_steel.png",
+	"res://assets/sprites/npc/npc_violet.png",
 ]
 
-const NURSE := "res://assets/kenney/chars/nurse.png"
+const NURSE := "res://assets/sprites/npc/nurse.png"
 const SHRINE_FOUNTAIN := "res://assets/kenney/props/shrine_fountain.png"
 const HEAL_CROSS := "res://assets/kenney/props/heal_cross.png"
 const ECHO_CAPSULE := "res://assets/kenney/items/echo_capsule.png"

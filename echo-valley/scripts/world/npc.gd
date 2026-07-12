@@ -43,18 +43,20 @@ func setup(p_world, p_cell: Vector2i, p_facing: String, p_data: Dictionary, text
 	sprite = Sprite2D.new()
 	if texture_path != "":
 		sprite.texture = load(texture_path)
-		sprite.region_enabled = false
-		use_sheet = false
 	else:
 		sprite.texture = load("res://assets/sprites/hero.png")
-		sprite.region_enabled = true
-		use_sheet = true
+	# A 64x128 texture is a hero-layout sheet (4 walk frames x 4 facing rows):
+	# drive it as a directional sprite so the NPC can face the player.
+	var tex := sprite.texture
+	use_sheet = tex != null and tex.get_width() == 64 and tex.get_height() == 128
+	sprite.region_enabled = use_sheet
+	if use_sheet:
 		_apply_facing_region()
 	sprite.centered = false
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	sprite.modulate = tint
-	# Kenney NPC tiles are 16x16; the hero sheet frame is 16x32. Anchor feet to the tile.
-	var th := sprite.texture.get_height() if sprite.texture else 32
+	# 16x32 frames anchor feet to the tile base; small 16x16 tiles sit a bit higher.
+	var th := 32 if use_sheet else (tex.get_height() if tex else 32)
 	sprite.offset = Vector2(0, -16) if th >= 28 else Vector2(0, -8)
 	add_child(sprite)
 	z_index = 4

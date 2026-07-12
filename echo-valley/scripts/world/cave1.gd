@@ -61,7 +61,7 @@ func _build_map() -> void:
 		"win_line": "Solid team. The deeper hall's just ahead.",
 	})
 	add_trainer(Vector2i(15, 11), "left", {
-		"id": "cave1_seer", "name": "Cave Seer Luma", "look": 10,
+		"id": "cave1_seer", "name": "Cave Seer Luma", "look": 6,
 		"party": [{ "id": "shadelet", "level": 24 }, { "id": "umbrapaw", "level": 25 }, { "id": "flintling", "level": 25 }],
 		"reward": 9,
 		"intro": ["The dark whispers of a challenger...", "Prove your light is worth following!"],

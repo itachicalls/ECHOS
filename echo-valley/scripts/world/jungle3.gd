@@ -50,7 +50,7 @@ func _build_map() -> void:
 		"win_line": "The ancient trees bow to your spirit.",
 	})
 	add_trainer(Vector2i(14, 18), "left", {
-		"id": "j3_rival", "name": "Rival Sabo", "look": 3,
+		"id": "j3_rival", "name": "Rival Sabo", "look": 5,
 		"party": [{ "id": "flarefox", "level": 19 }, { "id": "marowl", "level": 18 }, { "id": "nocturn", "level": 19 }],
 		"reward": 8,
 		"intro": ["I knew you'd make it this far.", "This is where I surpass you!"],
