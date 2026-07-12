@@ -15,6 +15,7 @@ var _tap_btn: Button
 var _tap_hint: Label
 var _bag_btn: Control
 var _menu_btn: Control
+var _quick_bar: Panel
 var _lines: Array = []
 var _index: int = 0
 var _open: bool = false
@@ -67,10 +68,12 @@ func _build() -> void:
 	_box.add_child(_text)
 
 	_arrow = Label.new()
-	_arrow.text = "\u25BC"
+	_arrow.text = ">"
 	_arrow.add_theme_font_size_override("font_size", 7)
 	_arrow.add_theme_color_override("font_color", Color("cfe8ff"))
-	_arrow.position = Vector2(VIEW_W - 28, 34)
+	_arrow.position = Vector2(218, 34)
+	_arrow.size = Vector2(8, 10)
+	_arrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_box.add_child(_arrow)
 
 	_tap_hint = Label.new()
@@ -78,7 +81,7 @@ func _build() -> void:
 	_tap_hint.add_theme_font_size_override("font_size", 5)
 	_tap_hint.add_theme_color_override("font_color", Color("8ec8ff"))
 	_tap_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_tap_hint.position = Vector2(VIEW_W - 88, 34)
+	_tap_hint.position = Vector2(148, 34)
 	_tap_hint.size = Vector2(72, 10)
 	_tap_hint.visible = false
 	_tap_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -104,17 +107,17 @@ func _build() -> void:
 
 
 func _build_quick_bar() -> void:
-	var bar := Panel.new()
-	bar.position = Vector2(194, 144)
-	bar.size = Vector2(42, 14)
-	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_quick_bar = Panel.new()
+	_quick_bar.position = Vector2(194, 144)
+	_quick_bar.size = Vector2(42, 14)
+	_quick_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var bar_sb := StyleBoxFlat.new()
 	bar_sb.bg_color = Color(0.09, 0.14, 0.20, 0.78)
 	bar_sb.border_color = Color("4a6888")
 	bar_sb.set_border_width_all(1)
 	bar_sb.set_corner_radius_all(4)
-	bar.add_theme_stylebox_override("panel", bar_sb)
-	add_child(bar)
+	_quick_bar.add_theme_stylebox_override("panel", bar_sb)
+	add_child(_quick_bar)
 
 	_menu_btn = _make_quick_btn(Vector2(196, 146), _icon_menu, "Menu (M)", func(): EventBus.menu_requested.emit("party"))
 	_bag_btn = _make_quick_btn(Vector2(214, 146), _icon_bag, "Bag (E)", func(): EventBus.menu_requested.emit("bag"))
@@ -196,6 +199,8 @@ func _process(delta: float) -> void:
 		_toast_timer -= delta
 		_toast.modulate.a = clampf(_toast_timer, 0.0, 1.0)
 	var hud_visible := not EventBus.dialogue_active and not EventBus.menu_active
+	if _quick_bar:
+		_quick_bar.visible = hud_visible
 	_bag_btn.visible = hud_visible
 	_menu_btn.visible = hud_visible
 	if _open:

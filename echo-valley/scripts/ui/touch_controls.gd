@@ -129,9 +129,9 @@ func _process(_delta: float) -> void:
 			Input.action_release(a)
 			_held[a] = false
 			btn.queue_redraw()
-	# A stays visible everywhere except when pause menu is open.
+	# A stays visible except during menus and dialogue (dialogue has its own tap target).
 	if _a_btn:
-		_a_btn.visible = not EventBus.menu_active
+		_a_btn.visible = not EventBus.menu_active and not EventBus.dialogue_active
 
 
 func _exit_tree() -> void:

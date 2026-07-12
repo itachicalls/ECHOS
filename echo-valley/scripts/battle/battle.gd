@@ -279,9 +279,10 @@ func _add_encounter_badge(info: Dictionary) -> void:
 	badge.add_theme_font_size_override("font_size", 5)
 	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	badge.position = Vector2(78, 20)
-	badge.size = Vector2(24, 8)
+	badge.position = Vector2(86, 2)
+	badge.size = Vector2(16, 9)
 	badge.clip_text = true
+	badge.z_index = 2
 	badge.visible = false
 	panel.add_child(badge)
 	info["badge"] = badge
@@ -296,13 +297,13 @@ func _set_encounter_badge(kind: String) -> void:
 			badge.text = "NEW!"
 			badge.add_theme_color_override("font_color", Color("ffd166"))
 			badge.add_theme_color_override("font_outline_color", Color("3a2200"))
-			badge.add_theme_constant_override("outline_size", 2)
+			badge.add_theme_constant_override("outline_size", 1)
 			badge.visible = true
 		"caught":
 			badge.text = "GOT"
 			badge.add_theme_color_override("font_color", Color("7dffb8"))
 			badge.add_theme_color_override("font_outline_color", Color("143024"))
-			badge.add_theme_constant_override("outline_size", 2)
+			badge.add_theme_constant_override("outline_size", 1)
 			badge.visible = true
 		_:
 			badge.visible = false
