@@ -570,6 +570,8 @@ func _ensure_net() -> bool:
 
 
 func _player_name() -> String:
+	if GameState.player_name != "":
+		return GameState.player_name.substr(0, 16)
 	if _join_field:
 		var n := _join_field.text.strip_edges()
 		if n != "":

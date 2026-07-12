@@ -5,6 +5,8 @@ extends Node2D
 const TILE := 16
 const STEP_TIME := 0.16
 
+const PlayerAvatarScript := preload("res://scripts/core/player_avatar.gd")
+
 var world: Node2D
 var cell: Vector2i = Vector2i.ZERO
 var facing: String = "down"
@@ -55,7 +57,7 @@ func _ready() -> void:
 
 
 func _build_frames() -> SpriteFrames:
-	var tex: Texture2D = load("res://assets/sprites/hero.png")
+	var tex: Texture2D = load(PlayerAvatarScript.sprite_path(GameState.player_avatar))
 	var sf := SpriteFrames.new()
 	sf.remove_animation("default")
 	for dir in ROW.keys():

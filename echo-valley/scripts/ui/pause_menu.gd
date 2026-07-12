@@ -227,7 +227,7 @@ func _fix_scroll_size() -> void:
 
 # ---------------------------------------------------------------- Party
 func _render_party() -> void:
-	_section_title.text = "ACTIVE PARTY (%d/%d)" % [GameState.party.size(), EchoTypes.PARTY_SIZE]
+	_section_title.text = "%s's PARTY (%d/%d)" % [GameState.player_name, GameState.party.size(), EchoTypes.PARTY_SIZE]
 	if GameState.party.is_empty():
 		_content.add_child(_label("You have no %s yet." % GameStrings.CREATURE_PLURAL_LOWER, 8))
 		return

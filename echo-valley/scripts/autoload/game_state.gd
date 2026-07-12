@@ -2,9 +2,12 @@ extends Node
 
 signal party_changed
 
+const PlayerAvatarScript := preload("res://scripts/core/player_avatar.gd")
+
 const STARTERS := ["emberkit", "tideling", "mossling"]
 
 var player_name: String = "Ash"
+var player_avatar: String = "keeper"
 var party: Array[EchoInstance] = []
 var pc_box: Array[EchoInstance] = []
 var inventory: Dictionary = { "echo_capsule": 3, "heart_salve": 2 }
@@ -20,6 +23,11 @@ var play_mode: String = "solo"
 
 func has_starter() -> bool:
 	return bool(flags.get("starter_chosen", false)) and party.size() > 0
+
+
+func set_player_identity(name: String, avatar_id: String) -> void:
+	player_avatar = PlayerAvatarScript.normalize_id(avatar_id)
+	player_name = PlayerAvatarScript.sanitize_name(name, player_avatar)
 
 
 func choose_starter(id: String) -> bool:
@@ -147,7 +155,9 @@ func to_dict() -> Dictionary:
 	var bd: Array = []
 	for e in pc_box: bd.append(e.to_dict())
 	return {
-		"player_name": player_name, "party": pd, "pc_box": bd,
+		"player_name": player_name,
+		"player_avatar": player_avatar,
+		"party": pd, "pc_box": bd,
 		"inventory": inventory.duplicate(true), "flags": flags.duplicate(true),
 		"seen": seen.duplicate(true), "caught": caught.duplicate(true),
 		"current_map": current_map,
@@ -157,7 +167,8 @@ func to_dict() -> Dictionary:
 
 
 func from_dict(data: Dictionary) -> void:
-	player_name = String(data.get("player_name", "Ash"))
+	player_name = PlayerAvatarScript.sanitize_name(String(data.get("player_name", "Ash")), String(data.get("player_avatar", "keeper")))
+	player_avatar = PlayerAvatarScript.normalize_id(String(data.get("player_avatar", "keeper")))
 	inventory = data.get("inventory", inventory).duplicate(true)
 	if inventory.has("echo_charm") and not inventory.has("echo_capsule"):
 		inventory["echo_capsule"] = int(inventory.get("echo_charm", 0))

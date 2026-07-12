@@ -3,6 +3,9 @@ extends Control
 ## focal point of each cutscene slide. Painted scenery lives in the backdrop;
 ## atmospheric VFX live in the fx layer. Sprites get soft shadows + subtle motion.
 
+const PlayerAvatarScript := preload("res://scripts/core/player_avatar.gd")
+const FEET_Y_MAX := 118.0  # keep sprites above bottom letterbox (160 - 38px bar)
+
 var _root: Control
 var _fx: Control
 var _nodes: Array[Node] = []
@@ -16,6 +19,7 @@ func _ready() -> void:
 	size = Vector2(240, 160)
 	_root = Control.new()
 	_root.size = size
+	_root.clip_contents = true
 	_root.z_index = 1
 	add_child(_root)
 	_fx = Control.new()
@@ -115,59 +119,59 @@ func _play_entrance() -> void:
 
 func _build_chorus() -> void:
 	# The peaceful trio gathered under the rising sun.
-	_hero_harmon("mossling", Vector2(78, 110), 28, 0.0)
-	_hero_harmon("emberkit", Vector2(120, 112), 32, 0.7)
-	_hero_harmon("tideling", Vector2(162, 110), 28, 1.4)
+	_hero_harmon("mossling", Vector2(78, 100), 28, 0.0)
+	_hero_harmon("emberkit", Vector2(120, 102), 32, 0.7)
+	_hero_harmon("tideling", Vector2(162, 100), 28, 1.4)
 
 
 func _build_fracture() -> void:
 	# Two lone silhouettes flee the breaking land — kept sparse for drama.
-	_silhouette(Tiles.TRAINER_PATHS[4], Vector2(70, 108), 28, Color("120810"))
-	_silhouette("res://assets/kenney/chars/trainer_smith.png", Vector2(170, 110), 30, Color("160a12"))
+	_silhouette(Tiles.TRAINER_PATHS[4], Vector2(70, 100), 28, Color("120810"))
+	_silhouette("res://assets/kenney/chars/trainer_smith.png", Vector2(170, 102), 30, Color("160a12"))
 
 
 func _build_harmons() -> void:
 	# Hero trio, front and center — the focal introduction.
-	_hero_harmon("emberkit", Vector2(64, 108), 40, 0.0)
-	_hero_harmon("tideling", Vector2(120, 104), 44, 0.9)
-	_hero_harmon("mossling", Vector2(176, 108), 40, 1.8)
+	_hero_harmon("emberkit", Vector2(64, 96), 40, 0.0)
+	_hero_harmon("tideling", Vector2(120, 92), 44, 0.9)
+	_hero_harmon("mossling", Vector2(176, 96), 40, 1.8)
 
 
 func _build_disturbance() -> void:
 	# A lone explorer faces the awakening ruins.
-	_silhouette(Tiles.TRAINER_PATHS[4], Vector2(70, 110), 32, Color("1a1428"))
+	_silhouette(Tiles.TRAINER_PATHS[4], Vector2(70, 102), 32, Color("1a1428"))
 
 
 func _build_veil() -> void:
 	# Two hooded watchers flank a drifting ghost-Harmon.
-	_silhouette("res://assets/kenney/chars/trainer_monk.png", Vector2(40, 110), 32, Color("241d3a"))
-	_silhouette("res://assets/kenney/chars/trainer_guard.png", Vector2(200, 110), 32, Color("221b34"))
+	_silhouette("res://assets/kenney/chars/trainer_monk.png", Vector2(40, 102), 32, Color("241d3a"))
+	_silhouette("res://assets/kenney/chars/trainer_guard.png", Vector2(200, 102), 32, Color("221b34"))
 	_wisp("res://assets/kenney/chars/echo_ghost.png", Vector2(120, 64), 28, 0.0)
 
 
 func _build_journey() -> void:
 	# A traveler approaches the village at golden hour.
-	_walker(Tiles.TRAINER_PATHS[4], Vector2(30, 112), 30)
+	_walker(Tiles.TRAINER_PATHS[4], Vector2(30, 104), 30)
 
 
 func _build_town() -> void:
 	# The nurse greets a villager in the square — just two figures.
-	_hero_sprite(Tiles.NURSE, Vector2(96, 110), 28, 0.0)
-	_hero_sprite(Tiles.TRAINER_PATHS[3], Vector2(150, 110), 28, 1.0)
+	_hero_sprite(Tiles.NURSE, Vector2(96, 102), 28, 0.0)
+	_hero_sprite(Tiles.TRAINER_PATHS[3], Vector2(150, 102), 28, 1.0)
 
 
 func _build_bond() -> void:
 	# Close intimate moment: the chosen Harmon and its new partner.
 	var sid := _starter_id if _starter_id != "" else "emberkit"
-	_silhouette(Tiles.TRAINER_PATHS[4], Vector2(66, 112), 36, Color("101828"))
+	_hero_sprite(PlayerAvatarScript.sprite_path(GameState.player_avatar), Vector2(66, 104), 36, 0.0)
 	_float_harmon(sid, Vector2(140, 70), 48)
 
 
 func _build_depart() -> void:
 	# Partner and ranger set out north through the gate.
 	var sid := _starter_id if _starter_id != "" else "emberkit"
-	_hero_sprite(Tiles.TRAINER_PATHS[5], Vector2(92, 110), 28, 0.0)
-	_hero_harmon(sid, Vector2(132, 112), 26, 0.8)
+	_hero_sprite(PlayerAvatarScript.sprite_path(GameState.player_avatar), Vector2(92, 102), 28, 0.0)
+	_hero_harmon(sid, Vector2(132, 104), 26, 0.8)
 
 
 # ---- sprite factories ------------------------------------------------------
@@ -181,12 +185,13 @@ func _hero_harmon(id: String, feet: Vector2, px: int, off: float) -> void:
 
 func _hero_sprite(path: String, feet: Vector2, px: int, off: float) -> void:
 	var tr := _make_sprite(path, feet, px)
+	var grounded: Vector2 = tr.get_meta("feet", feet)
 	tr.set_meta("anim", "bob")
 	tr.set_meta("base_pos", tr.position)
 	tr.set_meta("amp", 1.0)
 	tr.set_meta("spd", 1.6)
 	tr.set_meta("off", off)
-	_shadows.append({"pos": feet + Vector2(0, 1), "w": px * 0.42})
+	_shadows.append({"pos": grounded + Vector2(0, 1), "w": px * 0.42})
 	_track(tr)
 
 
@@ -215,23 +220,25 @@ func _wisp(path: String, center: Vector2, px: int, off: float) -> void:
 
 func _silhouette(path: String, feet: Vector2, px: int, tint: Color) -> void:
 	var tr := _make_sprite(path, feet, px)
+	var grounded: Vector2 = tr.get_meta("feet", feet)
 	tr.modulate = tint
 	tr.set_meta("anim", "bob")
 	tr.set_meta("base_pos", tr.position)
 	tr.set_meta("amp", 0.5)
 	tr.set_meta("spd", 1.2)
 	tr.set_meta("off", 0.0)
-	_shadows.append({"pos": feet + Vector2(0, 1), "w": px * 0.4})
+	_shadows.append({"pos": grounded + Vector2(0, 1), "w": px * 0.4})
 	_track(tr)
 
 
 func _walker(path: String, feet: Vector2, px: int) -> void:
 	var tr := _make_sprite(path, feet, px)
+	var grounded: Vector2 = tr.get_meta("feet", feet)
 	tr.set_meta("anim", "walk")
 	tr.set_meta("base_pos", tr.position)
 	tr.set_meta("spd", 10.0)
 	tr.set_meta("range", 150.0)
-	_shadows.append({"pos": feet + Vector2(0, 1), "w": px * 0.4})
+	_shadows.append({"pos": grounded + Vector2(0, 1), "w": px * 0.4})
 	_track(tr)
 
 
@@ -239,29 +246,36 @@ func _make_sprite(path: String, feet: Vector2, px: int) -> TextureRect:
 	# `feet` is the ground contact point; sprite is centered horizontally and
 	# sits its bottom edge on that point.
 	var tr := TextureRect.new()
+	var display_w := float(px)
+	var display_h := float(px)
 	if ResourceLoader.exists(path):
 		var tex: Texture2D = load(path)
 		var tw := tex.get_width() if tex else 0
 		var th := tex.get_height() if tex else 0
-		# Hero-layout NPC sheets (64x128) must show one 16x32 frame, not the whole sheet.
+		# Hero-layout sheets (64x128) must show one 16x32 frame, not the whole sheet.
 		if tw == 64 and th == 128:
 			var atlas := AtlasTexture.new()
 			atlas.atlas = tex
 			atlas.region = Rect2(0, 0, 16, 32)
 			tr.texture = atlas
-			var h := px * 2
-			tr.size = Vector2(px, h)
-			tr.position = feet - Vector2(px * 0.5, h)
+			display_h = px * 2.0
 		else:
 			tr.texture = tex
-			tr.size = Vector2(px, px)
-			tr.position = feet - Vector2(px * 0.5, px)
+			if th > tw:
+				display_h = px * float(th) / float(tw)
 	else:
 		tr.size = Vector2(px, px)
-		tr.position = feet - Vector2(px * 0.5, px)
+
+	var grounded := Vector2(feet.x, minf(feet.y, FEET_Y_MAX))
+	grounded.y = minf(grounded.y, FEET_Y_MAX - display_h * 0.05)
+	tr.custom_minimum_size = Vector2(display_w, display_h)
+	tr.size = Vector2(display_w, display_h)
+	tr.position = grounded - Vector2(display_w * 0.5, display_h)
+	tr.set_meta("feet", grounded)
 	tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+	tr.clip_contents = true
 	return tr
 
 

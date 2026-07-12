@@ -1,6 +1,7 @@
 extends Control
 
 const TitleFonts := preload("res://scripts/ui/title_fonts.gd")
+const PlayerAvatarScript := preload("res://scripts/core/player_avatar.gd")
 
 const VIEW_W := 240
 const VIEW_H := 160
@@ -14,7 +15,11 @@ const STARTER_IDS := ["emberkit", "tideling", "mossling"]
 
 var _menu: VBoxContainer
 var _starter_panel: Control
+var _create_panel: Control
 var _chrome: Control
+var _picked_avatar: String = "keeper"
+var _name_field: LineEdit
+var _avatar_frames: Dictionary = {}
 
 
 func _ready() -> void:
@@ -159,7 +164,7 @@ func _on_new_game() -> void:
 	await _play_cutscene("opening")
 	if not is_inside_tree():
 		return
-	_show_starter_select()
+	_show_character_create()
 
 
 func _reset_state() -> void:
@@ -173,6 +178,173 @@ func _reset_state() -> void:
 	GameState.player_cell = Vector2i(12, 16)
 	GameState.player_facing = "up"
 	GameState.play_mode = "solo"
+	GameState.player_name = "Ash"
+	GameState.player_avatar = "keeper"
+
+
+func _show_character_create() -> void:
+	if _chrome:
+		_chrome.visible = false
+	_picked_avatar = "keeper"
+	_avatar_frames.clear()
+
+	_create_panel = Panel.new()
+	_create_panel.position = Vector2.ZERO
+	_create_panel.size = Vector2(VIEW_W, VIEW_H)
+	_create_panel.z_index = 20
+	_create_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color("060c18", 0.97)
+	sb.set_border_width_all(0)
+	_create_panel.add_theme_stylebox_override("panel", sb)
+	add_child(_create_panel)
+
+	TitleFonts.shadow_label(
+		_create_panel, "Create your Keeper", 7, Color("fff0b0"),
+		Vector2(8, 8), Vector2(VIEW_W - 16, 14),
+		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
+	)
+	TitleFonts.shadow_label(
+		_create_panel, "Choose your look", 5, Color("a8e8dc"),
+		Vector2(8, 22), Vector2(VIEW_W - 16, 10),
+		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
+	)
+
+	for i in PlayerAvatarScript.IDS.size():
+		var id: String = PlayerAvatarScript.IDS[i]
+		_avatar_column(id, 14 + i * 72)
+
+	_update_avatar_selection()
+
+	TitleFonts.shadow_label(
+		_create_panel, "Your name", 5, Color("cfe8ff"),
+		Vector2(8, 104), Vector2(VIEW_W - 16, 10),
+		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
+	)
+
+	_name_field = _name_field_box()
+	_name_field.text = PlayerAvatarScript.DEFAULT_NAMES[_picked_avatar]
+	_name_field.placeholder_text = "Enter a name..."
+	_create_panel.add_child(_name_field)
+
+	var go := _button("Continue", _on_confirm_character)
+	go.position = Vector2(75, 136)
+	go.size = Vector2(90, 18)
+	if TouchUtil != null and TouchUtil.is_touch_ui_enabled():
+		go.size = Vector2(90, 22)
+	_create_panel.add_child(go)
+
+
+func _avatar_column(id: String, x: int) -> void:
+	var frame := Panel.new()
+	frame.position = Vector2(x, 34)
+	frame.size = Vector2(64, 66)
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_create_panel.add_child(frame)
+	_avatar_frames[id] = frame
+
+	var preview := TextureRect.new()
+	preview.texture = PlayerAvatarScript.idle_preview_texture(id)
+	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+	preview.custom_minimum_size = Vector2(28, 56)
+	preview.size = Vector2(28, 56)
+	preview.position = Vector2(18, 4)
+	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(preview)
+
+	var nm := Label.new()
+	nm.text = PlayerAvatarScript.LABELS.get(id, id)
+	nm.position = Vector2(0, 46)
+	nm.size = Vector2(64, 8)
+	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	TitleFonts.apply(nm, 6, Color("f0f8ff"))
+	frame.add_child(nm)
+
+	var blurb := Label.new()
+	blurb.text = PlayerAvatarScript.BLURBS.get(id, "")
+	blurb.position = Vector2(2, 54)
+	blurb.size = Vector2(60, 10)
+	blurb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	blurb.autowrap_mode = TextServer.AUTOWRAP_WORD
+	blurb.clip_text = true
+	TitleFonts.apply(blurb, 4, Color("8ec8ff"))
+	frame.add_child(blurb)
+
+	var hit := Button.new()
+	hit.position = Vector2.ZERO
+	hit.size = frame.size
+	hit.focus_mode = Control.FOCUS_NONE
+	hit.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	hit.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+	hit.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+	hit.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	hit.pressed.connect(_on_pick_avatar.bind(id))
+	frame.add_child(hit)
+
+
+func _name_field_box() -> LineEdit:
+	var f := LineEdit.new()
+	f.position = Vector2(52, 116)
+	f.size = Vector2(136, 16)
+	f.max_length = PlayerAvatarScript.MAX_NAME_LEN
+	f.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	f.virtual_keyboard_enabled = true
+	f.focus_mode = Control.FOCUS_ALL
+	f.add_theme_font_size_override("font_size", 7)
+	f.add_theme_stylebox_override("normal", _field_style(Color("0c141c", 0.92), Color("3a5f8f")))
+	f.add_theme_stylebox_override("focus", _field_style(Color("14202b"), Color("8ec8ff")))
+	f.add_theme_color_override("font_color", Color("e8f4ff"))
+	f.add_theme_color_override("font_placeholder_color", Color("5a7088"))
+	return f
+
+
+func _field_style(bg: Color, border: Color) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(3)
+	sb.content_margin_left = 4
+	sb.content_margin_right = 4
+	return sb
+
+
+func _on_pick_avatar(id: String) -> void:
+	_picked_avatar = id
+	_update_avatar_selection()
+	if _name_field == null:
+		return
+	var current := _name_field.text.strip_edges()
+	for default_name in PlayerAvatarScript.DEFAULT_NAMES.values():
+		if current == default_name:
+			_name_field.text = PlayerAvatarScript.DEFAULT_NAMES.get(id, "Keeper")
+			return
+	if current == "":
+		_name_field.text = PlayerAvatarScript.DEFAULT_NAMES.get(id, "Keeper")
+
+
+func _update_avatar_selection() -> void:
+	for id in PlayerAvatarScript.IDS:
+		var frame: Panel = _avatar_frames.get(id, null)
+		if frame == null:
+			continue
+		var sel := id == _picked_avatar
+		var box := StyleBoxFlat.new()
+		box.bg_color = Color("1a3050", 0.88) if sel else Color("0c1428", 0.55)
+		box.border_color = Color("fff0b0") if sel else Color("3a5f8f", 0.6)
+		box.set_border_width_all(2 if sel else 1)
+		box.set_corner_radius_all(4)
+		frame.add_theme_stylebox_override("panel", box)
+
+
+func _on_confirm_character() -> void:
+	var typed := _name_field.text if _name_field else ""
+	GameState.set_player_identity(typed, _picked_avatar)
+	if _create_panel:
+		_create_panel.visible = false
+	_show_starter_select()
 
 
 func _show_starter_select() -> void:
@@ -192,7 +364,7 @@ func _show_starter_select() -> void:
 	add_child(_starter_panel)
 
 	TitleFonts.shadow_label(
-		_starter_panel, "Choose your first %s" % GameStrings.CREATURE, 7, Color("fff0b0"),
+		_starter_panel, "%s — choose your first %s" % [GameState.player_name, GameStrings.CREATURE], 7, Color("fff0b0"),
 		Vector2(8, 10), Vector2(VIEW_W - 16, 14),
 		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
 	)
@@ -256,6 +428,8 @@ func _play_cutscene(sequence_id: String, starter_id: String = "") -> void:
 		_chrome.visible = false
 	if _starter_panel and is_instance_valid(_starter_panel):
 		_starter_panel.visible = false
+	if _create_panel and is_instance_valid(_create_panel):
+		_create_panel.visible = false
 	var cut := preload("res://scripts/boot/intro_cutscene.gd").new()
 	cut.sequence_id = sequence_id
 	cut.starter_id = starter_id

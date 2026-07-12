@@ -10,6 +10,9 @@ const VIEW_H := 160
 const PRELOADS := [
 	"res://assets/kenney/roguelike_sheet.png",
 	"res://assets/kenney/tiny_dungeon_sheet.png",
+	"res://assets/sprites/hero.png",
+	"res://assets/sprites/hero_curly.png",
+	"res://assets/sprites/hero_cap.png",
 	"res://assets/sprites/npc/nurse.png",
 	"res://assets/kenney/items/echo_capsule.png",
 	"res://data/echoes.json",
