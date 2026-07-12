@@ -41,7 +41,7 @@ const RESONANCE_SYMBOLS := {
 	Resonance.GRASS: "✿",
 	Resonance.ROCK: "■",
 	Resonance.AIR: "◆",
-	Resonance.SHADOW: "★",
+	Resonance.SHADOW: "S",
 }
 
 const RESONANCE_GLYPHS := {

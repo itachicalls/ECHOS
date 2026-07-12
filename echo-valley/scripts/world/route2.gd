@@ -57,14 +57,14 @@ func _build_map() -> void:
 	add_interact(Vector2i(12, 6), { "type": "sign", "text": "FISHING DOCK - face the pond and press J with your Fishing Rod equipped in your bag." })
 
 	add_trainer(Vector2i(6, 16), "right", {
-		"id": "r2_lena", "name": "Ranger Lena", "look": 4,
+		"id": "r2_lena", "name": "Ranger Lena", "look": 8,
 		"party": [{ "id": "fernkit", "level": 9 }, { "id": "dewling", "level": 9 }],
 		"reward": 3,
 		"intro": ["The Echowood is my home turf.", "Prove you belong here!"],
 		"win_line": "The forest smiles on you. Well done.",
 	})
 	add_trainer(Vector2i(7, 6), "down", {
-		"id": "r2_rival", "name": "Rival Sabo", "look": 3,
+		"id": "r2_rival", "name": "Rival Sabo", "look": 10,
 		"party": [{ "id": "duskling", "level": 10 }, { "id": "cindboth", "level": 10 }, { "id": "zephyr", "level": 11 }],
 		"reward": 5,
 		"intro": ["So YOU'RE the trainer everyone's talking about.", "Let's find out if the hype is real!"],
@@ -93,50 +93,87 @@ func _on_map_step(cell: Vector2i) -> void:
 
 
 func _trigger_faction_ambush() -> void:
-	if _cutscene or _busy:
+	if _cutscene or _busy or player == null:
 		return
-	_cutscene = true
-	if player and player.has_method("set_input_locked"):
-		player.set_input_locked(true)
-	EventBus.dialogue_requested.emit([
+
+	var pc: Vector2i = player.cell
+	var surround := _ambush_surround_cells(pc)
+	var spawns := _ambush_spawn_cells(pc)
+
+	var actor_defs := [
+		{ "look": 9, "spawn": spawns[0], "surround": surround[0] },
+		{ "look": 8, "spawn": spawns[1], "surround": surround[1] },
+		{ "look": 11, "spawn": spawns[2], "surround": surround[2] },
+	]
+
+	play_ambush_surround(actor_defs, [
 		"Shadows move between the trees...",
 		"Three figures step onto the path — emblems of the Veil, the Rangers, and the Archive.",
 		"\"You carry too much resonance for one keeper,\" one warns.",
 		"\"Prove your strength, or turn back.\"",
-	])
-	EventBus.dialogue_closed.connect(func() -> void:
-		var chain := [
-			{
-				"id": "faction_veil", "name": "Veil Agent", "look": 3,
-				"party": [{ "id": "duskling", "level": 10 }, { "id": "shadelet", "level": 11 }],
-				"reward": 2,
-				"intro": ["The Veil tests every rising keeper.", "Your Harmons will tell us if you listen to the Fracture."],
-				"win_line": "Hmm. You fight with conviction.",
-			},
-			{
-				"id": "faction_ranger", "name": "Ranger Scout", "look": 4,
-				"party": [{ "id": "fernkit", "level": 11 }, { "id": "dewling", "level": 11 }],
-				"reward": 2,
-				"intro": ["Route Rangers guard the valley's balance.", "Show me you can protect your team!"],
-				"win_line": "Steady command. The routes respect you.",
-			},
-			{
-				"id": "faction_archive", "name": "Archive Hunter", "look": 0,
-				"party": [{ "id": "cindboth", "level": 11 }, { "id": "zephyr", "level": 12 }],
-				"reward": 3,
-				"intro": ["The Memory Archive records every battle.", "We will see what your Harmons remember."],
-				"win_line": "Logged. Your story grows louder.",
-			},
-		]
-		SceneRouter.start_ambush_chain(chain, "route2")
-		if player and player.has_method("set_input_locked"):
-			player.set_input_locked(false)
-		_cutscene = false
-	, CONNECT_ONE_SHOT)
+	], _start_ambush_chain)
 
 
-func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:
-	for x in range(x0, x1 + 1):
-		for y in range(y0, y1 + 1):
-			if not is_blocked(Vector2i(x, y)):
-				place_tall_grass(Vector2i(x, y))
+func _ambush_surround_cells(pc: Vector2i) -> Array:
+	var order := [
+		pc + Vector2i(-1, 0),
+		pc + Vector2i(1, 0),
+		pc + Vector2i(0, -1),
+		pc + Vector2i(0, 1),
+		pc + Vector2i(-1, -1),
+		pc + Vector2i(1, -1),
+	]
+	var out: Array = []
+	for c in order:
+		if out.size() >= 3:
+			break
+		if c == pc or is_blocked(c):
+			continue
+		if c in out:
+			continue
+		out.append(c)
+	while out.size() < 3:
+		var offset := Vector2i(-1, 0) if out.size() == 0 else Vector2i(1, 0) if out.size() == 1 else Vector2i(0, -1)
+		out.append(pc + offset)
+	return out.slice(0, 3)
+
+
+func _ambush_spawn_cells(pc: Vector2i) -> Array:
+	return [
+		_pick_spawn(pc + Vector2i(-5, 0), pc + Vector2i(-1, 0)),
+		_pick_spawn(pc + Vector2i(5, 0), pc + Vector2i(1, 0)),
+		_pick_spawn(pc + Vector2i(0, -5), pc + Vector2i(0, -1)),
+	]
+
+
+func _pick_spawn(preferred: Vector2i, fallback: Vector2i) -> Vector2i:
+	if not is_blocked(preferred):
+		return preferred
+	return fallback + Vector2i(0, -2) if not is_blocked(fallback + Vector2i(0, -2)) else fallback
+
+
+func _start_ambush_chain() -> void:
+	var chain := [
+		{
+			"id": "faction_veil", "name": "Veil Agent", "look": 9,
+			"party": [{ "id": "duskling", "level": 10 }, { "id": "shadelet", "level": 11 }],
+			"reward": 2,
+			"intro": ["The Veil tests every rising keeper.", "Your Harmons will tell us if you listen to the Fracture."],
+			"win_line": "Hmm. You fight with conviction.",
+		},
+		{
+			"id": "faction_ranger", "name": "Ranger Scout", "look": 8,
+			"party": [{ "id": "fernkit", "level": 11 }, { "id": "dewling", "level": 11 }],
+			"reward": 2,
+			"intro": ["Route Rangers guard the valley's balance.", "Show me you can protect your team!"],
+			"win_line": "Steady command. The routes respect you.",
+		},
+		{
+			"id": "faction_archive", "name": "Archive Hunter", "look": 11,
+			"party": [{ "id": "cindboth", "level": 11 }, { "id": "zephyr", "level": 12 }],
+			"reward": 3,
+			"intro": ["The Memory Archive records every battle.", "We will see what your Harmons remember."],
+			"win_line": "Logged. Your story grows louder.",
+		},
+	]
+	SceneRouter.start_ambush_chain(chain, "route2")

@@ -54,6 +54,10 @@ func setup(p_world, p_cell: Vector2i, p_facing: String, p_data: Dictionary, text
 	sprite.offset = Vector2(0, -16)
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	sprite.modulate = tint
+	# Kenney tiles are 16×16; scale to player height (32px) and center on the tile.
+	if sprite.texture and sprite.texture.get_height() <= 16 and sprite.texture.get_width() <= 16:
+		sprite.scale = Vector2(2.0, 2.0)
+		sprite.offset = Vector2(-4, -8)
 	add_child(sprite)
 	z_index = 4
 	_wander_timer = randf_range(1.0, 3.0)

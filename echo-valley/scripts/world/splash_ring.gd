@@ -9,4 +9,5 @@ func _ready() -> void:
 
 
 func _draw() -> void:
-	draw_arc(Vector2.ZERO, radius, 0.0, TAU, 20, Color("cfefff", 0.55), 1.2, true)
+	draw_arc(Vector2.ZERO, radius, 0.0, TAU, 24, Color("e8f7ff", 0.65), 1.1, true)
+	draw_arc(Vector2(0, 0.5), radius * 0.72, 0.0, TAU, 20, Color("9fd4ff", 0.35), 0.8, true)

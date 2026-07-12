@@ -279,8 +279,7 @@ func _echo_card(e: EchoInstance, in_party: bool, party_index: int = -1) -> Contr
 	card.add_child(col)
 
 	var res_name: String = RES_NAMES[int(def.resonance)] if def else "Normal"
-	var lead_tag := "  ★" if in_party and party_index == 0 else ""
-	var title := _label("%s  Lv%d  [%s]%s" % [e.display_name(), e.level, res_name, lead_tag], 7)
+	var title := _label("%s  Lv%d  [%s]" % [e.display_name(), e.level, res_name], 7)
 	title.custom_minimum_size = Vector2(info_w, 9)
 	title.size = Vector2(info_w, 9)
 	title.clip_text = true

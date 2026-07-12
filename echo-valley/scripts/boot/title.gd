@@ -247,7 +247,7 @@ func _on_pick_starter(id: String) -> void:
 		return
 	GameState.flags["intro_seen"] = true
 	SaveService.save_game()
-	SceneRouter.go_to_map("town", Vector2i(12, 16), "up")
+	await SceneRouter.go_to_map("town", Vector2i(12, 16), "up")
 
 
 func _play_cutscene(sequence_id: String, starter_id: String = "") -> void:

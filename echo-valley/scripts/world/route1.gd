@@ -66,7 +66,7 @@ func _build_map() -> void:
 	}, 5)
 
 	add_trainer(Vector2i(6, 11), "down", {
-		"id": "r1_finn", "name": "Camper Finn", "look": 4,
+		"id": "r1_finn", "name": "Camper Finn", "look": 14,
 		"party": [{ "id": "pebblit", "level": 5 }, { "id": "zephyr", "level": 6 }],
 		"reward": 2,
 		"intro": ["Hey! You walked right into my line of sight!", "A Keeper never turns down a challenge. Go!"],
@@ -74,7 +74,7 @@ func _build_map() -> void:
 	})
 	# a second sight-line trainer guarding the eastern meadow
 	add_trainer(Vector2i(15, 8), "left", {
-		"id": "r1_maple", "name": "Forager Maple", "look": 0,
+		"id": "r1_maple", "name": "Forager Maple", "look": 12,
 		"party": [{ "id": "mossling", "level": 6 }, { "id": "dewling", "level": 6 }],
 		"reward": 2,
 		"intro": ["Not so fast! These meadows are my training ground.", "Show me your bond with your Echoes!"],

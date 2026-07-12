@@ -8,6 +8,7 @@ const PlayerScene = preload("res://scenes/player/player.tscn")
 const HudScene = preload("res://scenes/ui/hud.tscn")
 const PauseMenuScript = preload("res://scripts/ui/pause_menu.gd")
 const NpcScript = preload("res://scripts/world/npc.gd")
+const AmbushActor := preload("res://scripts/world/ambush_actor.gd")
 const ItemIcon := preload("res://scripts/ui/item_icon.gd")
 
 const STEP_DIRS := {
@@ -378,7 +379,7 @@ func _place_sprite_prop(sheet: String, cell: Vector2i, atlas: Vector2i, w: int, 
 
 
 func _look_from_id(id: String) -> int:
-	return absi(id.hash()) % 6
+	return absi(id.hash()) % Tiles.TRAINER_PATHS.size()
 
 
 # --- queries used by the player ---
@@ -467,6 +468,43 @@ func _manhattan(a: Vector2i, b: Vector2i) -> int:
 	return absi(a.x - b.x) + absi(a.y - b.y)
 
 
+## Spawns low-poly faction characters that march in and surround the player.
+func play_ambush_surround(actor_defs: Array, lines: Array, on_dialogue_done: Callable) -> void:
+	if _cutscene or _busy:
+		return
+	_cutscene = true
+	if player and player.has_method("set_input_locked"):
+		player.set_input_locked(true)
+
+	var actors: Array = []
+	for def in actor_defs:
+		var d: Dictionary = def
+		var actor: AmbushActor = AmbushActor.new()
+		actor.setup(self, d.get("spawn", Vector2i.ZERO), d.get("surround", Vector2i.ZERO), int(d.get("look", 0)))
+		add_child(actor)
+		actors.append(actor)
+
+	for actor in actors:
+		await (actor as AmbushActor).walk_to_target()
+
+	if player:
+		for actor in actors:
+			(actor as AmbushActor).face_towards(player.cell)
+	await get_tree().create_timer(0.35).timeout
+
+	EventBus.dialogue_requested.emit(lines)
+	EventBus.dialogue_closed.connect(func() -> void:
+		for actor in actors:
+			if is_instance_valid(actor):
+				actor.queue_free()
+		if on_dialogue_done.is_valid():
+			on_dialogue_done.call()
+		if player and player.has_method("set_input_locked"):
+			player.set_input_locked(false)
+		_cutscene = false
+	, CONNECT_ONE_SHOT)
+
+
 func on_player_step(cell: Vector2i) -> void:
 	if pickups.has(cell):
 		_collect_pickup(cell)
@@ -474,7 +512,7 @@ func on_player_step(cell: Vector2i) -> void:
 		_apply_hazard(cell)
 	if warps.has(cell):
 		var w: Dictionary = warps[cell]
-		SceneRouter.go_to_map(String(w.map), Vector2i(w.cell.x, w.cell.y) if w.cell is Vector2i else w.cell, String(w.facing))
+		await SceneRouter.go_to_map(String(w.map), Vector2i(w.cell.x, w.cell.y) if w.cell is Vector2i else w.cell, String(w.facing))
 		return
 	if is_grass(cell):
 		_roll_encounter()
@@ -562,50 +600,101 @@ func _finish_greeter_gifts(greeter: Dictionary, gift_from: Vector2 = Vector2.INF
 func _play_fishing_cast(splash_at: Vector2) -> void:
 	if player and player.has_method("set_input_locked"):
 		player.set_input_locked(true)
-	var cast_from: Vector2 = player.position + Vector2(6, -6) if player else splash_at + Vector2(0, 24)
 
-	# Quick rod whip (line flash)
+	var facing := "down"
+	if player and "facing" in player:
+		facing = String(player.facing)
+	var face_off := {
+		"up": Vector2(6, -18),
+		"down": Vector2(6, -2),
+		"left": Vector2(-4, -10),
+		"right": Vector2(14, -10),
+	}
+	var cast_from: Vector2 = player.position + face_off.get(facing, Vector2(6, -6)) if player else splash_at + Vector2(0, 24)
+
+	# Brief player "cast" bob so the throw reads.
+	if player and player.get("sprite"):
+		var spr: Node = player.sprite
+		var cast_bob := create_tween()
+		cast_bob.tween_property(spr, "position:y", spr.position.y - 2.0, 0.08)
+		cast_bob.tween_property(spr, "position:y", 0.0, 0.12)
+
+	# Rod tip whip toward the water.
 	var whip := Line2D.new()
-	whip.width = 1.5
+	whip.width = 1.4
 	whip.default_color = Color("8b5a2b")
-	whip.points = PackedVector2Array([cast_from, cast_from + Vector2(10, -14)])
 	whip.z_index = 11
+	var mid: Vector2 = cast_from.lerp(splash_at, 0.45) + Vector2(0, -10)
+	whip.points = PackedVector2Array([cast_from, mid])
 	add_child(whip)
 	var whip_tw := create_tween()
-	whip_tw.tween_property(whip, "modulate:a", 0.0, 0.18).set_delay(0.08)
+	whip_tw.tween_method(func(t: float) -> void:
+		var tip: Vector2 = cast_from.lerp(splash_at, t)
+		var arc: Vector2 = cast_from.lerp(splash_at, t * 0.5) + Vector2(0, -12.0 * sin(t * PI))
+		whip.points = PackedVector2Array([cast_from, arc, tip])
+	, 0.0, 1.0, 0.28).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	whip_tw.parallel().tween_property(whip, "modulate:a", 0.0, 0.12).set_delay(0.22)
 	whip_tw.chain().tween_callback(whip.queue_free)
 
-	# Bobber flies to the water
-	var bob := ColorRect.new()
-	bob.color = Color("ff5050")
-	bob.size = Vector2(3, 3)
-	bob.position = cast_from
+	# Pixel bobber (drawn capsule, not a flat rect).
+	var bob := Node2D.new()
 	bob.z_index = 12
+	bob.position = cast_from
+	bob.set_script(preload("res://scripts/world/fishing_bobber.gd"))
 	add_child(bob)
-	var fly := create_tween()
-	fly.tween_property(bob, "position", splash_at - Vector2(1.5, 1.5), 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	await fly.finished
 
-	# Splash ripples
-	for i in 3:
-		var ring := _make_splash_ring(splash_at, 4 + i * 4)
+	var fly := create_tween()
+	fly.tween_method(func(t: float) -> void:
+		var p: Vector2 = cast_from.lerp(splash_at, t)
+		p.y -= 14.0 * sin(t * PI)
+		bob.position = p
+	, 0.0, 1.0, 0.36).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await fly.finished
+	bob.position = splash_at
+
+	# Staggered splash rings + water sparkles.
+	for i in 4:
+		var ring := _make_splash_ring(splash_at, 3.0 + float(i) * 3.5)
+		ring.modulate.a = 0.0
 		add_child(ring)
 		var rt := create_tween()
-		rt.set_parallel(true)
-		rt.tween_property(ring, "scale", Vector2(2.2, 1.2), 0.35)
-		rt.tween_property(ring, "modulate:a", 0.0, 0.35)
+		rt.tween_property(ring, "modulate:a", 0.7, 0.04).set_delay(i * 0.07)
+		rt.tween_property(ring, "scale", Vector2(1.8 + i * 0.25, 1.15 + i * 0.1), 0.38)
+		rt.parallel().tween_property(ring, "modulate:a", 0.0, 0.38)
 		rt.chain().tween_callback(ring.queue_free)
+		# Tiny droplet flecks
+		if i < 3:
+			var drop := ColorRect.new()
+			drop.color = Color("d8f4ff", 0.9)
+			drop.size = Vector2(2, 2)
+			drop.z_index = 12
+			drop.position = splash_at + Vector2(randf_range(-6, 6), randf_range(-4, 2))
+			add_child(drop)
+			var dt := create_tween()
+			dt.tween_property(drop, "position:y", drop.position.y - randf_range(4, 9), 0.28)
+			dt.parallel().tween_property(drop, "modulate:a", 0.0, 0.28)
+			dt.chain().tween_callback(drop.queue_free)
 
-	# Bobber bobs while waiting
+	# Idle bob on the water.
 	for _i in 3:
+		var base_y := bob.position.y
 		var bob_tw := create_tween()
-		bob_tw.tween_property(bob, "position:y", bob.position.y - 2.0, 0.22).set_trans(Tween.TRANS_SINE)
-		bob_tw.tween_property(bob, "position:y", bob.position.y + 2.0, 0.22).set_trans(Tween.TRANS_SINE)
+		bob_tw.tween_property(bob, "position:y", base_y - 2.0, 0.2).set_trans(Tween.TRANS_SINE)
+		bob_tw.tween_property(bob, "position:y", base_y + 1.5, 0.22).set_trans(Tween.TRANS_SINE)
+		bob_tw.tween_property(bob, "position:y", base_y, 0.12)
 		await bob_tw.finished
-		await get_tree().create_timer(0.12).timeout
+		await get_tree().create_timer(0.08).timeout
+
+	# Bite yank — bobber dips hard then settles.
+	var yank := create_tween()
+	yank.tween_property(bob, "position:y", bob.position.y + 4.0, 0.08).set_trans(Tween.TRANS_BACK)
+	yank.tween_property(bob, "position:y", bob.position.y - 1.0, 0.1)
+	yank.tween_property(bob, "scale", Vector2(0.85, 1.15), 0.06)
+	yank.tween_property(bob, "scale", Vector2(1.0, 1.0), 0.08)
+	await yank.finished
 
 	var sink := create_tween()
-	sink.tween_property(bob, "modulate:a", 0.0, 0.15)
+	sink.tween_property(bob, "modulate:a", 0.0, 0.18)
 	await sink.finished
 	bob.queue_free()
 	if player and player.has_method("set_input_locked"):

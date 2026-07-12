@@ -42,14 +42,14 @@ func _build_map() -> void:
 	add_interact(Vector2i(9, 21), { "type": "sign", "text": "SCORCH ROUTE 2 - mirages dance ahead. An east fork winds through the dunes." })
 
 	add_trainer(Vector2i(15, 12), "left", {
-		"id": "d2_rider", "name": "Dune Rider", "look": 3,
+		"id": "d2_rider", "name": "Dune Rider", "look": 7,
 		"party": [{ "id": "zephyr", "level": 12 }, { "id": "craggan", "level": 13 }],
 		"reward": 4,
 		"intro": ["I race the wind across these dunes!", "Try to keep up!"],
 		"win_line": "Ha! You've got desert legs. Well fought.",
 	})
 	add_trainer(Vector2i(7, 17), "down", {
-		"id": "d2_mason", "name": "Ruin Mason", "look": 2,
+		"id": "d2_mason", "name": "Ruin Mason", "look": 13,
 		"party": [{ "id": "pebblit", "level": 11 }, { "id": "duskling", "level": 12 }, { "id": "cindboth", "level": 12 }],
 		"reward": 4,
 		"intro": ["Ancient stones whisper secrets here.", "Battle me among the ruins!"],

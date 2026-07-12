@@ -41,7 +41,7 @@ func _build_map() -> void:
 	add_interact(Vector2i(9, 21), { "type": "sign", "text": "SCORCH ROUTE 1 - blistering sands hide hardy Echoes. North leads deeper." })
 
 	add_trainer(Vector2i(6, 12), "right", {
-		"id": "d1_sage", "name": "Nomad Sage", "look": 0,
+		"id": "d1_sage", "name": "Nomad Sage", "look": 11,
 		"party": [{ "id": "pebblit", "level": 10 }, { "id": "cindboth", "level": 11 }],
 		"reward": 3,
 		"intro": ["The desert tests every trainer.", "Show me your grit!"],

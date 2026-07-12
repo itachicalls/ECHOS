@@ -48,7 +48,7 @@ func _build_map() -> void:
 	add_interact(Vector2i(9, 22), { "type": "sign", "text": "VERDANT ROUTE 2 - vines thicken ahead. Beware the marsh pool." })
 
 	add_trainer(Vector2i(6, 10), "right", {
-		"id": "j2_herbal", "name": "Herbalist Mira", "look": 3,
+		"id": "j2_herbal", "name": "Herbalist Mira", "look": 16,
 		"party": [{ "id": "fernkit", "level": 15 }, { "id": "bramblor", "level": 16 }],
 		"reward": 5,
 		"intro": ["I brew salves from jungle leaves.", "Let's see whose Echoes thrive!"],

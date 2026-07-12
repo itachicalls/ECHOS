@@ -60,6 +60,8 @@ const HOUSE_W := 3
 const HOUSE_H := 3
 
 # --- character / prop / item sprite paths ---
+# Mix of Kenney dungeon trainers (16x16, scaled to player height in npc.gd)
+# plus taller 16x32 procedural trainers that match the hero silhouette.
 const TRAINER_PATHS := [
 	"res://assets/kenney/chars/trainer_wizard.png",
 	"res://assets/kenney/chars/trainer_monk.png",
@@ -67,6 +69,20 @@ const TRAINER_PATHS := [
 	"res://assets/kenney/chars/trainer_viking.png",
 	"res://assets/kenney/chars/trainer_scout.png",
 	"res://assets/kenney/chars/trainer_knight.png",
+	"res://assets/kenney/chars/trainer_guard.png",
+	"res://assets/kenney/chars/trainer_soldier.png",
+	"res://assets/kenney/chars/trainer_ranger.png",
+	"res://assets/kenney/chars/trainer_hood.png",
+	"res://assets/kenney/chars/trainer_fighter.png",
+	"res://assets/kenney/chars/trainer_elder.png",
+	"res://assets/kenney/chars/trainer_squire.png",
+	"res://assets/kenney/chars/merchant.png",
+	"res://assets/sprites/trainer_0.png",
+	"res://assets/sprites/trainer_1.png",
+	"res://assets/sprites/trainer_2.png",
+	"res://assets/sprites/trainer_3.png",
+	"res://assets/sprites/trainer_4.png",
+	"res://assets/sprites/trainer_5.png",
 ]
 
 const NURSE := "res://assets/kenney/chars/nurse.png"

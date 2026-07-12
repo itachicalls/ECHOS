@@ -1,6 +1,7 @@
 Add-Type -AssemblyName System.Drawing
 
-# Reassign sprites for generated echoes so families use distinct monster silhouettes.
+# Reassign generated Harmon sprites so each species gets a unique silhouette
+# from the 112 clean Normal+Alternative monster fronts before any hue-shift.
 $root      = "c:\Users\smyde\memoir\echo-valley"
 $echoesDir = Join-Path $root "assets\echoes"
 $dataFile  = Join-Path $root "data\echoes.json"
@@ -45,21 +46,49 @@ function SaveRecolor($srcPath, $dstPath, [double]$hue) {
   if (-not (Test-Path $srcPath)) { return $false }
   $src = [System.Drawing.Bitmap]::FromFile($srcPath)
   $bmp = New-Object System.Drawing.Bitmap $src.Width, $src.Height
-  $g = [System.Drawing.Graphics]::FromImage($bmp)
-  $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
-  $arr = HueMatrix $hue
-  $cm = New-Object System.Drawing.Imaging.ColorMatrix
-  $cm.Matrix00=$arr[0,0]; $cm.Matrix01=$arr[0,1]; $cm.Matrix02=$arr[0,2]
-  $cm.Matrix10=$arr[1,0]; $cm.Matrix11=$arr[1,1]; $cm.Matrix12=$arr[1,2]
-  $cm.Matrix20=$arr[2,0]; $cm.Matrix21=$arr[2,1]; $cm.Matrix22=$arr[2,2]
-  $cm.Matrix33=1.0; $cm.Matrix44=1.0
-  $ia = New-Object System.Drawing.Imaging.ImageAttributes
-  $ia.SetColorMatrix($cm)
-  $rect = New-Object System.Drawing.Rectangle 0,0,$src.Width,$src.Height
-  $g.DrawImage($src, $rect, 0,0,$src.Width,$src.Height, [System.Drawing.GraphicsUnit]::Pixel, $ia)
-  $g.Dispose(); $bmp.Save($dstPath, [System.Drawing.Imaging.ImageFormat]::Png)
+  for ($y = 0; $y -lt $src.Height; $y++) {
+    for ($x = 0; $x -lt $src.Width; $x++) {
+      $c = $src.GetPixel($x, $y)
+      if ($c.A -lt 8) {
+        $bmp.SetPixel($x, $y, [System.Drawing.Color]::Transparent)
+        continue
+      }
+      $h = $c.GetHue()
+      $s = $c.GetSaturation()
+      $b = $c.GetBrightness()
+      $nh = ($h + $hue) % 360.0
+      if ($nh -lt 0) { $nh += 360.0 }
+      $bmp.SetPixel($x, $y, (HsbToColor $nh $s $b $c.A))
+    }
+  }
+  $bmp.Save($dstPath, [System.Drawing.Imaging.ImageFormat]::Png)
   $bmp.Dispose(); $src.Dispose()
   return $true
+}
+
+function HsbToColor([double]$h, [double]$s, [double]$br, [int]$a) {
+  if ($s -le 0.0001) {
+    $v = [int][Math]::Round($br * 255.0)
+    return [System.Drawing.Color]::FromArgb($a, $v, $v, $v)
+  }
+  $hh = $h / 60.0
+  $i = [int][Math]::Floor($hh)
+  $f = $hh - $i
+  $p = $br * (1.0 - $s)
+  $q = $br * (1.0 - $s * $f)
+  $t = $br * (1.0 - $s * (1.0 - $f))
+  switch ($i % 6) {
+    0 { $r=$br; $g=$t; $b=$p }
+    1 { $r=$q; $g=$br; $b=$p }
+    2 { $r=$p; $g=$br; $b=$t }
+    3 { $r=$p; $g=$q; $b=$br }
+    4 { $r=$t; $g=$p; $b=$br }
+    default { $r=$br; $g=$p; $b=$q }
+  }
+  return [System.Drawing.Color]::FromArgb($a,
+    [int][Math]::Round([Math]::Min(255,$r*255)),
+    [int][Math]::Round([Math]::Min(255,$g*255)),
+    [int][Math]::Round([Math]::Min(255,$b*255)))
 }
 
 function CopyPng($srcPath, $dstPath) {
@@ -82,28 +111,31 @@ function WriteSprite($id, $palette, $num, [double]$hue = 0) {
   return $okF
 }
 
-# Build shuffled pool: every (palette, num) pair, then hue-shifted extras.
-$pool = @()
-foreach ($n in 1..56) { $pool += @{p='N'; n=$n; h=0.0} }
-foreach ($n in 1..56) { $pool += @{p='A'; n=$n; h=0.0} }
-for ($i = 0; $i -lt 20; $i++) {
-  $n = ($i * 3 % 56) + 1
-  $pool += @{p='N'; n=$n; h=[double](35 + $i * 17)}
+# Unique clean pool first (112), then distinct hue-shifted leftovers.
+$pool = [System.Collections.Generic.List[object]]::new()
+foreach ($n in 1..56) { $pool.Add(@{p='N'; n=$n; h=0.0}) }
+foreach ($n in 1..56) { $pool.Add(@{p='A'; n=$n; h=0.0}) }
+# Extra unique-looking hues for overflow beyond 112
+$extraHues = @(28,55,82,110,140,168,195,225,255,285,318,348,42,70)
+for ($i = 0; $i -lt $extraHues.Count; $i++) {
+  $n = (($i * 7) % 56) + 1
+  $pool.Add(@{p='N'; n=$n; h=[double]$extraHues[$i]})
 }
-$rng = New-Object System.Random 42
-$pool = $pool | Sort-Object { $rng.Next() }
+
+$rng = New-Object System.Random 77
+$shuffled = $pool | Sort-Object { $rng.Next() }
 
 $raw = Get-Content $dataFile -Raw
 $json = $raw | ConvertFrom-Json
+
+# Build generated-only evolution chains (roots first).
 $byId = @{}
 foreach ($e in $json) { $byId[$e.id] = $e }
-
-# Evolution chains for generated echoes only.
-$chains = @()
 $childOf = @{}
 foreach ($e in $json) {
   if ($e.evolve_to -and $e.evolve_to -ne '') { $childOf[$e.evolve_to] = $e.id }
 }
+$chains = @()
 foreach ($e in $json) {
   if ($preserve -contains $e.id) { continue }
   if ($childOf.ContainsKey($e.id)) { continue }
@@ -111,31 +143,46 @@ foreach ($e in $json) {
   $cur = $e.id
   while ($byId[$cur].evolve_to -and $byId[$cur].evolve_to -ne '') {
     $cur = $byId[$cur].evolve_to
+    if ($preserve -contains $cur) { break }
     $chain += $cur
   }
   $chains += ,$chain
 }
 
-$poolIdx = 0
-$written = 0
+# Flatten generated ids in chain order, assign unique pool entries sequentially.
+$ids = @()
 foreach ($chain in ($chains | Sort-Object { $_.Count })) {
-  # Pick assignments with maximally different monster numbers within the chain.
-  $nums = @(1..56) | Sort-Object { $rng.Next() }
-  for ($st = 0; $st -lt $chain.Count; $st++) {
-    $id = $chain[$st]
+  foreach ($id in $chain) {
     if ($preserve -contains $id) { continue }
-    $spec = $pool[$poolIdx % $pool.Count]
-    $poolIdx++
-    # Force distinct silhouette per evolution stage when possible.
-    $num = $nums[$st % $nums.Count]
-    $hue = $spec.h
-    if ($spec.h -eq 0) {
-      WriteSprite $id $spec.p $num 0 | Out-Null
-    } else {
-      WriteSprite $id 'N' $num $hue | Out-Null
-    }
-    $written++
+    $ids += $id
   }
 }
 
-Write-Output "Rediversified $written echo sprites across $($chains.Count) families."
+$written = 0
+$usedKeys = @{}
+$poolIdx = 0
+foreach ($id in $ids) {
+  $spec = $null
+  while ($poolIdx -lt $shuffled.Count) {
+    $cand = $shuffled[$poolIdx]
+    $poolIdx++
+    $key = "{0}:{1}:{2}" -f $cand.p, $cand.n, [int]$cand.h
+    if (-not $usedKeys.ContainsKey($key)) {
+      $usedKeys[$key] = $true
+      $spec = $cand
+      break
+    }
+  }
+  if ($null -eq $spec) {
+    $n = ($written % 56) + 1
+    $spec = @{p='N'; n=$n; h=[double](20 + ($written * 23) % 320)}
+  }
+  if ($spec.h -eq 0) {
+    WriteSprite $id $spec.p $spec.n 0 | Out-Null
+  } else {
+    WriteSprite $id 'N' $spec.n $spec.h | Out-Null
+  }
+  $written++
+}
+
+Write-Output "Rediversified $written Harmon sprites (unique pool keys: $($usedKeys.Count))."
