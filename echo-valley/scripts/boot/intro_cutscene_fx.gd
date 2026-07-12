@@ -58,9 +58,9 @@ func _fx_fracture() -> void:
 
 func _fx_harmons() -> void:
 	# Soft resonance auras around the trio + rising music motes.
-	for p in [Vector2(64, 96), Vector2(120, 88), Vector2(176, 96)]:
+	for p in [Vector2(64, 106), Vector2(120, 100), Vector2(176, 106)]:
 		var pulse := 0.18 + 0.1 * sin(_t * 2.2 + p.x)
-		draw_arc(p, 20.0, 0, TAU, 28, Color("7ee8d8", pulse), 1.0, true)
+		draw_arc(p, 18.0, 0, TAU, 28, Color("7ee8d8", pulse), 1.0, true)
 	_rising_motes(16, Color("bff0e0"), 0.8)
 
 

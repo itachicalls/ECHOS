@@ -18,9 +18,9 @@ const LABELS := {
 }
 
 const BLURBS := {
-	"keeper": "Classic valley look",
-	"curly": "Warm & spirited",
-	"cap": "Cool & confident",
+	"keeper": "Brave heart of the valley",
+	"curly": "Warm spirit, ready to bond",
+	"cap": "Cool stride, sharp focus",
 }
 
 const DEFAULT_NAMES := {
