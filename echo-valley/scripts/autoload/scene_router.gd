@@ -187,7 +187,6 @@ func get_battle_request() -> Dictionary:
 
 func ensure_visible() -> void:
 	_busy = false
-	_clear_fade()
 
 
 func finish_battle(result: Dictionary) -> void:
@@ -214,81 +213,21 @@ func finish_battle(result: Dictionary) -> void:
 
 
 func _swap_scene(path: String) -> void:
-	# Recover if a prior transition stalled (e.g. web hitch).
+	# Recover if a prior transition stalled instead of blocking forever.
 	var wait_guard := 0
-	while _busy and wait_guard < 180:
+	while _busy and wait_guard < 120:
 		wait_guard += 1
 		await get_tree().process_frame
-	if _busy:
-		push_warning("SceneRouter: clearing stuck busy lock before swap")
-		_busy = false
 	_busy = true
 	_lock_players(true)
-	await _fade(true)
 	var err := get_tree().change_scene_to_file(path)
 	if err != OK:
 		push_error("Scene change failed: %s (%d)" % [path, err])
-		_busy = false
-		_lock_players(false)
-		await _fade(false)
-		return
-	# Wait until the new scene finishes _ready (avoids black flash on web/mobile).
-	for _i in 3:
-		await get_tree().process_frame
-	var scene := get_tree().current_scene
-	if scene != null and not scene.is_node_ready():
-		await scene.ready
-	for _i in 2:
-		await get_tree().process_frame
+	# A couple of frames lets the new scene finish _ready before we unlock.
+	await get_tree().process_frame
+	await get_tree().process_frame
 	_busy = false
 	_lock_players(false)
-	await _fade(false)
-
-
-func _fade(to_black: bool) -> void:
-	var fade := _ensure_fade()
-	if fade == null:
-		return
-	fade.visible = true
-	fade.mouse_filter = Control.MOUSE_FILTER_STOP if to_black else Control.MOUSE_FILTER_IGNORE
-	var target := 1.0 if to_black else 0.0
-	var tw := create_tween()
-	tw.tween_property(fade, "color:a", target, 0.12 if to_black else 0.18)
-	await tw.finished
-	if not to_black:
-		fade.visible = false
-		fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-
-func _ensure_fade() -> ColorRect:
-	var layer := get_node_or_null("TransitionFadeLayer") as CanvasLayer
-	if layer == null:
-		layer = CanvasLayer.new()
-		layer.name = "TransitionFadeLayer"
-		layer.layer = 100
-		add_child(layer)
-	var fade := layer.get_node_or_null("TransitionFade") as ColorRect
-	if fade == null:
-		fade = ColorRect.new()
-		fade.name = "TransitionFade"
-		fade.color = Color(0, 0, 0, 0)
-		fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		fade.visible = false
-		layer.add_child(fade)
-	return fade
-
-
-func _clear_fade() -> void:
-	var layer := get_node_or_null("TransitionFadeLayer") as CanvasLayer
-	if layer == null:
-		return
-	var fade := layer.get_node_or_null("TransitionFade") as ColorRect
-	if fade == null:
-		return
-	fade.color.a = 0.0
-	fade.visible = false
-	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func _lock_players(v: bool) -> void:

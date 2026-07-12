@@ -103,7 +103,7 @@ func _trigger_faction_ambush() -> void:
 	var actor_defs := [
 		{ "look": 9, "spawn": spawns[0], "surround": surround[0] },
 		{ "look": 8, "spawn": spawns[1], "surround": surround[1] },
-		{ "look": 11, "spawn": spawns[2], "surround": surround[2] },
+		{ "look": 10, "spawn": spawns[2], "surround": surround[2] },
 	]
 
 	play_ambush_surround(actor_defs, [
@@ -169,7 +169,7 @@ func _start_ambush_chain() -> void:
 			"win_line": "Steady command. The routes respect you.",
 		},
 		{
-			"id": "faction_archive", "name": "Archive Hunter", "look": 11,
+			"id": "faction_archive", "name": "Archive Hunter", "look": 10,
 			"party": [{ "id": "cindboth", "level": 11 }, { "id": "zephyr", "level": 12 }],
 			"reward": 3,
 			"intro": ["The Memory Archive records every battle.", "We will see what your Harmons remember."],

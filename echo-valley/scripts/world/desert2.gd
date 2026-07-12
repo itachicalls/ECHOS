@@ -49,7 +49,7 @@ func _build_map() -> void:
 		"win_line": "Ha! You've got desert legs. Well fought.",
 	})
 	add_trainer(Vector2i(7, 17), "down", {
-		"id": "d2_mason", "name": "Ruin Mason", "look": 13,
+		"id": "d2_mason", "name": "Ruin Mason", "look": 9,
 		"party": [{ "id": "pebblit", "level": 11 }, { "id": "duskling", "level": 12 }, { "id": "cindboth", "level": 12 }],
 		"reward": 4,
 		"intro": ["Ancient stones whisper secrets here.", "Battle me among the ruins!"],

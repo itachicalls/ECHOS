@@ -53,23 +53,12 @@ func setup(p_world, p_cell: Vector2i, p_facing: String, p_data: Dictionary, text
 	sprite.centered = false
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	sprite.modulate = tint
-	_apply_sprite_layout(sprite)
+	# Kenney NPC tiles are 16x16; the hero sheet frame is 16x32. Anchor feet to the tile.
+	var th := sprite.texture.get_height() if sprite.texture else 32
+	sprite.offset = Vector2(0, -16) if th >= 28 else Vector2(0, -8)
 	add_child(sprite)
 	z_index = 4
 	_wander_timer = randf_range(1.0, 3.0)
-
-
-func _apply_sprite_layout(spr: Sprite2D) -> void:
-	if spr.texture == null:
-		spr.offset = Vector2(0, -16)
-		return
-	var th := spr.texture.get_height()
-	spr.scale = Vector2.ONE
-	if th >= 28:
-		spr.offset = Vector2(0, -16)
-	else:
-		# 16×16 Kenney tiles — keep native size, anchor feet on the tile.
-		spr.offset = Vector2(0, -8)
 
 
 func _apply_facing_region() -> void:

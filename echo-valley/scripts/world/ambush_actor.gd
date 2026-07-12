@@ -25,20 +25,9 @@ func setup(p_world, spawn: Vector2i, dest: Vector2i, look: int) -> void:
 	sprite.texture = load(Tiles.TRAINER_PATHS[idx])
 	sprite.centered = false
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_apply_sprite_layout(sprite)
+	var th := sprite.texture.get_height() if sprite.texture else 32
+	sprite.offset = Vector2(0, -16) if th >= 28 else Vector2(0, -8)
 	add_child(sprite)
-
-
-func _apply_sprite_layout(spr: Sprite2D) -> void:
-	if spr.texture == null:
-		spr.offset = Vector2(0, -16)
-		return
-	var th := spr.texture.get_height()
-	spr.scale = Vector2.ONE
-	if th >= 28:
-		spr.offset = Vector2(0, -16)
-	else:
-		spr.offset = Vector2(0, -8)
 
 
 func face_towards(other: Vector2i) -> void:
