@@ -3,8 +3,9 @@ extends Node
 ## WebSocket client for 2-player online versus (host-authoritative battles).
 ## Production: harmona.fun (Vercel) connects cross-origin to the Render lobby.
 
-# Custom domain on Render — add ws.harmona.fun in Render dashboard + DNS CNAME.
-const PROD_LOBBY_WSS := "wss://ws.harmona.fun/versus"
+# Render lobby service (harmona.fun is static on Vercel, so versus connects
+# cross-origin to the Render WebSocket host — no DNS/subdomain setup needed).
+const PROD_LOBBY_WSS := "wss://harmona-versus.onrender.com/versus"
 # Vercel preview deploys use the same lobby.
 const VERCEL_HOST_SUFFIX := ".vercel.app"
 const HARMONA_HOSTS := ["harmona.fun", "www.harmona.fun"]

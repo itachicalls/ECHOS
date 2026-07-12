@@ -45,6 +45,7 @@ var _status: Label
 var _action_btn: Button
 var _code_lbl: Label
 var _join_field: LineEdit
+var _code_in: LineEdit
 
 
 func _ready() -> void:
@@ -191,34 +192,56 @@ func _showdown_card(title: String, subtitle: String, pos: Vector2, sz: Vector2, 
 
 
 func _build_online(parent: Control) -> void:
-	_soft_title(parent, "PLAYER VS PLAYER", "host or join a room")
-	_status = _caption(parent, "Connect, then share your room code.", 28)
+	_soft_title(parent, "PLAYER VS PLAYER", "host a room, or join a friend's")
+	_status = _caption(parent, "Enter a name, then Host or Join.", 25)
 
-	_label_in(parent, Vector2(PAD, 42), Vector2(60, 10), "YOUR NAME", 5, Color("7c8aa0"), false)
-	_join_field = _styled_field(Vector2(PAD, 52), Vector2(110, 18))
-	_join_field.text = "Player"
+	# --- name row (full width) ---
+	_label_in(parent, Vector2(PAD, 35), Vector2(120, 9), "YOUR NAME", 5, Color("8aa0b8"), false)
+	_join_field = _styled_field(Vector2(PAD, 44), Vector2(W, 16))
+	if _join_field.text == "":
+		_join_field.text = GameState.player_name if GameState.player_name != "" else "Player"
 	parent.add_child(_join_field)
 
-	_chip(parent, Vector2(PAD, 76), Vector2(52, 16), "Host", _host_room, false, C_PVP)
-	_chip(parent, Vector2(62, 76), Vector2(52, 16), "Join", _join_room, false, C_CPU)
-
-	_label_in(parent, Vector2(122, 42), Vector2(110, 10), "ROOM CODE", 5, Color("7c8aa0"), false)
+	# --- HOST panel (left) : creates a room + shows the code -------------------
+	var host_panel := _sub_panel(parent, Vector2(PAD, 66), Vector2(108, 58), C_PVP)
+	_label_in(host_panel, Vector2(6, 5), Vector2(96, 9), "HOST", 6, C_PVP.lightened(0.3), true)
+	_chip(host_panel, Vector2(8, 16), Vector2(92, 18), "Create Room", _host_room, false, C_PVP)
+	_label_in(host_panel, Vector2(6, 37), Vector2(96, 8), "ROOM CODE", 5, Color("8aa0b8"), true)
 	_code_lbl = Label.new()
-	_code_lbl.text = "------"
-	_pin(_code_lbl, Vector2(122, 52), Vector2(110, 18))
+	_pin(_code_lbl, Vector2(6, 44), Vector2(96, 12))
 	_code_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_code_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	TitleFonts.apply(_code_lbl, 10, C_GOLD, Color("1a1030"), 1)
-	parent.add_child(_code_lbl)
+	_code_lbl.text = _room_code if _room_code != "" else "- - - - - -"
+	TitleFonts.apply(_code_lbl, 9, C_GOLD, Color("1a1030"), 1)
+	host_panel.add_child(_code_lbl)
 
-	var code_in := _styled_field(Vector2(122, 76), Vector2(110, 18))
-	code_in.name = "code_in"
-	code_in.placeholder_text = "ENTER CODE"
-	code_in.max_length = 6
-	parent.add_child(code_in)
+	# --- JOIN panel (right) : enter a code + connect --------------------------
+	var join_panel := _sub_panel(parent, Vector2(PAD + 114, 66), Vector2(108, 58), C_CPU)
+	_label_in(join_panel, Vector2(6, 5), Vector2(96, 9), "JOIN", 6, C_CPU.lightened(0.3), true)
+	_code_in = _styled_field(Vector2(8, 16), Vector2(92, 18))
+	_code_in.name = "code_in"
+	_code_in.placeholder_text = "CODE"
+	_code_in.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_code_in.max_length = 6
+	join_panel.add_child(_code_in)
+	_chip(join_panel, Vector2(8, 37), Vector2(92, 18), "Enter Room", _join_room, false, C_CPU)
 
 	_action_btn = null
-	_draft_footer(parent, _on_back, Callable(), "", "Draft", _go_online_draft, true)
+	_draft_footer(parent, _on_back, Callable(), "", "Draft Team", _go_online_draft, false)
+
+
+## A soft bordered sub-panel used to group the Host / Join controls.
+func _sub_panel(parent: Control, pos: Vector2, sz: Vector2, accent: Color) -> Panel:
+	var p := Panel.new()
+	_pin(p, pos, sz)
+	p.clip_contents = true
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(accent.r * 0.14, accent.g * 0.14, accent.b * 0.2, 0.8)
+	sb.border_color = Color(accent.r, accent.g, accent.b, 0.7)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(4)
+	parent.add_child(p)
+	return p
 
 
 func _build_draft(parent: Control, title: String) -> void:
@@ -544,29 +567,39 @@ func _host_room() -> void:
 		return
 	VersusNet.create_room(_player_name())
 	VersusNet.role = "host"
-	_status.text = "Room created — share the code!"
+	if _status:
+		_status.text = "Creating room..."
 
 
 func _join_room() -> void:
-	if not await _ensure_net():
-		return
-	var code_in: LineEdit = _root.get_node_or_null("code_in") as LineEdit
-	var code := code_in.text.to_upper().strip_edges() if code_in else ""
+	var code := _code_in.text.to_upper().strip_edges() if _code_in else ""
 	if code.length() < 4:
-		_status.text = "Enter a room code first."
+		if _status:
+			_status.text = "Enter your friend's room code first."
+		return
+	if not await _ensure_net():
 		return
 	VersusNet.join_room(code, _player_name())
 	VersusNet.role = "guest"
+	if _status:
+		_status.text = "Joining room %s..." % code
 
 
 func _ensure_net() -> bool:
 	if VersusNet.lobby_open():
 		return true
+	if _status:
+		_status.text = "Connecting to lobby (may take ~30s if asleep)..."
 	var err := VersusNet.connect_lobby()
 	if err != OK:
-		_status.text = "Could not reach lobby server."
+		if _status:
+			_status.text = "Couldn't reach the lobby. Check connection & retry."
 		return false
-	return await VersusNet.wait_connected()
+	# Free hosting cold-starts slowly, so give the handshake generous time.
+	var ok := await VersusNet.wait_connected(45.0)
+	if not ok and _status:
+		_status.text = "Lobby didn't answer — it may be waking up. Try again."
+	return ok
 
 
 func _player_name() -> String:
