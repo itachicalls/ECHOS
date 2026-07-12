@@ -52,6 +52,7 @@ const FACING_ROW := { "down": 0, "right": 1, "up": 2, "left": 3 }
 
 
 func _ready() -> void:
+	SceneRouter.ensure_visible()
 	_setup_tileset()
 	ground = _make_layer(0)
 	decor = _make_layer(1)
@@ -271,6 +272,13 @@ func place_tree(cell: Vector2i, col: int = Tiles.TREE_GREEN_COL) -> void:
 func place_tall_grass(cell: Vector2i, tile: Vector3i = Tiles.TALL_GRASS) -> void:
 	set_ground(cell, tile)
 	grass[cell] = true
+
+
+func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:
+	for x in range(x0, x1 + 1):
+		for y in range(y0, y1 + 1):
+			if not is_blocked(Vector2i(x, y)):
+				place_tall_grass(Vector2i(x, y))
 
 
 func place_house(origin: Vector2i) -> void:

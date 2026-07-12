@@ -204,6 +204,10 @@ func get_battle_request() -> Dictionary:
 
 func ensure_visible() -> void:
 	_busy = false
+	if _draining_queue and _transition_queue.is_empty():
+		_draining_queue = false
+	if not _draining_queue and _transition_queue.size() > 0:
+		_drain_queue_async()
 
 
 func finish_battle(result: Dictionary) -> void:
@@ -251,26 +255,30 @@ func _drain_queue_async() -> void:
 	_draining_queue = true
 	while _transition_queue.size() > 0:
 		var job: Callable = _transition_queue.pop_front()
+		_busy = true
+		_lock_players(true)
 		await job.call()
+		_busy = false
+		_lock_players(false)
 	_draining_queue = false
 
 
 func _swap_scene(path: String) -> void:
-	while _busy:
-		await get_tree().process_frame
-	_busy = true
-	_lock_players(true)
-	# Sync swap on this autoload only — safe because map/battle nodes are not in our call stack.
-	var err := get_tree().change_scene_to_file(path)
+	var tree := get_tree()
+	var err := tree.change_scene_to_file(path)
 	if err != OK:
 		push_error("Scene change failed: %s (%d)" % [path, err])
-		_busy = false
-		_lock_players(false)
 		return
-	await get_tree().process_frame
-	await get_tree().process_frame
-	_busy = false
-	_lock_players(false)
+
+	var ready := false
+	for _i in 180:
+		await tree.process_frame
+		var scene := tree.current_scene
+		if scene != null and scene.is_node_ready():
+			ready = true
+			break
+	if not ready:
+		push_error("Scene change timed out waiting for ready: %s" % path)
 
 
 func _lock_players(v: bool) -> void:
