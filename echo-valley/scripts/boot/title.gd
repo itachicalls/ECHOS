@@ -14,6 +14,7 @@ const STARTER_IDS := ["emberkit", "tideling", "mossling"]
 
 var _menu: VBoxContainer
 var _starter_panel: Control
+var _chrome: Control
 
 
 func _ready() -> void:
@@ -26,31 +27,28 @@ func _ready() -> void:
 
 func _build_scene() -> void:
 	var backdrop := preload("res://scripts/ui/title_backdrop.gd").new()
+	backdrop.z_index = -1
 	add_child(backdrop)
 
-	# Title stack: warm glow, then crisp pixel type.
-	var glow := Label.new()
-	glow.text = GameStrings.TITLE
-	glow.position = Vector2(0, 10)
-	glow.size = Vector2(VIEW_W, 24)
-	glow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	TitleFonts.apply(glow, 10, Color("7ee8d8", 0.35))
-	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(glow)
+	# All title chrome lives here so cutscenes can hide it cleanly.
+	_chrome = Control.new()
+	_chrome.size = Vector2(VIEW_W, VIEW_H)
+	_chrome.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_chrome.z_index = 1
+	add_child(_chrome)
 
-	var title := TitleFonts.shadow_label(
-		self, GameStrings.TITLE, 10, Color("fff0b0"),
-		Vector2(0, 8), Vector2(VIEW_W, 24),
-		HORIZONTAL_ALIGNMENT_CENTER, Color("1a2848"), 3
+	# Single clean title — no glow + shadow + outline stack (that garbles pixel fonts).
+	TitleFonts.shadow_label(
+		_chrome, GameStrings.TITLE, 8, Color("fff0b0"),
+		Vector2(4, 10), Vector2(VIEW_W - 8, 16),
+		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
 	)
-	title.clip_text = true
 
-	var sub := TitleFonts.shadow_label(
-		self, GameStrings.TAGLINE, 6, Color("e8f4ff"),
-		Vector2(4, 30), Vector2(VIEW_W - 8, 14),
-		HORIZONTAL_ALIGNMENT_CENTER, Color("1a3050"), 1
+	TitleFonts.shadow_label(
+		_chrome, GameStrings.TAGLINE, 5, Color("e8f4ff"),
+		Vector2(8, 28), Vector2(VIEW_W - 16, 12),
+		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
 	)
-	sub.clip_text = true
 
 	const STARTER_PX := 26
 	for i in STARTER_IDS.size():
@@ -62,7 +60,7 @@ func _build_scene() -> void:
 		tr.size = Vector2(STARTER_PX, STARTER_PX)
 		var base_y := 84.0
 		tr.position = Vector2(10 + i * 32, base_y)
-		add_child(tr)
+		_chrome.add_child(tr)
 		var t := create_tween().set_loops()
 		var up := 0.55 + i * 0.12
 		t.tween_property(tr, "position:y", base_y - 2.0, up).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -72,8 +70,8 @@ func _build_scene() -> void:
 	ver.text = "v0.14"
 	ver.position = Vector2(6, 146)
 	ver.size = Vector2(48, 10)
-	TitleFonts.apply(ver, 6, Color("d8e8ff", 0.75), Color("1a2848"), 1)
-	add_child(ver)
+	TitleFonts.apply(ver, 5, Color("d8e8ff", 0.75))
+	_chrome.add_child(ver)
 
 
 func _button_style(bg: Color, border: Color) -> StyleBoxFlat:
@@ -120,7 +118,7 @@ func _build_menu() -> void:
 	psb.shadow_color = Color(0, 0, 0, 0.35)
 	psb.shadow_size = 3
 	panel.add_theme_stylebox_override("panel", psb)
-	add_child(panel)
+	_chrome.add_child(panel)
 
 	_menu = VBoxContainer.new()
 	_menu.position = Vector2(8, 6)
@@ -167,27 +165,33 @@ func _reset_state() -> void:
 
 
 func _show_starter_select() -> void:
+	# Keep title chrome hidden — it was bleeding over this panel.
+	if _chrome:
+		_chrome.visible = false
+
 	_starter_panel = Panel.new()
 	_starter_panel.position = Vector2.ZERO
 	_starter_panel.size = Vector2(VIEW_W, VIEW_H)
+	_starter_panel.z_index = 20
+	_starter_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color("060c18", 0.92)
-	sb.set_border_width_all(2)
-	sb.border_color = Color("5ad4c8", 0.35)
+	sb.bg_color = Color("060c18", 0.97)
+	sb.set_border_width_all(0)
 	_starter_panel.add_theme_stylebox_override("panel", sb)
 	add_child(_starter_panel)
 
-	var head := TitleFonts.shadow_label(
-		_starter_panel, "Choose your first %s" % GameStrings.CREATURE, 8, Color("fff0b0"),
-		Vector2(0, 8), Vector2(VIEW_W, 16), HORIZONTAL_ALIGNMENT_CENTER, Color("1a2848"), 2
+	TitleFonts.shadow_label(
+		_starter_panel, "Choose your first %s" % GameStrings.CREATURE, 7, Color("fff0b0"),
+		Vector2(8, 10), Vector2(VIEW_W - 16, 14),
+		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0, 0
 	)
 
 	for i in STARTER_IDS.size():
 		var id: String = STARTER_IDS[i]
 		var col := VBoxContainer.new()
 		col.alignment = BoxContainer.ALIGNMENT_CENTER
-		col.add_theme_constant_override("separation", 2)
-		col.position = Vector2(16 + i * 72, 30)
+		col.add_theme_constant_override("separation", 3)
+		col.position = Vector2(12 + i * 72, 32)
 		col.custom_minimum_size = Vector2(64, 0)
 		_starter_panel.add_child(col)
 
@@ -196,21 +200,23 @@ func _show_starter_select() -> void:
 		art.texture = load(def.sprite_path)
 		art.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		art.custom_minimum_size = Vector2(48, 48)
+		art.size = Vector2(48, 48)
 		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		col.add_child(art)
 
 		var nm := Label.new()
 		nm.text = def.name
-		nm.custom_minimum_size = Vector2(64, 12)
+		nm.custom_minimum_size = Vector2(64, 10)
 		nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		TitleFonts.apply(nm, 6, Color("f0f8ff"), Color("1a2848"), 1)
+		TitleFonts.apply(nm, 6, Color("f0f8ff"))
 		col.add_child(nm)
 
 		var bl := Label.new()
 		bl.text = STARTER_BLURB[id]
-		bl.custom_minimum_size = Vector2(64, 20)
+		bl.custom_minimum_size = Vector2(64, 22)
 		bl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		bl.autowrap_mode = TextServer.AUTOWRAP_WORD
+		bl.clip_text = true
 		TitleFonts.apply(bl, 5, Color("a8e8dc"))
 		col.add_child(bl)
 
@@ -234,8 +240,15 @@ func _on_pick_starter(id: String) -> void:
 
 
 func _play_cutscene(sequence_id: String, starter_id: String = "") -> void:
+	# Hide overlays so nothing paints over the cutscene.
+	if _chrome:
+		_chrome.visible = false
+	if _starter_panel and is_instance_valid(_starter_panel):
+		_starter_panel.visible = false
 	var cut := preload("res://scripts/boot/intro_cutscene.gd").new()
 	cut.sequence_id = sequence_id
 	cut.starter_id = starter_id
+	cut.z_index = 40
 	add_child(cut)
 	await cut.finished
+	# Do NOT restore chrome here — caller decides what screen comes next.

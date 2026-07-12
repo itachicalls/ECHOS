@@ -67,15 +67,10 @@ func _draw() -> void:
 		var tw := 0.55 + 0.45 * sin(_time * 2.2 + _star_twinkle[i])
 		draw_rect(Rect2(p.x, p.y, 1, 1), Color(1, 1, 1, fade * tw * 0.9))
 
-	var sun := Vector2(188, 34)
-	for r in [22, 16, 10]:
-		var a := 0.08 + float(10 - r) * 0.04
-		draw_circle(sun, float(r), Color("ffe8a0", a))
-	draw_circle(sun, 7.0, Color("fff4c8"))
-	draw_circle(sun, 5.0, Color("fffde8"))
+	_draw_moon(Vector2(214, 10))
 
 	_draw_cloud(Vector2(14 + _cloud_offset * 0.28, 16), 0, 0.9)
-	_draw_cloud(Vector2(158 + _cloud_offset * 0.4, 12), 2, 0.78)
+	_draw_cloud(Vector2(96 + _cloud_offset * 0.4, 12), 2, 0.78)
 	_draw_cloud(Vector2(64 + _cloud_offset * 0.52, 44), 1, 0.92)
 
 	_draw_hill(118, 92, 130, Color("2d6b3a"))
@@ -108,6 +103,15 @@ func _draw() -> void:
 	_draw_flower(Vector2(24, ground_y + 30), Color("78d8ff"))
 
 	draw_rect(Rect2(0, VIEW_H - 6, VIEW_W, 6), Color("1a4028", 0.35))
+
+
+func _draw_moon(pos: Vector2) -> void:
+	# Small corner moon — stays above the title/tagline safe zone.
+	for r in [10, 7, 4]:
+		var a := 0.07 + float(4 - r) * 0.03
+		draw_circle(pos, float(r), Color("ffe8a0", a))
+	draw_circle(pos, 4.0, Color("fff4c8"))
+	draw_circle(pos, 3.0, Color("fffde8"))
 
 
 func _draw_hill(cx: float, base_y: float, radius: float, col: Color) -> void:

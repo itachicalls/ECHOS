@@ -6,58 +6,55 @@
         "Long ago, every creature and every valley sang as one.",
         "The world was bound by an ancient force — The Chorus."
       ],
-      "hold": 3.2
+      "hold": 3.4
     },
     {
       "visual": "fracture",
       "lines": [
         "Then came The Fracture.",
-        "The bond shattered. Regions fell silent. Memories were lost."
+        "The bond shattered. Regions fell silent."
       ],
-      "hold": 3.4
+      "hold": 3.2
     },
     {
       "visual": "harmons",
       "lines": [
         "The creatures that remained are called Harmons.",
-        "Each one carries a fragment of the old world's song."
+        "Each one carries a fragment of the old song."
       ],
-      "hold": 3.0
+      "hold": 3.2
     },
     {
       "visual": "disturbance",
       "lines": [
         "Now strange signals ripple across the Routes.",
-        "Ruins awaken. Harmons grow restless.",
-        "Something beneath the valley is stirring again."
+        "Ruins awaken. Harmons grow restless."
       ],
-      "hold": 3.6
+      "hold": 3.2
     },
     {
       "visual": "veil",
       "lines": [
-        "Whispers speak of The Veil — hooded watchers at the valley's edge.",
-        "Ghostly Harmons and rogue keepers gather where the Chorus grows thin.",
-        "They warn that restoring the old song could awaken something terrible."
+        "Whispers speak of The Veil — hooded watchers.",
+        "They warn that restoring the song could awaken something terrible."
       ],
-      "hold": 3.8
+      "hold": 3.4
     },
     {
       "visual": "journey",
       "lines": [
-        "You arrive at Harmona Rest — a village at the edge of the unknown.",
-        "Route Rangers guard what remains. Only the worthy earn Resonance Sigils.",
-        "Your journey to restore the valley begins now."
+        "You arrive at Harmona Rest, at the edge of the unknown.",
+        "Route Rangers guard what remains. Your journey begins."
       ],
-      "hold": 3.6
+      "hold": 3.4
     }
   ],
   "arrival": [
     {
       "visual": "town",
       "lines": [
-        "Harmona Rest — the village where explorers gather before the Routes.",
-        "Nurse Odalie tends to travelers. Merchants and keepers share rumors of The Fracture."
+        "Harmona Rest — where explorers gather before the Routes.",
+        "Nurse Odalie tends travelers. Rumors of The Fracture linger."
       ],
       "hold": 3.2
     },
@@ -65,7 +62,7 @@
       "visual": "bond",
       "lines": [
         "Your Harmon stirs at your touch.",
-        "A faint melody echoes between you — the first note of a bond."
+        "A faint melody echoes — the first note of a bond."
       ],
       "hold": 3.2
     },
@@ -73,10 +70,9 @@
       "visual": "depart",
       "lines": [
         "Head north through the gate to Route 1.",
-        "Find wild Harmons, challenge Rangers, and uncover what broke The Chorus.",
-        "The valley is waiting."
+        "Find Harmons, challenge Rangers, and uncover The Fracture."
       ],
-      "hold": 3.4
+      "hold": 3.2
     }
   ]
 }

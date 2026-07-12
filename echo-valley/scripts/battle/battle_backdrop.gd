@@ -146,7 +146,7 @@ func _draw_jungle() -> void:
 func _draw_cave() -> void:
 	for y in VIEW_H:
 		var t := float(y) / float(VIEW_H - 1)
-		draw_line(Vector2(0, y), Vector2(VIEW_W, y), Color("12101c").lerp(Color("2a2838"), t))
+		draw_rect(Rect2(0, y, VIEW_W, 1), Color("12101c").lerp(Color("2a2838"), t))
 	# Ceiling stalactites.
 	for i in 10:
 		var sx := 4 + i * 23
@@ -226,9 +226,10 @@ func _sky_day(t: float) -> Color:
 
 
 func _paint_sky(color_fn: Callable) -> void:
+	# Filled rects — draw_line left visible horizontal banding when scaled.
 	for y in HORIZON:
 		var t := float(y) / float(HORIZON - 1)
-		draw_line(Vector2(0, y), Vector2(VIEW_W, y), color_fn.call(t))
+		draw_rect(Rect2(0, y, VIEW_W, 1), color_fn.call(t))
 
 
 func _draw_sun(pos: Vector2, core: Color, glow_r: int = 10) -> void:

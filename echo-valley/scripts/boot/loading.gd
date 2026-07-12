@@ -43,25 +43,16 @@ func _build_ui() -> void:
 	veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(veil)
 
-	var glow := Label.new()
-	glow.text = GameStrings.TITLE
-	glow.position = Vector2(0, 42)
-	glow.size = Vector2(VIEW_W, 24)
-	glow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	TitleFonts.apply(glow, 10, Color("7ee8d8", 0.35))
-	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(glow)
-
 	TitleFonts.shadow_label(
-		self, GameStrings.TITLE, 10, Color("fff0b0"),
-		Vector2(0, 40), Vector2(VIEW_W, 24),
-		HORIZONTAL_ALIGNMENT_CENTER, Color("1a2848"), 3
+		self, GameStrings.TITLE, 8, Color("fff0b0"),
+		Vector2(4, 42), Vector2(VIEW_W - 8, 16),
+		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0
 	)
 
 	TitleFonts.shadow_label(
-		self, "awakening the valley...", 6, Color("d8f0ff"),
+		self, "awakening the valley...", 5, Color("d8f0ff"),
 		Vector2(0, 62), Vector2(VIEW_W, 12),
-		HORIZONTAL_ALIGNMENT_CENTER, Color("1a3050"), 1
+		HORIZONTAL_ALIGNMENT_CENTER, Color(), 0
 	)
 
 	const STARTER_PX := 22

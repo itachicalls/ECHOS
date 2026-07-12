@@ -337,9 +337,10 @@ func add_prop(sprite_path: String, cell: Vector2i, blocks: bool = false) -> Spri
 
 
 func add_heal_station(nurse_cell: Vector2i, emblem_cell: Vector2i, facing: String = "down") -> Node2D:
-	# Echo Rest clinic: a red medical cross emblem above a nurse you talk to.
+	# Echo Rest clinic: small red medical cross (+) above the nurse — not a big X icon.
 	var cross := add_prop(Tiles.HEAL_CROSS, emblem_cell, false)
 	cross.z_index = 6
+	cross.scale = Vector2(1.0, 1.0)
 	var nurse := add_npc(nurse_cell, facing, Color(1, 1, 1), {
 		"type": "heal",
 		"npc_sprite": true,

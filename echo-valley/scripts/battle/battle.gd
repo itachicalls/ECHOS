@@ -99,6 +99,7 @@ func _build_ui() -> void:
 	var map_id := String(request.get("return_map", GameState.current_map))
 	var is_ranger := bool(request.get("gym", false)) or bool(request.get("ranger", false))
 	var backdrop := preload("res://scripts/battle/battle_backdrop.gd").new()
+	backdrop.z_index = -1
 	backdrop.configure(map_id, is_ranger, String(request.get("kind", "wild")))
 	add_child(backdrop)
 
@@ -218,14 +219,14 @@ func _info_panel(pos: Vector2, show_xp: bool = false) -> Dictionary:
 	name_lbl.clip_text = true
 	panel.add_child(name_lbl)
 
-	var type_badge := TypeEmblem.create(EchoTypes.Resonance.NONE, 14)
-	type_badge.position = Vector2(56, 2)
+	var type_badge := TypeEmblem.create(EchoTypes.Resonance.NONE, 9)
+	type_badge.position = Vector2(58, 3)
 	panel.add_child(type_badge)
 
 	var level_lbl := Label.new()
 	level_lbl.add_theme_font_size_override("font_size", 7)
 	level_lbl.add_theme_color_override("font_color", Color("cfe8ff"))
-	level_lbl.position = Vector2(74, 3)
+	level_lbl.position = Vector2(70, 3)
 	panel.add_child(level_lbl)
 
 	var bar_bg := ColorRect.new()
@@ -316,7 +317,7 @@ func _swap_type_badge(info: Dictionary, resonance: int) -> void:
 	var pos: Vector2 = old.position
 	parent.remove_child(old)
 	old.queue_free()
-	var emblem := TypeEmblem.create(resonance, 14)
+	var emblem := TypeEmblem.create(resonance, 9)
 	emblem.position = pos
 	parent.add_child(emblem)
 	info.type_badge = emblem

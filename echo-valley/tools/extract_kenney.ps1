@@ -63,6 +63,15 @@ Copy-Rg 40 23 "$root\items\echo_net.png"   # orange capsule from roguelike sheet
 Copy-Item $rg "$root\roguelike_sheet.png" -Force
 Copy-Item $td "$root\tiny_dungeon_sheet.png" -Force
 Copy-Item "$raw\tiny-town\Tilemap\tilemap_packed.png" "$root\tiny_town_sheet.png" -Force
-Copy-Item "$raw\game-icons\PNG\Black\1x\cross.png" "$root\props\heal_cross.png" -Force
+# Red medical cross (+) for Echo Rest clinics — 16x16 pixel art.
+$hc = New-Object System.Drawing.Bitmap 16, 16
+$clear = [System.Drawing.Color]::FromArgb(0, 0, 0, 0)
+$red = [System.Drawing.Color]::FromArgb(255, 210, 48, 48)
+$hi = [System.Drawing.Color]::FromArgb(255, 255, 210, 210)
+for ($x = 0; $x -lt 16; $x++) { for ($y = 0; $y -lt 16; $y++) { $hc.SetPixel($x, $y, $clear) } }
+for ($y = 2; $y -lt 14; $y++) { for ($x = 6; $x -lt 10; $x++) { $hc.SetPixel($x, $y, $red) } }
+for ($y = 6; $y -lt 10; $y++) { for ($x = 2; $x -lt 14; $x++) { $hc.SetPixel($x, $y, $red) } }
+for ($y = 7; $y -lt 9; $y++) { for ($x = 7; $x -lt 9; $x++) { $hc.SetPixel($x, $y, $hi) } }
+$hc.Save("$root\props\heal_cross.png"); $hc.Dispose()
 
 Write-Output "EXTRACT DONE"
