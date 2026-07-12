@@ -1,6 +1,6 @@
 extends Control
 
-## Animated story cutscenes for new-game intro and arrival.
+## Animated story cutscenes using real Kenney / in-game assets.
 
 signal finished
 
@@ -14,14 +14,13 @@ var starter_id: String = ""
 
 var _slides: Array = []
 var _index := 0
-var _line_idx := 0
 var _anim_t := 0.0
 var _caption: Label
-var _prompt: Label
 var _fade: ColorRect
-var _canvas: Control
+var _stage: Control
 var _done := false
 var _sequences: Dictionary = {}
+var _advance_requested := false
 
 
 func _ready() -> void:
@@ -50,14 +49,11 @@ func _load_data() -> void:
 
 func _build_ui() -> void:
 	var backdrop := preload("res://scripts/ui/title_backdrop.gd").new()
-	backdrop.modulate = Color(0.55, 0.62, 0.78, 1.0)
+	backdrop.modulate = Color(0.72, 0.78, 0.92, 1.0)
 	add_child(backdrop)
 
-	_canvas = Control.new()
-	_canvas.size = Vector2(VIEW_W, VIEW_H)
-	_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_canvas.set_script(load("res://scripts/boot/intro_cutscene_canvas.gd"))
-	add_child(_canvas)
+	_stage = preload("res://scripts/boot/intro_cutscene_stage.gd").new()
+	add_child(_stage)
 
 	_fade = ColorRect.new()
 	_fade.color = Color(0.02, 0.04, 0.08, 1.0)
@@ -82,13 +78,13 @@ func _build_ui() -> void:
 	TitleFonts.apply(_caption, 6, Color("f0f8ff"), Color("1a2848"), 1)
 	box.add_child(_caption)
 
-	_prompt = Label.new()
-	_prompt.position = Vector2(10, 34)
-	_prompt.size = Vector2(208, 10)
-	_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	TitleFonts.apply(_prompt, 5, Color("7ee8d8", 0.85))
-	_prompt.text = "> continue"
-	box.add_child(_prompt)
+	var prompt := Label.new()
+	prompt.position = Vector2(10, 34)
+	prompt.size = Vector2(208, 10)
+	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	TitleFonts.apply(prompt, 5, Color("7ee8d8", 0.85))
+	prompt.text = "> continue"
+	box.add_child(prompt)
 
 	var tap := Button.new()
 	tap.position = Vector2.ZERO
@@ -103,9 +99,11 @@ func _build_ui() -> void:
 
 
 func _process(delta: float) -> void:
+	if _done:
+		return
 	_anim_t += delta
-	if _canvas:
-		_canvas.queue_redraw()
+	if _stage and _stage.has_method("animate"):
+		_stage.call("animate", _anim_t)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -122,9 +120,6 @@ func _on_advance() -> void:
 	_advance_requested = true
 
 
-var _advance_requested := false
-
-
 func _run() -> void:
 	_fade.color.a = 1.0
 	var intro := create_tween()
@@ -133,8 +128,10 @@ func _run() -> void:
 
 	while _index < _slides.size():
 		_anim_t = 0.0
-		_line_idx = 0
 		var slide: Dictionary = _slides[_index]
+		var visual := String(slide.get("visual", ""))
+		if _stage and _stage.has_method("build"):
+			_stage.call("build", visual, starter_id)
 		var lines: Array = slide.get("lines", [])
 		var per_line := float(slide.get("hold", 2.8)) / maxf(1.0, float(lines.size()))
 
@@ -150,7 +147,6 @@ func _run() -> void:
 					break
 				await get_tree().process_frame
 
-		# Slide transition.
 		var out := create_tween()
 		out.tween_property(_fade, "color:a", 1.0, 0.45)
 		await out.finished
@@ -166,17 +162,3 @@ func _run() -> void:
 	await end.finished
 	finished.emit()
 	queue_free()
-
-
-func get_visual() -> String:
-	if _index >= _slides.size():
-		return ""
-	return String(_slides[_index].get("visual", ""))
-
-
-func get_anim_t() -> float:
-	return _anim_t
-
-
-func get_starter_id() -> String:
-	return starter_id

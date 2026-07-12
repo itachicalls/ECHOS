@@ -36,9 +36,9 @@
     {
       "visual": "veil",
       "lines": [
-        "Some say a faction called The Veil watches from the shadows.",
-        "They believe restoring The Chorus could doom us all.",
-        "The truth is buried deeper than any Route."
+        "Whispers speak of The Veil — hooded watchers at the valley's edge.",
+        "Ghostly Harmons and rogue keepers gather where the Chorus grows thin.",
+        "They warn that restoring the old song could awaken something terrible."
       ],
       "hold": 3.8
     },
@@ -56,10 +56,10 @@
     {
       "visual": "town",
       "lines": [
-        "Harmona Rest — a cozy village wrapped in tall grass and old songs.",
-        "Explorers gather here before venturing into the wild Routes."
+        "Harmona Rest — the village where explorers gather before the Routes.",
+        "Nurse Odalie tends to travelers. Merchants and keepers share rumors of The Fracture."
       ],
-      "hold": 3.0
+      "hold": 3.2
     },
     {
       "visual": "bond",
