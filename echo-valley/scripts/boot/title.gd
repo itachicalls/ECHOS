@@ -274,8 +274,8 @@ func _show_character_create() -> void:
 	_create_panel.add_child(name_lbl)
 
 	const FIELD_W := 72
-	const FIELD_H := 14
-	const FIELD_Y := 112
+	const FIELD_H := 16
+	const FIELD_Y := 110
 	_name_field = LineEdit.new()
 	_name_field.position = Vector2((VIEW_W - FIELD_W) / 2, FIELD_Y)
 	_name_field.size = Vector2(FIELD_W, FIELD_H)
@@ -287,8 +287,8 @@ func _show_character_create() -> void:
 	_name_field.text = PlayerAvatarScript.DEFAULT_NAMES[_picked_avatar]
 	_name_field.placeholder_text = "Name"
 	TitleFonts.apply(_name_field, 5, Color("fff8e8"))
-	_name_field.add_theme_stylebox_override("normal", _create_box(Color("102030", 0.95), Color("5ad4c8")))
-	_name_field.add_theme_stylebox_override("focus", _create_box(Color("183848", 0.98), Color("fff0b0")))
+	_name_field.add_theme_stylebox_override("normal", _create_field_box(Color("102030", 0.95), Color("5ad4c8")))
+	_name_field.add_theme_stylebox_override("focus", _create_field_box(Color("183848", 0.98), Color("fff0b0")))
 	_name_field.add_theme_color_override("font_color", Color("fff8e8"))
 	_name_field.add_theme_color_override("font_placeholder_color", Color("6a88a0"))
 	_name_field.add_theme_color_override("caret_color", Color("fff0b0"))
@@ -296,8 +296,9 @@ func _show_character_create() -> void:
 
 	const BTN_W := 84
 	const BTN_H := 14
+	const BTN_Y := 140  # well below field (110 + 16 + 14px gap)
 	var go := Button.new()
-	go.position = Vector2((VIEW_W - BTN_W) / 2, FIELD_Y + FIELD_H + 8)
+	go.position = Vector2((VIEW_W - BTN_W) / 2, BTN_Y)
 	go.size = Vector2(BTN_W, BTN_H)
 	go.custom_minimum_size = Vector2(BTN_W, BTN_H)
 	go.focus_mode = Control.FOCUS_NONE
@@ -387,6 +388,19 @@ func _avatar_slot(id: String, pos: Vector2, sz: Vector2, accent: Color) -> void:
 	hit.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	hit.pressed.connect(_on_pick_avatar.bind(id))
 	frame.add_child(hit)
+
+
+func _create_field_box(bg: Color, border: Color) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(3)
+	sb.content_margin_left = 3
+	sb.content_margin_right = 3
+	sb.content_margin_top = 0
+	sb.content_margin_bottom = 0
+	return sb
 
 
 func _create_box(bg: Color, border: Color) -> StyleBoxFlat:
