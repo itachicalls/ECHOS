@@ -1,6 +1,13 @@
 extends Node
 
 ## WebSocket client for 2-player online versus (host-authoritative battles).
+## Production: harmona.fun (Vercel) connects cross-origin to the Render lobby.
+
+# Custom domain on Render — add ws.harmona.fun in Render dashboard + DNS CNAME.
+const PROD_LOBBY_WSS := "wss://ws.harmona.fun/versus"
+# Vercel preview deploys use the same lobby.
+const VERCEL_HOST_SUFFIX := ".vercel.app"
+const HARMONA_HOSTS := ["harmona.fun", "www.harmona.fun"]
 
 signal connected
 signal disconnected
@@ -114,9 +121,17 @@ func _flip_winner(w: String) -> String:
 
 func _ws_url() -> String:
 	if OS.has_feature("web"):
-		var js := "((location.protocol==='https:')?'wss://':'ws://')+location.host+'/versus'"
-		var url: String = JavaScriptBridge.eval(js)
-		return url
+		var host: String = JavaScriptBridge.eval("location.hostname")
+		# Local dev: game + lobby share server.js on the same port.
+		if host == "localhost" or host == "127.0.0.1":
+			return JavaScriptBridge.eval(
+				"((location.protocol==='https:')?'wss://':'ws://')+location.host+'/versus'")
+		# harmona.fun (and Vercel previews) → Render lobby subdomain.
+		if host in HARMONA_HOSTS or host.ends_with(VERCEL_HOST_SUFFIX):
+			return PROD_LOBBY_WSS
+		# Fallback for all-in-one hosts (e.g. Render serving game + lobby).
+		return JavaScriptBridge.eval(
+			"((location.protocol==='https:')?'wss://':'ws://')+location.host+'/versus'")
 	return "ws://127.0.0.1:4173/versus"
 
 

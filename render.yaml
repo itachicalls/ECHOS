@@ -1,0 +1,13 @@
+# Render blueprint: versus lobby for harmona.fun online play.
+# The game stays on Vercel; this service only runs the WebSocket lobby.
+services:
+  - type: web
+    name: harmona-versus
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node versus-server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
