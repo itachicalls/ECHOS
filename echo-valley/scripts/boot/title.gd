@@ -274,9 +274,10 @@ func _show_character_create() -> void:
 	_create_panel.add_child(name_lbl)
 
 	const FIELD_W := 72
-	const FIELD_H := 12
+	const FIELD_H := 14
+	const FIELD_Y := 112
 	_name_field = LineEdit.new()
-	_name_field.position = Vector2((VIEW_W - FIELD_W) / 2, 112)
+	_name_field.position = Vector2((VIEW_W - FIELD_W) / 2, FIELD_Y)
 	_name_field.size = Vector2(FIELD_W, FIELD_H)
 	_name_field.custom_minimum_size = Vector2(FIELD_W, FIELD_H)
 	_name_field.max_length = PlayerAvatarScript.MAX_NAME_LEN
@@ -296,7 +297,7 @@ func _show_character_create() -> void:
 	const BTN_W := 84
 	const BTN_H := 14
 	var go := Button.new()
-	go.position = Vector2((VIEW_W - BTN_W) / 2, 128)
+	go.position = Vector2((VIEW_W - BTN_W) / 2, FIELD_Y + FIELD_H + 8)
 	go.size = Vector2(BTN_W, BTN_H)
 	go.custom_minimum_size = Vector2(BTN_W, BTN_H)
 	go.focus_mode = Control.FOCUS_NONE

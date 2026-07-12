@@ -1,7 +1,7 @@
 extends Control
 
 ## Cinematic story cutscenes: painted scenes + grounded hero sprites, framed
-## with letterbox bars, a gentle camera drift, and subtitle text that fits.
+## with letterbox bars and subtitle text that fits.
 
 signal finished
 
@@ -67,7 +67,7 @@ func _build_ui() -> void:
 	under.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(under)
 
-	# Camera holds the movable scene layers (gentle drift only).
+	# Scene layers (static — no camera drift/zoom).
 	_camera = Control.new()
 	_camera.size = Vector2(VIEW_W, VIEW_H)
 	_camera.pivot_offset = Vector2(VIEW_W * 0.5, VIEW_H * 0.5)
@@ -196,7 +196,6 @@ func _run() -> void:
 		var slide: Dictionary = _slides[_index]
 		var lines: Array = slide.get("lines", [])
 		var hold := float(slide.get("hold", 3.0))
-		_start_camera_move(_index, hold)
 
 		var per_line := hold / maxf(1.0, float(lines.size()))
 		for line_i in lines.size():
@@ -259,16 +258,3 @@ func _reset_camera() -> void:
 		_cam_tween.kill()
 	_camera.scale = Vector2.ONE
 	_camera.position = Vector2.ZERO
-
-
-func _start_camera_move(index: int, duration: float) -> void:
-	if _cam_tween and _cam_tween.is_valid():
-		_cam_tween.kill()
-	# Very gentle drift — barely noticeable, no shake feel.
-	var dirs := [Vector2(-1.5, 0.5), Vector2(1.5, -0.5), Vector2(-1.0, -0.8), Vector2(1.0, 0.8)]
-	var pan: Vector2 = dirs[index % dirs.size()]
-	_camera.scale = Vector2(1.0, 1.0)
-	_camera.position = Vector2.ZERO
-	_cam_tween = create_tween().set_parallel(true)
-	_cam_tween.tween_property(_camera, "scale", Vector2(1.03, 1.03), duration + 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_cam_tween.tween_property(_camera, "position", pan, duration + 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
