@@ -9,8 +9,8 @@ const TitleFonts := preload("res://scripts/ui/title_fonts.gd")
 
 const VIEW_W := 240
 const VIEW_H := 160
-const BAR_TOP := 14
-const BAR_BOTTOM := 38
+const BAR_TOP := 12
+const BAR_BOTTOM := 30
 
 
 var sequence_id: String = "opening"
@@ -101,13 +101,13 @@ func _build_ui() -> void:
 
 	# Caption sits fully inside the bottom bar with padding for the tap prompt.
 	_caption = Label.new()
-	_caption.position = Vector2(8, VIEW_H - BAR_BOTTOM + 3)
-	_caption.size = Vector2(VIEW_W - 16, BAR_BOTTOM - 14)
+	_caption.position = Vector2(10, VIEW_H - BAR_BOTTOM + 4)
+	_caption.size = Vector2(VIEW_W - 20, BAR_BOTTOM - 14)
 	_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_caption.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	_caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_caption.clip_text = true
-	_caption.max_lines_visible = 3
+	_caption.max_lines_visible = 2
 	_caption.z_index = 6
 	_caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	TitleFonts.apply(_caption, 5, Color("f4f8ff"), Color("000000"), 1)
