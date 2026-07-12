@@ -18,17 +18,24 @@ func _ready() -> void:
 	_build()
 
 
+const KEY := 22
+const GAP := 2
+
+
 func _build() -> void:
-	_dir_btns["move_up"] = _dir_btn(Vector2(20, 110), "up")
-	_dir_btns["move_left"] = _dir_btn(Vector2(4, 126), "left")
-	_dir_btns["move_right"] = _dir_btn(Vector2(36, 126), "right")
-	_dir_btns["move_down"] = _dir_btn(Vector2(20, 142), "down")
+	# Compact D-pad, lower-left — sized for comfortable mobile thumbs.
+	var cx := 24
+	var cy := 118
+	_dir_btns["move_up"] = _dir_btn(Vector2(cx, cy - KEY - GAP), "up")
+	_dir_btns["move_left"] = _dir_btn(Vector2(cx - KEY - GAP, cy), "left")
+	_dir_btns["move_right"] = _dir_btn(Vector2(cx + KEY + GAP, cy), "right")
+	_dir_btns["move_down"] = _dir_btn(Vector2(cx, cy + KEY + GAP), "down")
 	for a in DIRS:
 		_held[a] = false
 
 	_a_btn = Button.new()
-	_a_btn.position = Vector2(206, 124)
-	_a_btn.size = Vector2(28, 22)
+	_a_btn.position = Vector2(200, 118)
+	_a_btn.size = Vector2(34, 26)
 	_a_btn.custom_minimum_size = _a_btn.size
 	_a_btn.text = "A"
 	_a_btn.focus_mode = Control.FOCUS_NONE
@@ -56,8 +63,8 @@ func _on_a_up() -> void:
 func _dir_btn(pos: Vector2, dir: String) -> Button:
 	var b := Button.new()
 	b.position = pos
-	b.size = Vector2(16, 16)
-	b.custom_minimum_size = b.size
+	b.size = Vector2(KEY, KEY)
+	b.custom_minimum_size = Vector2(KEY, KEY)
 	b.focus_mode = Control.FOCUS_NONE
 	_style_btn(b)
 	b.draw.connect(_draw_arrow.bind(b, dir))
@@ -67,7 +74,7 @@ func _dir_btn(pos: Vector2, dir: String) -> Button:
 
 func _draw_arrow(b: Button, dir: String) -> void:
 	var c := b.size * 0.5
-	var a := 4.0
+	var a := 6.0
 	var pts: PackedVector2Array
 	match dir:
 		"up":

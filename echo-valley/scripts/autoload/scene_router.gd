@@ -49,11 +49,15 @@ func go_to_versus_setup() -> void:
 func start_wild_battle(def_id: String, level: int) -> void:
 	_return_map = GameState.current_map
 	var enemy := EchoCatalog.create_instance(def_id, level)
+	var was_caught := bool(GameState.caught.get(def_id, false))
+	var was_seen := bool(GameState.seen.get(def_id, false))
 	GameState.mark_seen(def_id)
 	_battle_request = {
 		"kind": "wild", "enemies": [enemy], "return_map": _return_map,
 		"can_flee": true, "can_catch": true, "level": level,
 		"enemy_team_ids": [def_id],
+		"enemy_was_caught": was_caught,
+		"enemy_first_seen": not was_seen,
 	}
 	await _swap_scene(BATTLE)
 

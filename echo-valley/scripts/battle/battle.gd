@@ -115,6 +115,7 @@ func _build_ui() -> void:
 	# Classic GBA layout — panels in corners, sprites in front (higher z_index).
 	enemy_base = _terrain_base(Vector2(146, 50), Vector2(86, 16))
 	enemy_info = _info_panel(Vector2(6, 6), false)
+	_add_encounter_badge(enemy_info)
 	enemy_sprite = _echo_sprite(Vector2(170, 6))
 	player_base = _terrain_base(Vector2(4, 88), Vector2(92, 18))
 	player_sprite = _echo_sprite(Vector2(10, 50))
@@ -250,7 +251,7 @@ func _info_panel(pos: Vector2, show_xp: bool = false) -> Dictionary:
 	hp_lbl.position = Vector2(58, 20)
 	panel.add_child(hp_lbl)
 
-	var out := { "name": name_lbl, "level": level_lbl, "type_badge": type_badge, "bar": bar, "hp": hp_lbl, "show_xp": show_xp }
+	var out := { "panel": panel, "name": name_lbl, "level": level_lbl, "type_badge": type_badge, "bar": bar, "hp": hp_lbl, "show_xp": show_xp }
 	if show_xp:
 		var xp_bg := ColorRect.new()
 		xp_bg.color = Color("22303c")
@@ -270,6 +271,41 @@ func _info_panel(pos: Vector2, show_xp: bool = false) -> Dictionary:
 		out["xp_bar"] = xp_bar
 		out["xp_lbl"] = xp_lbl
 	return out
+
+
+func _add_encounter_badge(info: Dictionary) -> void:
+	var panel: Panel = info.panel
+	var badge := Label.new()
+	badge.add_theme_font_size_override("font_size", 5)
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	badge.position = Vector2(78, 20)
+	badge.size = Vector2(24, 8)
+	badge.clip_text = true
+	badge.visible = false
+	panel.add_child(badge)
+	info["badge"] = badge
+
+
+func _set_encounter_badge(kind: String) -> void:
+	if not enemy_info.has("badge"):
+		return
+	var badge: Label = enemy_info.badge
+	match kind:
+		"new":
+			badge.text = "NEW!"
+			badge.add_theme_color_override("font_color", Color("ffd166"))
+			badge.add_theme_color_override("font_outline_color", Color("3a2200"))
+			badge.add_theme_constant_override("outline_size", 2)
+			badge.visible = true
+		"caught":
+			badge.text = "GOT"
+			badge.add_theme_color_override("font_color", Color("7dffb8"))
+			badge.add_theme_color_override("font_outline_color", Color("143024"))
+			badge.add_theme_constant_override("outline_size", 2)
+			badge.visible = true
+		_:
+			badge.visible = false
 
 
 func _swap_type_badge(info: Dictionary, resonance: int) -> void:
@@ -537,7 +573,17 @@ func _intro() -> void:
 	if kind == "trainer" or kind == "versus":
 		await _say("%s wants to battle!" % String(request.get("trainer_name", "Rival")))
 	else:
-		await _say("A wild %s appeared!" % _active("enemy").name)
+		var foe := _active("enemy")
+		var line := "A wild %s appeared!" % foe.name
+		if bool(request.get("enemy_was_caught", false)):
+			line = "A wild %s appeared!\nAlready in your collection." % foe.name
+			_set_encounter_badge("caught")
+		elif bool(request.get("enemy_first_seen", false)):
+			line = "A wild %s appeared!\nA new Echo!" % foe.name
+			_set_encounter_badge("new")
+		else:
+			_set_encounter_badge("")
+		await _say(line)
 	await _say("Go, %s!" % _active("player").name)
 	_open_main_menu()
 
