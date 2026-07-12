@@ -76,9 +76,9 @@ func _draw() -> void:
 	draw_circle(sun, 7.0, Color("fff4c8"))
 	draw_circle(sun, 5.0, Color("fffde8"))
 
-	_draw_cloud(Vector2(28 + _cloud_offset * 0.35, 22), 1.0)
-	_draw_cloud(Vector2(110 + _cloud_offset * 0.55, 38), 0.85)
-	_draw_cloud(Vector2(200 + _cloud_offset * 0.4 - VIEW_W, 18), 0.7)
+	_draw_cloud(Vector2(14 + _cloud_offset * 0.28, 16), 0, 0.9)
+	_draw_cloud(Vector2(158 + _cloud_offset * 0.4, 12), 2, 0.78)
+	_draw_cloud(Vector2(64 + _cloud_offset * 0.52, 44), 1, 0.92)
 
 	_draw_hill(118, 92, 130, Color("2d6b3a"))
 	_draw_hill(200, 96, 110, Color("256032"))
@@ -133,17 +133,54 @@ func _draw_hill(cx: float, base_y: float, radius: float, col: Color) -> void:
 	draw_line(Vector2(cx - radius * 0.35, base_y - 2), Vector2(cx + radius * 0.1, base_y - 6), Color(1, 1, 1, 0.08))
 
 
-func _draw_cloud(origin: Vector2, scale: float) -> void:
-	var puff := Color(1, 1, 1, 0.88 * scale)
-	var shadow := Color("9ab8e8", 0.35 * scale)
-	var offsets := [
-		Vector2(0, 0), Vector2(10, -2), Vector2(22, 0), Vector2(34, 2),
-		Vector2(6, 4), Vector2(18, 5), Vector2(28, 4),
+func _draw_cloud(origin: Vector2, style: int, alpha: float = 1.0) -> void:
+	var styles := [
+		{
+			"shadow": [[0, 7, 14, 2], [12, 5, 12, 2], [22, 6, 10, 2], [4, 8, 30, 3]],
+			"body": [[1, 6, 12, 2], [11, 4, 14, 3], [21, 5, 11, 2], [3, 7, 30, 3], [16, 2, 8, 2]],
+			"rim": [[3, 9, 28, 1], [13, 7, 12, 1]],
+			"highlight": [[2, 5, 5, 1], [13, 3, 6, 1], [23, 4, 4, 1], [18, 2, 3, 1]],
+			"wisp": [[32, 6, 5, 1], [36, 5, 3, 1], [38, 4, 2, 1]],
+		},
+		{
+			"shadow": [[0, 6, 18, 2], [16, 4, 16, 2], [6, 7, 34, 3]],
+			"body": [[1, 5, 16, 2], [14, 3, 18, 3], [5, 6, 34, 3], [22, 1, 10, 2]],
+			"rim": [[6, 8, 30, 1]],
+			"highlight": [[3, 4, 6, 1], [17, 2, 7, 1], [25, 3, 4, 1]],
+			"wisp": [[38, 5, 4, 1], [41, 4, 2, 1]],
+		},
+		{
+			"shadow": [[0, 5, 8, 2], [6, 3, 10, 2], [2, 6, 16, 2]],
+			"body": [[1, 4, 7, 2], [5, 2, 12, 3], [2, 5, 16, 2], [9, 1, 5, 1]],
+			"rim": [[3, 6, 14, 1]],
+			"highlight": [[2, 3, 3, 1], [7, 2, 4, 1], [11, 3, 2, 1]],
+			"wisp": [[16, 4, 3, 1]],
+		},
 	]
-	for off in offsets:
-		draw_circle(origin + off * scale, 5.5 * scale, shadow)
-	for off in offsets:
-		draw_circle(origin + off * scale + Vector2(0, -1), 5.0 * scale, puff)
+	var data: Dictionary = styles[style % styles.size()]
+	var sh_col := Color("4a6898", 0.42 * alpha)
+	var body_col := Color("e6f0fc", 0.94 * alpha)
+	var rim_col := Color("8aa8cc", 0.62 * alpha)
+	var hi_col := Color("ffffff", alpha)
+	var wisp_col := Color("f4faff", 0.72 * alpha)
+
+	for r: Array in data.get("shadow", []):
+		_draw_cloud_rect(origin, r, sh_col, Vector2(1, 1))
+	for r: Array in data.get("body", []):
+		_draw_cloud_rect(origin, r, body_col)
+	for r: Array in data.get("rim", []):
+		_draw_cloud_rect(origin, r, rim_col)
+	for r: Array in data.get("highlight", []):
+		_draw_cloud_rect(origin, r, hi_col)
+	for r: Array in data.get("wisp", []):
+		_draw_cloud_rect(origin, r, wisp_col)
+
+
+func _draw_cloud_rect(origin: Vector2, rect: Array, col: Color, offset: Vector2 = Vector2.ZERO) -> void:
+	draw_rect(
+		Rect2(origin + Vector2(rect[0], rect[1]) + offset, Vector2(rect[2], rect[3])),
+		col
+	)
 
 
 func _draw_tuft(pos: Vector2) -> void:
