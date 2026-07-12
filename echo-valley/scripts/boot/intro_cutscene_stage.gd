@@ -240,12 +240,28 @@ func _make_sprite(path: String, feet: Vector2, px: int) -> TextureRect:
 	# sits its bottom edge on that point.
 	var tr := TextureRect.new()
 	if ResourceLoader.exists(path):
-		tr.texture = load(path)
+		var tex: Texture2D = load(path)
+		var tw := tex.get_width() if tex else 0
+		var th := tex.get_height() if tex else 0
+		# Hero-layout NPC sheets (64x128) must show one 16x32 frame, not the whole sheet.
+		if tw == 64 and th == 128:
+			var atlas := AtlasTexture.new()
+			atlas.atlas = tex
+			atlas.region = Rect2(0, 0, 16, 32)
+			tr.texture = atlas
+			var h := px * 2
+			tr.size = Vector2(px, h)
+			tr.position = feet - Vector2(px * 0.5, h)
+		else:
+			tr.texture = tex
+			tr.size = Vector2(px, px)
+			tr.position = feet - Vector2(px * 0.5, px)
+	else:
+		tr.size = Vector2(px, px)
+		tr.position = feet - Vector2(px * 0.5, px)
 	tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	tr.size = Vector2(px, px)
-	tr.position = feet - Vector2(px * 0.5, px)
 	return tr
 
 
