@@ -110,6 +110,8 @@ func _build() -> void:
 
 func _apply_touch_layout() -> void:
 	var m := TouchUtil.get_game_margins()
+	if m == Vector4.ZERO:
+		m = Vector4(4, 2, 4, 8)
 	_box.position = Vector2(4 + int(m.x), 88)
 	_box.size = Vector2(VIEW_W - 8 - int(m.x) - int(m.z), 68)
 	_text.size = Vector2(_box.size.x - 22, 52)
@@ -117,7 +119,8 @@ func _apply_touch_layout() -> void:
 	_tap_btn.custom_minimum_size = _box.size
 	_tap_hint.add_theme_font_size_override("font_size", 6)
 	_tap_hint.position = Vector2(_box.size.x - 78, _box.size.y - 14)
-	_quick_bar.position = Vector2(VIEW_W - int(m.z) - 52, VIEW_H - int(m.w) - 18)
+	# Top-right on touch — bottom-right is reserved for the A button.
+	_quick_bar.position = Vector2(VIEW_W - int(m.z) - 52, int(m.y) + 6)
 	_quick_bar.size = Vector2(48, 16)
 	_menu_btn.position = Vector2(_quick_bar.position.x + 2, _quick_bar.position.y + 2)
 	_menu_btn.size = Vector2(22, 14)

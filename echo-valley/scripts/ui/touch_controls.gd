@@ -26,32 +26,67 @@ func _ready() -> void:
 
 const KEY := 20
 const GAP := 2
-const A_W := 26
-const A_H := 20
+const A_W := 28
+const A_H := 22
+const PAD_EXTRA := 6
 
 
 func _build() -> void:
-	var cx := 14
-	var cy := 124
-	_dir_btns["move_up"] = _dir_btn(Vector2(cx, cy - KEY - GAP), "up")
-	_dir_btns["move_left"] = _dir_btn(Vector2(cx - KEY - GAP, cy), "left")
-	_dir_btns["move_right"] = _dir_btn(Vector2(cx + KEY + GAP, cy), "right")
-	_dir_btns["move_down"] = _dir_btn(Vector2(cx, cy + KEY + GAP), "down")
+	_layout_controls()
 	for a in DIRS:
 		_held[a] = false
 
-	_a_btn = Button.new()
-	_a_btn.position = Vector2(62, 126)
-	_a_btn.size = Vector2(A_W, A_H)
-	_a_btn.custom_minimum_size = _a_btn.size
-	_a_btn.text = "A"
-	_a_btn.focus_mode = Control.FOCUS_NONE
-	_a_btn.add_theme_font_size_override("font_size", 8)
-	_a_btn.add_theme_color_override("font_color", Color("eaf4ff"))
-	_style_btn(_a_btn)
-	_a_btn.button_down.connect(_on_a_down)
-	_a_btn.button_up.connect(_on_a_up)
-	_root.add_child(_a_btn)
+
+func _layout_controls() -> void:
+	var m := TouchUtil.get_game_margins()
+	if m == Vector4.ZERO:
+		m = Vector4(4, 2, 4, 8)
+	var pad_l := int(m.x) + PAD_EXTRA
+	var pad_r := int(m.z) + PAD_EXTRA
+	var pad_b := int(m.w) + PAD_EXTRA
+
+	# D-pad center inset so left + down arms stay inside 240x160.
+	var cx := pad_l + KEY + GAP
+	var cy := int(GAME_H) - pad_b - (KEY + GAP + KEY)
+
+	_reposition_dpad(cx, cy)
+
+	if _a_btn == null:
+		_a_btn = Button.new()
+		_a_btn.size = Vector2(A_W, A_H)
+		_a_btn.custom_minimum_size = _a_btn.size
+		_a_btn.text = "A"
+		_a_btn.focus_mode = Control.FOCUS_NONE
+		_a_btn.add_theme_font_size_override("font_size", 9)
+		_a_btn.add_theme_color_override("font_color", Color("eaf4ff"))
+		_style_btn(_a_btn)
+		_a_btn.button_down.connect(_on_a_down)
+		_a_btn.button_up.connect(_on_a_up)
+		_root.add_child(_a_btn)
+
+	# A on the right thumb — opposite side from movement.
+	_a_btn.position = Vector2(int(GAME_W) - pad_r - A_W, cy - 1)
+
+
+func _reposition_dpad(cx: int, cy: int) -> void:
+	if _dir_btns.is_empty():
+		_dir_btns["move_up"] = _dir_btn(Vector2(cx, cy - KEY - GAP), "up")
+		_dir_btns["move_left"] = _dir_btn(Vector2(cx - KEY - GAP, cy), "left")
+		_dir_btns["move_right"] = _dir_btn(Vector2(cx + KEY + GAP, cy), "right")
+		_dir_btns["move_down"] = _dir_btn(Vector2(cx, cy + KEY + GAP), "down")
+		return
+	var up: Button = _dir_btns.get("move_up", null)
+	var left: Button = _dir_btns.get("move_left", null)
+	var right: Button = _dir_btns.get("move_right", null)
+	var down: Button = _dir_btns.get("move_down", null)
+	if up:
+		up.position = Vector2(cx, cy - KEY - GAP)
+	if left:
+		left.position = Vector2(cx - KEY - GAP, cy)
+	if right:
+		right.position = Vector2(cx + KEY + GAP, cy)
+	if down:
+		down.position = Vector2(cx, cy + KEY + GAP)
 
 
 func _on_a_down() -> void:
