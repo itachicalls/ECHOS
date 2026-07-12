@@ -15,6 +15,7 @@ const PRELOADS := [
 	"res://data/echoes.json",
 	"res://data/chimes.json",
 	"res://data/encounters.json",
+	"res://data/intro_cutscenes.json",
 ]
 
 var _fill: ColorRect

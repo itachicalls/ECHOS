@@ -1,0 +1,82 @@
+{
+  "opening": [
+    {
+      "visual": "chorus",
+      "lines": [
+        "Long ago, every creature and every valley sang as one.",
+        "The world was bound by an ancient force — The Chorus."
+      ],
+      "hold": 3.2
+    },
+    {
+      "visual": "fracture",
+      "lines": [
+        "Then came The Fracture.",
+        "The bond shattered. Regions fell silent. Memories were lost."
+      ],
+      "hold": 3.4
+    },
+    {
+      "visual": "harmons",
+      "lines": [
+        "The creatures that remained are called Harmons.",
+        "Each one carries a fragment of the old world's song."
+      ],
+      "hold": 3.0
+    },
+    {
+      "visual": "disturbance",
+      "lines": [
+        "Now strange signals ripple across the Routes.",
+        "Ruins awaken. Harmons grow restless.",
+        "Something beneath the valley is stirring again."
+      ],
+      "hold": 3.6
+    },
+    {
+      "visual": "veil",
+      "lines": [
+        "Some say a faction called The Veil watches from the shadows.",
+        "They believe restoring The Chorus could doom us all.",
+        "The truth is buried deeper than any Route."
+      ],
+      "hold": 3.8
+    },
+    {
+      "visual": "journey",
+      "lines": [
+        "You arrive at Harmona Rest — a village at the edge of the unknown.",
+        "Route Rangers guard what remains. Only the worthy earn Resonance Sigils.",
+        "Your journey to restore the valley begins now."
+      ],
+      "hold": 3.6
+    }
+  ],
+  "arrival": [
+    {
+      "visual": "town",
+      "lines": [
+        "Harmona Rest — a cozy village wrapped in tall grass and old songs.",
+        "Explorers gather here before venturing into the wild Routes."
+      ],
+      "hold": 3.0
+    },
+    {
+      "visual": "bond",
+      "lines": [
+        "Your Harmon stirs at your touch.",
+        "A faint melody echoes between you — the first note of a bond."
+      ],
+      "hold": 3.2
+    },
+    {
+      "visual": "depart",
+      "lines": [
+        "Head north through the gate to Route 1.",
+        "Find wild Harmons, challenge Rangers, and uncover what broke The Chorus.",
+        "The valley is waiting."
+      ],
+      "hold": 3.4
+    }
+  ]
+}

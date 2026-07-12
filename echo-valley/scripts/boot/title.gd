@@ -148,6 +148,9 @@ func _on_new_game() -> void:
 	SaveService.delete_save()
 	_reset_state()
 	_menu.visible = false
+	await _play_cutscene("opening")
+	if not is_inside_tree():
+		return
 	_show_starter_select()
 
 
@@ -218,6 +221,21 @@ func _show_starter_select() -> void:
 
 
 func _on_pick_starter(id: String) -> void:
-	if GameState.choose_starter(id):
-		SaveService.save_game()
-		SceneRouter.go_to_map("town", Vector2i(12, 16), "up")
+	if not GameState.choose_starter(id):
+		return
+	if _starter_panel:
+		_starter_panel.visible = false
+	await _play_cutscene("arrival", id)
+	if not is_inside_tree():
+		return
+	GameState.flags["intro_seen"] = true
+	SaveService.save_game()
+	SceneRouter.go_to_map("town", Vector2i(12, 16), "up")
+
+
+func _play_cutscene(sequence_id: String, starter_id: String = "") -> void:
+	var cut := preload("res://scripts/boot/intro_cutscene.gd").new()
+	cut.sequence_id = sequence_id
+	cut.starter_id = starter_id
+	add_child(cut)
+	await cut.finished

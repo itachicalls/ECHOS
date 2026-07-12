@@ -1,9 +1,8 @@
 {
   "intro": [
-    "Harmona Valley — a fractured land where living remnants of an ancient bond drift through the wilds.",
-    "They are called HARMONS: creatures carrying hidden memories of the old world.",
-    "Long ago, The Chorus linked every living thing to the land. Then came The Fracture.",
-    "Strange disturbances ripple across the Routes. You arrive in Harmona Rest to uncover the truth."
+    "Welcome to Harmona Rest, explorer.",
+    "Press M to open your menu — check your party, bag, and journal for objectives.",
+    "Strange signals stir on the Routes north of town. Walk into the tall grass when you're ready."
   ],
   "lore": {
     "chorus": "The Chorus once linked all creatures and the land in perfect resonance.",
