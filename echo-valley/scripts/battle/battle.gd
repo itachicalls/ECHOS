@@ -165,8 +165,8 @@ func _build_ui() -> void:
 # ---- battle menu layout (manual pixel positions — grids break on web) ----
 const _MENU_GAP := 2
 const _CMD_BTN := Vector2(56, 20)
-const _SUB_BTN := Vector2(76, 15)
-const _SUB_ROW_H := 17
+const _SUB_BTN := Vector2(76, 20)
+const _SUB_ROW_H := 22
 const _SUB_COLS := 3
 const _ACTION_W := 120
 
@@ -708,20 +708,31 @@ func _menu_btn(pos: Vector2, sz: Vector2, text: String, cb: Callable, font_size:
 
 	var lbl := Label.new()
 	lbl.text = text
-	lbl.position = Vector2(2, 0)
-	lbl.size = Vector2(sz.x - 4, sz.y)
-	lbl.custom_minimum_size = Vector2(sz.x - 4, sz.y)
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	lbl.add_theme_font_size_override("font_size", font_size)
 	lbl.add_theme_color_override("font_color", Color("f2f7ff") if enabled else Color("6b7890"))
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	lbl.clip_text = true
 	lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_fit_label_in_btn(lbl, sz, font_size)
 	slot.add_child(lbl)
 
 	menu_root.add_child(slot)
 	return slot
+
+
+func _fit_label_in_btn(lbl: Label, btn_sz: Vector2, font_size: int) -> void:
+	var fnt := lbl.get_theme_font("font")
+	if fnt == null:
+		fnt = ThemeDB.fallback_font
+	var line_h := int(fnt.get_height(font_size))
+	var pad_x := 2
+	var text_w := int(btn_sz.x) - pad_x * 2
+	var text_y := maxi(0, int((btn_sz.y - line_h) * 0.5))
+	lbl.position = Vector2(pad_x, text_y)
+	lbl.size = Vector2(text_w, line_h)
+	lbl.custom_minimum_size = Vector2(text_w, line_h)
 
 
 func _layout_cmd_2x2(items: Array) -> void:
@@ -745,8 +756,15 @@ func _layout_cmd_2x2(items: Array) -> void:
 
 func _layout_submenu(items: Array, back_cb: Callable = Callable()) -> void:
 	var x0 := 2
-	var y0 := 1
+	var y0 := 2
 	var dx := _SUB_BTN.x + _MENU_GAP
+	var item_rows := 0
+	for i in items.size():
+		item_rows = maxi(item_rows, i / _SUB_COLS + 1)
+	item_rows = mini(item_rows, 2)
+	var dense := item_rows >= 2
+	var btn_sz := Vector2(_SUB_BTN.x, 15 if dense else 20)
+	var row_h := 17 if dense else 22
 	for i in items.size():
 		var it: Dictionary = items[i]
 		var col := i % _SUB_COLS
@@ -754,15 +772,17 @@ func _layout_submenu(items: Array, back_cb: Callable = Callable()) -> void:
 		if row >= 2:
 			break
 		_menu_btn(
-			Vector2(x0 + col * dx, y0 + row * _SUB_ROW_H),
-			_SUB_BTN,
+			Vector2(x0 + col * dx, y0 + row * row_h),
+			btn_sz,
 			String(it.get("text", "")),
 			it.get("cb", Callable()),
 			int(it.get("font", 6)),
 			bool(it.get("enabled", true))
 		)
 	if back_cb.is_valid():
-		_menu_btn(Vector2(2, y0 + 2 * _SUB_ROW_H), Vector2(230, 14), "Back", back_cb, 6)
+		var back_y := y0 + item_rows * row_h
+		var back_h := 15 if dense else 20
+		_menu_btn(Vector2(2, back_y), Vector2(230, back_h), "Back", back_cb, 6)
 
 
 func _open_main_menu() -> void:

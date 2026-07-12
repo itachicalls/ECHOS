@@ -1,5 +1,7 @@
 extends Control
 
+const TitleFonts := preload("res://scripts/ui/title_fonts.gd")
+
 const VIEW_W := 240
 const VIEW_H := 160
 
@@ -22,52 +24,33 @@ func _ready() -> void:
 	_build_menu()
 
 
-# ------------------------------------------------------------------ scenery
 func _build_scene() -> void:
-	var grad := Gradient.new()
-	grad.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
-	grad.colors = PackedColorArray([Color("21356b"), Color("6f8fd0"), Color("f7d9a6")])
-	var sky_tex := GradientTexture2D.new()
-	sky_tex.gradient = grad
-	sky_tex.fill_from = Vector2(0, 0)
-	sky_tex.fill_to = Vector2(0, 1)
-	sky_tex.width = VIEW_W
-	sky_tex.height = VIEW_H
-	var sky := TextureRect.new()
-	sky.texture = sky_tex
-	sky.position = Vector2.ZERO
-	sky.size = Vector2(VIEW_W, VIEW_H)
-	sky.stretch_mode = TextureRect.STRETCH_SCALE
-	add_child(sky)
+	var backdrop := preload("res://scripts/ui/title_backdrop.gd").new()
+	add_child(backdrop)
 
-	_circle(Vector2(188, 28), 28, Color(1, 0.92, 0.7, 0.55))
-	_circle(Vector2(188, 28), 20, Color(1, 0.95, 0.78, 0.9))
-	_cloud(Vector2(10, 10), 0.75)
-	_cloud(Vector2(130, 6), 0.55)
+	# Title stack: warm glow, then crisp pixel type.
+	var glow := Label.new()
+	glow.text = "ECHO VALLEY"
+	glow.position = Vector2(0, 10)
+	glow.size = Vector2(VIEW_W, 24)
+	glow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	TitleFonts.apply(glow, 11, Color("7ee8d8", 0.35))
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(glow)
 
-	_hill(Vector2(52, 120), 80, Color("6cbf6a"))
-	_hill(Vector2(178, 124), 96, Color("58ad57"))
-	var ground := ColorRect.new()
-	ground.color = Color("4f9d4e")
-	ground.position = Vector2(0, 112)
-	ground.size = Vector2(VIEW_W, 48)
-	add_child(ground)
-	var ground2 := ColorRect.new()
-	ground2.color = Color("3f8a44")
-	ground2.position = Vector2(0, 126)
-	ground2.size = Vector2(VIEW_W, 34)
-	add_child(ground2)
-
-	# fixed coords — no anchors (anchors break when the window is scaled on web)
-	var title := _label("ECHO VALLEY", 22, Color("ffe08a"), Vector2(0, 8), Vector2(VIEW_W, 28), HORIZONTAL_ALIGNMENT_CENTER)
-	title.add_theme_color_override("font_outline_color", Color("2a1a3a"))
-	title.add_theme_constant_override("outline_size", 4)
+	var title := TitleFonts.shadow_label(
+		self, "ECHO VALLEY", 11, Color("fff0b0"),
+		Vector2(0, 8), Vector2(VIEW_W, 24),
+		HORIZONTAL_ALIGNMENT_CENTER, Color("1a2848"), 3
+	)
 	title.clip_text = true
-	add_child(title)
 
-	var sub := _label("a cozy Echo-catching adventure", 7, Color("2a3a5a"), Vector2(4, 36), Vector2(VIEW_W - 8, 12), HORIZONTAL_ALIGNMENT_CENTER)
+	var sub := TitleFonts.shadow_label(
+		self, "a cozy echo-catching adventure", 6, Color("e8f4ff"),
+		Vector2(4, 30), Vector2(VIEW_W - 8, 14),
+		HORIZONTAL_ALIGNMENT_CENTER, Color("1a3050"), 1
+	)
 	sub.clip_text = true
-	add_child(sub)
 
 	const STARTER_PX := 26
 	for i in STARTER_IDS.size():
@@ -85,59 +68,14 @@ func _build_scene() -> void:
 		t.tween_property(tr, "position:y", base_y - 2.0, up).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		t.tween_property(tr, "position:y", base_y, up).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
-	var ver := _label("v0.14", 7, Color("2a3a5a", 0.8), Vector2(4, 148), Vector2(40, 10), HORIZONTAL_ALIGNMENT_LEFT)
+	var ver := Label.new()
+	ver.text = "v0.14"
+	ver.position = Vector2(6, 146)
+	ver.size = Vector2(48, 10)
+	TitleFonts.apply(ver, 6, Color("d8e8ff", 0.75), Color("1a2848"), 1)
 	add_child(ver)
 
 
-func _circle(center: Vector2, radius: float, color: Color) -> void:
-	var c := _make_disc(radius, color)
-	c.position = center - Vector2(radius, radius)
-	add_child(c)
-
-
-func _make_disc(radius: float, color: Color) -> TextureRect:
-	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
-	img.fill(Color(0, 0, 0, 0))
-	var r := 30.0
-	for y in 64:
-		for x in 64:
-			if Vector2(x - 32, y - 32).length() <= r:
-				img.set_pixel(x, y, Color(1, 1, 1, 1))
-	var tex := ImageTexture.create_from_image(img)
-	var tr := TextureRect.new()
-	tr.texture = tex
-	tr.modulate = color
-	tr.size = Vector2(radius * 2, radius * 2)
-	tr.stretch_mode = TextureRect.STRETCH_SCALE
-	return tr
-
-
-func _cloud(pos: Vector2, scale: float) -> void:
-	var col := Color(1, 1, 1, 0.85)
-	for off in [Vector2(0, 6), Vector2(14, 2), Vector2(28, 6), Vector2(10, 0), Vector2(20, 0)]:
-		var d := _make_disc(9 * scale, col)
-		d.position = pos + off * scale
-		add_child(d)
-
-
-func _hill(center: Vector2, width: float, color: Color) -> void:
-	var d := _make_disc(width * 0.5, color)
-	d.position = center - Vector2(width * 0.5, width * 0.5)
-	add_child(d)
-
-
-func _label(text: String, size: int, color: Color, pos: Vector2, sz: Vector2, align: int) -> Label:
-	var l := Label.new()
-	l.text = text
-	l.position = pos
-	l.size = sz
-	l.add_theme_font_size_override("font_size", size)
-	l.add_theme_color_override("font_color", color)
-	l.horizontal_alignment = align
-	return l
-
-
-# ------------------------------------------------------------------ menu
 func _button_style(bg: Color, border: Color) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = bg
@@ -154,13 +92,12 @@ func _button_style(bg: Color, border: Color) -> StyleBoxFlat:
 func _button(text: String, cb: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.add_theme_font_size_override("font_size", 9)
-	b.add_theme_color_override("font_color", Color("ffffff"))
-	b.add_theme_color_override("font_hover_color", Color("ffe08a"))
-	b.add_theme_color_override("font_pressed_color", Color("ffd166"))
-	b.add_theme_stylebox_override("normal", _button_style(Color("1d3a5f", 0.92), Color("cfe8ff")))
-	b.add_theme_stylebox_override("hover", _button_style(Color("2b5384", 0.96), Color("ffe08a")))
-	b.add_theme_stylebox_override("pressed", _button_style(Color("14263f", 0.96), Color("ffd166")))
+	TitleFonts.apply(b, 6, Color("f0f8ff"))
+	b.add_theme_color_override("font_hover_color", Color("fff0b0"))
+	b.add_theme_color_override("font_pressed_color", Color("7ee8d8"))
+	b.add_theme_stylebox_override("normal", _button_style(Color("142038", 0.9), Color("5ad4c8", 0.7)))
+	b.add_theme_stylebox_override("hover", _button_style(Color("1e3058", 0.95), Color("fff0b0")))
+	b.add_theme_stylebox_override("pressed", _button_style(Color("0c1828", 0.95), Color("7ee8d8")))
 	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	b.custom_minimum_size = Vector2(90, 18)
 	b.size = Vector2(90, 18)
@@ -176,10 +113,12 @@ func _build_menu() -> void:
 	panel.position = Vector2(124, 52)
 	panel.size = Vector2(110, panel_h)
 	var psb := StyleBoxFlat.new()
-	psb.bg_color = Color(0.06, 0.12, 0.2, 0.55)
+	psb.bg_color = Color("0c1428", 0.72)
 	psb.set_corner_radius_all(6)
-	psb.set_border_width_all(1)
-	psb.border_color = Color(1, 1, 1, 0.25)
+	psb.set_border_width_all(2)
+	psb.border_color = Color("5ad4c8", 0.45)
+	psb.shadow_color = Color(0, 0, 0, 0.35)
+	psb.shadow_size = 3
 	panel.add_theme_stylebox_override("panel", psb)
 	add_child(panel)
 
@@ -224,18 +163,21 @@ func _reset_state() -> void:
 	GameState.play_mode = "solo"
 
 
-# ------------------------------------------------------------------ starter select
 func _show_starter_select() -> void:
 	_starter_panel = Panel.new()
 	_starter_panel.position = Vector2.ZERO
 	_starter_panel.size = Vector2(VIEW_W, VIEW_H)
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.05, 0.08, 0.11, 0.94)
+	sb.bg_color = Color("060c18", 0.92)
+	sb.set_border_width_all(2)
+	sb.border_color = Color("5ad4c8", 0.35)
 	_starter_panel.add_theme_stylebox_override("panel", sb)
 	add_child(_starter_panel)
 
-	var head := _label("Choose your first Echo", 12, Color("ffe08a"), Vector2(0, 8), Vector2(VIEW_W, 16), HORIZONTAL_ALIGNMENT_CENTER)
-	_starter_panel.add_child(head)
+	var head := TitleFonts.shadow_label(
+		_starter_panel, "Choose your first Echo", 8, Color("fff0b0"),
+		Vector2(0, 8), Vector2(VIEW_W, 16), HORIZONTAL_ALIGNMENT_CENTER, Color("1a2848"), 2
+	)
 
 	for i in STARTER_IDS.size():
 		var id: String = STARTER_IDS[i]
@@ -254,11 +196,19 @@ func _show_starter_select() -> void:
 		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		col.add_child(art)
 
-		var nm := _label(def.name, 9, Color("ffffff"), Vector2.ZERO, Vector2(64, 12), HORIZONTAL_ALIGNMENT_CENTER)
+		var nm := Label.new()
+		nm.text = def.name
+		nm.custom_minimum_size = Vector2(64, 12)
+		nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		TitleFonts.apply(nm, 6, Color("f0f8ff"), Color("1a2848"), 1)
 		col.add_child(nm)
 
-		var bl := _label(STARTER_BLURB[id], 6, Color("a8dadc"), Vector2.ZERO, Vector2(64, 20), HORIZONTAL_ALIGNMENT_CENTER)
+		var bl := Label.new()
+		bl.text = STARTER_BLURB[id]
+		bl.custom_minimum_size = Vector2(64, 20)
+		bl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		bl.autowrap_mode = TextServer.AUTOWRAP_WORD
+		TitleFonts.apply(bl, 5, Color("a8e8dc"))
 		col.add_child(bl)
 
 		var pick := _button("Pick", _on_pick_starter.bind(id))
