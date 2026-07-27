@@ -37,19 +37,25 @@
       "id": "s3_desert", "title": "Scorch Route Trial",
       "objective": "Cross the desert and defeat Ranger Sol to earn a Resonance Sigil.",
       "hint": "Ranger Sol guards the scorched route — only the worthy restore its resonance.",
-      "flag": "trainer_d3_warden"
+      "flag": "trainer_gym_desert"
     },
     {
       "id": "s4_grove", "title": "Heart of the Grove",
       "objective": "Reach the Verdant grove and defeat Ranger Ivy.",
-      "hint": "Ranger Ivy protects the grove's deepest memories.",
-      "flag": "trainer_j3_elder"
+      "hint": "Ranger Ivy protects the grove's deepest memories and seals the cavern pass.",
+      "flag": "trainer_gym_jungle"
     },
     {
-      "id": "s5_finale", "title": "Two Truths",
-      "objective": "Face Rival Sabo one last time — The Veil and The Rangers both hold pieces of the truth.",
-      "hint": "Sabo makes a final stand in Verdant Route 3.",
+      "id": "s5_rival_return", "title": "Two Truths",
+      "objective": "Face Rival Sabo again in Verdant Route 3 — The Veil and The Rangers both hold pieces of the truth.",
+      "hint": "Sabo makes a second stand in Verdant Route 3.",
       "flag": "trainer_j3_rival"
+    },
+    {
+      "id": "s6_champion", "title": "The Deep Throne",
+      "objective": "Descend the Crag Caverns and defeat Champion Vael.",
+      "hint": "Vael waits atop the Deep Throne in Cave 2. Heal at the lantern camp first.",
+      "flag": "trainer_champion"
     },
     {
       "id": "s7_coast", "title": "Salt on the Wind",
@@ -82,10 +88,22 @@
       "flag": "faction_ambush_graveyard"
     },
     {
-      "id": "s6_champ", "title": "The Dream Older Than the Chorus",
+      "id": "s12_primordial", "title": "The Dream Older Than the Chorus",
       "objective": "Wake and face PRIMORDIUS at the barrow-mound — then decide the valley's fate: restore The Chorus, preserve The Fracture, or forge a new balance.",
       "hint": "The mound splits at the north end of the Hollow Barrows. Bring your strongest team.",
-      "flag": "__complete__"
+      "flag": "story_complete"
+    },
+    {
+      "id": "s13_ashpeak", "title": "After the Dream",
+      "objective": "A caldera opened south of town. Climb Ashpeak and claim SOLARCH.",
+      "hint": "Leave Harmona Rest through the south gate after completing the fate choice.",
+      "flag": "legend_solarch"
+    },
+    {
+      "id": "s14_skyreach", "title": "Crown of Wind",
+      "objective": "Ascend Skyreach Spire and face SKYSOVEREIGN.",
+      "hint": "North of Ashpeak Caldera. Pack Ultras — the summit is unforgiving.",
+      "flag": "legend_skysovereign"
     }
   ]
 }

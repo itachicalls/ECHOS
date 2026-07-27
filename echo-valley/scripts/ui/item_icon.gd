@@ -29,8 +29,10 @@ func _draw() -> void:
 	match item_id:
 		"fishing_rod":
 			_draw_rod(s)
-		"heart_salve":
-			_draw_salve(s)
+		"heart_salve", "super_salve", "max_salve":
+			_draw_salve(s, item_id)
+		"repel_charm", "power_band", "thunder_sigil", "mind_sigil", "chorus_shard":
+			_draw_charm(s, item_id)
 		_:
 			var tex := _capsule_texture(item_id, icon_size)
 			if tex:
@@ -149,6 +151,26 @@ func _palette_for_kind(kind: String) -> Dictionary:
 				"bottom_shade": Color("c88010"),
 				"accent": Color("e09018"),
 			}
+		"great_capsule":
+			return {
+				"top": Color("e8f0ff"),
+				"top_hi": Color("ffffff"),
+				"top_shade": Color("c0d0ea"),
+				"bottom": Color("3a7ad4"),
+				"bottom_hi": Color("5a9af0"),
+				"bottom_shade": Color("2458a8"),
+				"accent": Color("2a68c0"),
+			}
+		"ultra_capsule":
+			return {
+				"top": Color("fff0e8"),
+				"top_hi": Color("ffffff"),
+				"top_shade": Color("e8c8b0"),
+				"bottom": Color("d45a28"),
+				"bottom_hi": Color("f07840"),
+				"bottom_shade": Color("a84018"),
+				"accent": Color("c85020"),
+			}
 		_:
 			return {
 				"top": Color("f2f6fa"),
@@ -161,13 +183,45 @@ func _palette_for_kind(kind: String) -> Dictionary:
 			}
 
 
-func _draw_salve(s: float) -> void:
+func _draw_salve(s: float, kind: String = "heart_salve") -> void:
 	var cx := s * 0.5
+	var body := Color("ff6b8a")
+	var mid := Color("ff8fab")
+	var cap := Color("ffd0dc")
+	match kind:
+		"super_salve":
+			body = Color("6bc8ff")
+			mid = Color("8fd8ff")
+			cap = Color("d0ecff")
+		"max_salve":
+			body = Color("d4a020")
+			mid = Color("f0c040")
+			cap = Color("fff0c0")
 	draw_rect(Rect2(cx - s * 0.14, s * 0.72, s * 0.28, s * 0.06), Color(0, 0, 0, 0.2))
-	draw_rect(Rect2(cx - s * 0.12, s * 0.34, s * 0.24, s * 0.4), Color("ff6b8a"))
-	draw_rect(Rect2(cx - s * 0.1, s * 0.36, s * 0.2, s * 0.34), Color("ff8fab"))
-	draw_rect(Rect2(cx - s * 0.08, s * 0.22, s * 0.16, s * 0.14), Color("ffd0dc"))
+	draw_rect(Rect2(cx - s * 0.12, s * 0.34, s * 0.24, s * 0.4), body)
+	draw_rect(Rect2(cx - s * 0.1, s * 0.36, s * 0.2, s * 0.34), mid)
+	draw_rect(Rect2(cx - s * 0.08, s * 0.22, s * 0.16, s * 0.14), cap)
 	draw_circle(Vector2(cx - s * 0.03, s * 0.46), s * 0.05, Color("fff0f4"))
+
+
+func _draw_charm(s: float, kind: String) -> void:
+	var cx := s * 0.5
+	var cy := s * 0.5
+	var col := Color("c9a227")
+	match kind:
+		"repel_charm":
+			col = Color("7dffb8")
+		"thunder_sigil":
+			col = Color("ffe066")
+		"mind_sigil":
+			col = Color("c49bff")
+		"chorus_shard":
+			col = Color("7ec8ff")
+		"power_band":
+			col = Color("e07040")
+	draw_circle(Vector2(cx, cy), s * 0.28, col.darkened(0.25))
+	draw_circle(Vector2(cx, cy), s * 0.2, col)
+	draw_circle(Vector2(cx - s * 0.05, cy - s * 0.05), s * 0.06, Color(1, 1, 1, 0.55))
 
 
 func _draw_rod(s: float) -> void:

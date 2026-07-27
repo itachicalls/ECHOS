@@ -1,0 +1,193 @@
+{
+  "quests": [
+    {
+      "id": "q_cottage_herbs",
+      "title": "Cottage Herbs",
+      "giver_map": "town",
+      "description": "Old Nell by the cottage wants a word once you've chosen a starter.",
+      "require_flag": "starter_chosen",
+      "complete_flag": "quest_cottage_herbs",
+      "complete": { "type": "talk" },
+      "lines": [
+        "Ah, a new keeper! My garden herbs soothe tired Harmons.",
+        "Take a Super Salve — and come back if the road gets rough."
+      ],
+      "done_lines": ["The herbs are growing fine. Travel safe!"],
+      "reward": { "super_salve": 1, "heart_salve": 2 }
+    },
+    {
+      "id": "q_pond_favor",
+      "title": "Pondside Favor",
+      "giver_map": "town",
+      "description": "Bring a Fishing Rod to the pondside villager.",
+      "require_flag": "starter_chosen",
+      "complete_flag": "quest_pond_favor",
+      "complete": { "type": "item", "id": "fishing_rod", "amount": 1, "consume": false },
+      "lines": [
+        "You have a rod? Wonderful!",
+        "The still ponds north of town hide gentle water Harmons. Take these capsules."
+      ],
+      "done_lines": ["Cast often — patience is a keeper's virtue."],
+      "incomplete_lines": ["If you find a Fishing Rod on Route 1, show it to me."],
+      "reward": { "great_capsule": 3 }
+    },
+    {
+      "id": "q_fern_friend",
+      "title": "Fern Friend",
+      "giver_map": "route1",
+      "description": "Catch a Fernkit and report to the meadow naturalist.",
+      "require_flag": "starter_chosen",
+      "complete_flag": "quest_fern_friend",
+      "complete": { "type": "caught", "id": "fernkit", "min": 1 },
+      "lines": [
+        "You caught a Fernkit! The meadows thank you.",
+        "Here's a Repel Charm — wild crowds can wait."
+      ],
+      "done_lines": ["Fernkit still thrive when keepers care."],
+      "incomplete_lines": ["Catch a Fernkit in the tall grass, then come back."],
+      "reward": { "repel_charm": 2, "echo_capsule": 3 }
+    },
+    {
+      "id": "q_rival_wager",
+      "title": "Rival Wager",
+      "giver_map": "route2",
+      "description": "Defeat Rival Sabo in the Echowood, then claim the wager.",
+      "require_flag": "starter_chosen",
+      "complete_flag": "quest_rival_wager",
+      "complete": { "type": "flag", "id": "trainer_r2_rival" },
+      "lines": [
+        "You actually beat Sabo? Ha!",
+        "I bet against him. Take the Power Band — you've earned the bragging rights."
+      ],
+      "done_lines": ["Keep that band polished."],
+      "incomplete_lines": ["Beat Rival Sabo up the path, then we'll settle the wager."],
+      "reward": { "power_band": 1, "great_capsule": 2 }
+    },
+    {
+      "id": "q_dune_samples",
+      "title": "Dune Samples",
+      "giver_map": "desert2",
+      "description": "Catch a Cactling for the dune researcher.",
+      "require_flag": "trainer_gym_grass",
+      "complete_flag": "quest_dune_samples",
+      "complete": { "type": "caught", "id": "cactling", "min": 1 },
+      "lines": [
+        "A Cactling! Perfect specimen.",
+        "Take these Great Capsules for the deeper dunes."
+      ],
+      "done_lines": ["The dunes keep surprising me."],
+      "incomplete_lines": ["Find a Cactling in Scorch Route brush and bring word."],
+      "reward": { "great_capsule": 4, "super_salve": 1 }
+    },
+    {
+      "id": "q_vine_courier",
+      "title": "Vine Courier",
+      "giver_map": "jungle2",
+      "description": "Deliver a Heart Salve to the trail medic in Verdant Route 2.",
+      "require_flag": "trainer_gym_desert",
+      "complete_flag": "quest_vine_courier",
+      "complete": { "type": "item", "id": "heart_salve", "amount": 1, "consume": true },
+      "lines": [
+        "You brought a Heart Salve — thank you!",
+        "Take this Super Salve and spare capsules for the grove ahead."
+      ],
+      "done_lines": ["The vines are kinder today."],
+      "incomplete_lines": ["I need one Heart Salve for a injured scout. Can you spare one?"],
+      "reward": { "super_salve": 2, "echo_capsule": 4 }
+    },
+    {
+      "id": "q_shell_song",
+      "title": "Shell Song",
+      "giver_map": "beach1",
+      "description": "Catch a Shellby for the beachcomber.",
+      "require_flag": "greeter_beach_marisol",
+      "complete_flag": "quest_shell_song",
+      "complete": { "type": "caught", "id": "shellby", "min": 1 },
+      "lines": [
+        "Shellby's song matches the tide — beautiful!",
+        "Take Ultra Capsules. Deep water hides rarer voices."
+      ],
+      "done_lines": ["Listen to the surf — it remembers."],
+      "incomplete_lines": ["Catch a Shellby in the sea scrub, then return."],
+      "reward": { "ultra_capsule": 2, "heart_salve": 2 }
+    },
+    {
+      "id": "q_cove_stock",
+      "title": "Cove Stock",
+      "giver_map": "tide_town",
+      "description": "Talk to the dock clerk after reaching Saltwind Cove.",
+      "require_flag": "greeter_beach_marisol",
+      "complete_flag": "quest_cove_stock",
+      "complete": { "type": "talk" },
+      "lines": [
+        "Keepers who reach the Cove get a care package.",
+        "Storms north don't wait for the unprepared."
+      ],
+      "done_lines": ["Stay dry out there."],
+      "reward": { "great_capsule": 3, "super_salve": 1, "repel_charm": 1 }
+    },
+    {
+      "id": "q_static_study",
+      "title": "Static Study",
+      "giver_map": "storm1",
+      "description": "Catch a Sparklit for the marsh scholar.",
+      "require_flag": "faction_ambush_storm1",
+      "complete_flag": "quest_static_study",
+      "complete": { "type": "caught", "id": "sparklit", "min": 1 },
+      "lines": [
+        "Sparklit data — excellent!",
+        "Accept this Thunder Sigil as thanks from the storm watch."
+      ],
+      "done_lines": ["The marsh still crackles with secrets."],
+      "incomplete_lines": ["Catch a Sparklit in the Voltmarsh fens."],
+      "reward": { "thunder_sigil": 1, "ultra_capsule": 2 }
+    },
+    {
+      "id": "q_dream_ledger",
+      "title": "Dream Ledger",
+      "giver_map": "psychic_town",
+      "description": "Speak with the hollow seer after earning the Charge Sigil.",
+      "require_flag": "trainer_gym_storm",
+      "complete_flag": "quest_dream_ledger",
+      "complete": { "type": "talk" },
+      "lines": [
+        "Your mind already brushes the Reach.",
+        "Take the Mind Sigil — a reminder to trust your Harmons."
+      ],
+      "done_lines": ["Dream carefully."],
+      "reward": { "mind_sigil": 1, "max_salve": 1 }
+    },
+    {
+      "id": "q_barrow_vigil",
+      "title": "Barrow Vigil",
+      "giver_map": "graveyard1",
+      "description": "Survive the factions' final stand, then speak with the vigil keeper.",
+      "require_flag": "faction_ambush_graveyard",
+      "complete_flag": "quest_barrow_vigil",
+      "complete": { "type": "flag", "id": "faction_ambush_graveyard" },
+      "lines": [
+        "You faced all three banners... and still stand.",
+        "A Chorus Shard for the keeper who would wake the dream."
+      ],
+      "done_lines": ["The tombs are quiet — for now."],
+      "incomplete_lines": ["The factions block the processional. Return when you've faced them."],
+      "reward": { "chorus_shard": 1, "ultra_capsule": 3, "max_salve": 2 }
+    },
+    {
+      "id": "q_moss_catalog",
+      "title": "Moss Catalog",
+      "giver_map": "route1",
+      "description": "Catch a Mossling for the Route 1 archivist (optional side task).",
+      "require_flag": "first_win",
+      "complete_flag": "quest_moss_catalog",
+      "complete": { "type": "caught", "id": "mossling", "min": 1 },
+      "lines": [
+        "A Mossling for the Archive — logged!",
+        "Here's a spare Great Capsule for your next find."
+      ],
+      "done_lines": ["Keep cataloging — every Harmon matters."],
+      "incomplete_lines": ["Catch a Mossling somewhere in the early routes."],
+      "reward": { "great_capsule": 2, "heart_salve": 1 }
+    }
+  ]
+}

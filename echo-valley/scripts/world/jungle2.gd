@@ -61,6 +61,24 @@ func _build_map() -> void:
 		"intro": ["I've mapped every root and river here.", "Test my trail knowledge!"],
 		"win_line": "You'd survive the deep jungle. Respect.",
 	})
+	add_trainer(Vector2i(14, 14), "left", {
+		"id": "j2_reed", "name": "Marsh Reed", "look": 10,
+		"party": [{ "id": "creepvine", "level": 15 }, { "id": "fungourd", "level": 16 }],
+		"reward": 5,
+		"intro": ["The marsh pool hides more than fish.", "Prove you belong!"],
+		"win_line": "Deeper roots await you north.",
+	}, 4)
+	add_trainer(Vector2i(3, 12), "right", {
+		"id": "j2_bramble", "name": "Bramble Twin Jo", "look": 1,
+		"party": [{ "id": "bramblejaw", "level": 16 }, { "id": "oakthorn", "level": 16 }, { "id": "sporewalk", "level": 17 }],
+		"reward": 5,
+		"intro": ["Thorns first. Mercy later.", "Ready?"],
+		"win_line": "You cut clean. Respect.",
+	}, 3)
+
+	add_npc(Vector2i(11, 15), "down", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_vine_courier",
+	}, Tiles.TRAINER_PATHS[8])
 
 	# thorn thickets sting the unwary
 	for p in [Vector2i(11, 12), Vector2i(12, 13), Vector2i(13, 12), Vector2i(8, 13)]:
@@ -71,6 +89,9 @@ func _build_map() -> void:
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 6), "heart_salve", 1)
 	add_pickup(Vector2i(17, 21), "echo_capsule", 2)
+	add_pickup(Vector2i(7, 8), "great_capsule", 2)
+	add_pickup(Vector2i(15, 20), "super_salve", 1)
+	add_pickup(Vector2i(4, 21), "repel_charm", 1)
 
 
 func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:

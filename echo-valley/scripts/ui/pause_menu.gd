@@ -2,7 +2,7 @@ extends CanvasLayer
 
 ## Overworld menu: Party / Bag / Journal. Toggle with the "menu" action.
 
-const RES_NAMES := ["Normal", "Fire", "Water", "Grass", "Rock", "Air", "Shadow"]
+const RES_NAMES := ["Normal", "Fire", "Water", "Grass", "Rock", "Air", "Shadow", "Electric", "Psychic"]
 const ItemIcon := preload("res://scripts/ui/item_icon.gd")
 const MENU_W := 228
 const MENU_H := 148
@@ -525,8 +525,10 @@ func _item_row(item_id: String, count: int, row_w: int) -> Panel:
 
 func _use_bag_item(item_id: String) -> void:
 	match item_id:
-		"heart_salve":
-			_use_salve()
+		"heart_salve", "super_salve", "max_salve":
+			_use_salve(item_id)
+		"repel_charm":
+			_use_repel()
 		"revive_capsule":
 			_use_revive_bag()
 		"evo_capsule":
@@ -573,8 +575,8 @@ func _use_evo_bag() -> void:
 	_render()
 
 
-func _use_salve() -> void:
-	if not ItemCatalog.consume_item("heart_salve", 1):
+func _use_salve(item_id: String = "heart_salve") -> void:
+	if not ItemCatalog.consume_item(item_id, 1):
 		return
 	var target: EchoInstance = null
 	var worst := 2.0
@@ -586,13 +588,22 @@ func _use_salve() -> void:
 			worst = ratio
 			target = e
 	if target == null:
+		ItemCatalog.add_item(item_id, 1)
 		EventBus.toast.emit("No Echo needs healing.")
 		return
-	GameState.inventory["heart_salve"] = int(GameState.inventory["heart_salve"]) - 1
-	var heal := int(round(float(target.max_hp()) * 0.6))
+	var heal := int(round(float(target.max_hp()) * ItemCatalog.heal_pct(item_id)))
 	target.current_hp = mini(target.max_hp(), target.current_hp + heal)
 	EventBus.toast.emit("%s recovered %d HP!" % [target.display_name(), heal])
 	EventBus.party_changed.emit()
+	_render()
+
+
+func _use_repel() -> void:
+	if not ItemCatalog.consume_item("repel_charm", 1):
+		return
+	var steps := int(ItemCatalog.get_def("repel_charm").get("repel_steps", 100))
+	GameState.flags["repel_steps"] = steps
+	EventBus.toast.emit("Wild Harmons will stay away for a while.")
 	_render()
 
 
@@ -619,7 +630,7 @@ func _render_journal() -> void:
 	hv.add_child(hint)
 	_content.add_child(head)
 
-	_content.add_child(_label("QUEST LOG (%d/%d)" % [StoryService.completed_count(), StoryService.stages.size()], 7, Color("cfe8ff")))
+	_content.add_child(_label("STORY (%d/%d)" % [StoryService.completed_count(), StoryService.stages.size()], 7, Color("cfe8ff")))
 	var cur_idx := StoryService.current_index()
 	for i in StoryService.stages.size():
 		var s: Dictionary = StoryService.stages[i]
@@ -629,6 +640,21 @@ func _render_journal() -> void:
 		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		line.custom_minimum_size = Vector2(MENU_W - MENU_PAD * 2 - 12, 0)
 		_content.add_child(line)
+
+	_content.add_child(_label("SIDE QUESTS (%d/%d)" % [QuestService.completed_count(), QuestService.quests.size()], 7, Color("cfe8ff")))
+	for q in QuestService.active_quests():
+		var done := QuestService.is_complete(String(q.get("id", "")))
+		var mark2 := "[x]" if done else "[ ]"
+		var col2 := Color("7dffb8") if done else Color("a8c0d8")
+		var qline := _label("%s %s" % [mark2, String(q.get("title", ""))], 6, col2)
+		qline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		qline.custom_minimum_size = Vector2(MENU_W - MENU_PAD * 2 - 12, 0)
+		_content.add_child(qline)
+		if not done:
+			var desc := _label(String(q.get("description", "")), 5, Color("7c8aa0"))
+			desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			desc.custom_minimum_size = Vector2(MENU_W - MENU_PAD * 2 - 12, 0)
+			_content.add_child(desc)
 
 
 # ---------------------------------------------------------------- helpers

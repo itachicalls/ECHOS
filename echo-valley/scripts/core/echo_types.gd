@@ -1,7 +1,7 @@
 class_name EchoTypes
 extends RefCounted
 
-enum Resonance { NONE, FIRE, WATER, GRASS, ROCK, AIR, SHADOW }
+enum Resonance { NONE, FIRE, WATER, GRASS, ROCK, AIR, SHADOW, ELECTRIC, PSYCHIC }
 enum ActionType { CHIME, SWITCH, CATCH, FLEE, WAIT }
 
 const RESONANCE_NAMES := {
@@ -12,6 +12,8 @@ const RESONANCE_NAMES := {
 	Resonance.ROCK: "Rock",
 	Resonance.AIR: "Air",
 	Resonance.SHADOW: "Shadow",
+	Resonance.ELECTRIC: "Electric",
+	Resonance.PSYCHIC: "Psychic",
 }
 
 const RESONANCE_COLORS := {
@@ -22,6 +24,8 @@ const RESONANCE_COLORS := {
 	Resonance.ROCK: Color("8d99ae"),
 	Resonance.AIR: Color("a8dadc"),
 	Resonance.SHADOW: Color("7b2cbf"),
+	Resonance.ELECTRIC: Color("f4d35e"),
+	Resonance.PSYCHIC: Color("e07aff"),
 }
 
 ## attacker -> resonances it is strong against (1.5x)
@@ -29,9 +33,11 @@ const ADVANTAGE := {
 	Resonance.FIRE: [Resonance.GRASS],
 	Resonance.WATER: [Resonance.FIRE, Resonance.ROCK],
 	Resonance.GRASS: [Resonance.WATER, Resonance.ROCK],
-	Resonance.ROCK: [Resonance.AIR, Resonance.FIRE],
+	Resonance.ROCK: [Resonance.AIR, Resonance.FIRE, Resonance.ELECTRIC],
 	Resonance.AIR: [Resonance.GRASS],
 	Resonance.SHADOW: [Resonance.AIR],
+	Resonance.ELECTRIC: [Resonance.WATER, Resonance.AIR],
+	Resonance.PSYCHIC: [Resonance.SHADOW, Resonance.ELECTRIC],
 }
 
 const RESONANCE_SYMBOLS := {
@@ -42,6 +48,8 @@ const RESONANCE_SYMBOLS := {
 	Resonance.ROCK: "■",
 	Resonance.AIR: "◆",
 	Resonance.SHADOW: "S",
+	Resonance.ELECTRIC: "⚡",
+	Resonance.PSYCHIC: "◉",
 }
 
 const RESONANCE_GLYPHS := {
@@ -52,6 +60,8 @@ const RESONANCE_GLYPHS := {
 	Resonance.ROCK: "R",
 	Resonance.AIR: "A",
 	Resonance.SHADOW: "S",
+	Resonance.ELECTRIC: "E",
+	Resonance.PSYCHIC: "P",
 }
 
 const ADV_MULT := 1.5
@@ -68,6 +78,8 @@ static func resonance_from_string(v: String) -> Resonance:
 		"rock": return Resonance.ROCK
 		"air": return Resonance.AIR
 		"shadow": return Resonance.SHADOW
+		"electric", "volt": return Resonance.ELECTRIC
+		"psychic": return Resonance.PSYCHIC
 		_: return Resonance.NONE
 
 

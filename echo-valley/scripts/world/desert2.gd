@@ -55,6 +55,31 @@ func _build_map() -> void:
 		"intro": ["Ancient stones whisper secrets here.", "Battle me among the ruins!"],
 		"win_line": "The ruins approve of your strength.",
 	})
+	add_trainer(Vector2i(4, 8), "right", {
+		"id": "d2_soleil", "name": "Sun Dancer Soleil", "look": 8,
+		"party": [{ "id": "cactopup", "level": 13 }, { "id": "magmapup", "level": 13 }],
+		"reward": 4,
+		"intro": ["Dance with the heat!", "Don't burn out!"],
+		"win_line": "Bright footwork. I yield.",
+	}, 4)
+	add_trainer(Vector2i(16, 18), "left", {
+		"id": "d2_quarry", "name": "Quarry Hand Jeb", "look": 9,
+		"party": [{ "id": "dunecrag", "level": 13 }, { "id": "dunejaw", "level": 14 }, { "id": "scorchid", "level": 14 }],
+		"reward": 4,
+		"intro": ["Stone under sand. Fire under stone.", "Ready?"],
+		"win_line": "Solid work, keeper.",
+	}, 3)
+
+	add_npc(Vector2i(12, 14), "down", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_dune_samples",
+	}, Tiles.TRAINER_PATHS[4])
+
+
+func _place_pickups() -> void:
+	add_pickup(Vector2i(4, 6), "echo_capsule", 2)
+	add_pickup(Vector2i(17, 15), "heart_salve", 2)
+	add_pickup(Vector2i(5, 20), "great_capsule", 2)
+	add_pickup(Vector2i(18, 8), "super_salve", 1)
 
 
 func _brush_patch(x0: int, y0: int, x1: int, y1: int) -> void:

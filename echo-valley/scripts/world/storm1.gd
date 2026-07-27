@@ -66,6 +66,25 @@ func _build_map() -> void:
 		"intro": ["I read the storm fronts for a living.", "Your team's looking like a clear forecast - let's fix that!"],
 		"win_line": "Skies clear. You've earned the pass ahead.",
 	}, 5)
+	add_trainer(Vector2i(5, 8), "right", {
+		"id": "storm_jax", "name": "Spark Tech Jax", "look": 13,
+		"party": [{ "id": "statikit", "level": 18 }, { "id": "ionling", "level": 19 }, { "id": "zaptenna", "level": 19 }],
+		"reward": 4,
+		"intro": ["Voltage's climbing — so are we!", "Electric trial, keeper!"],
+		"win_line": "Circuit's clear. You're the real conductor.",
+	}, 4)
+	add_trainer(Vector2i(15, 18), "left", {
+		"id": "storm_nyra", "name": "Fen Guard Nyra", "look": 10,
+		"party": [{ "id": "wattpup", "level": 19 }, { "id": "feathervolt", "level": 20 }],
+		"reward": 4,
+		"intro": ["Marsh mud and thunder — my favorite combo!", "Fight!"],
+		"win_line": "Zap. You win.",
+	}, 5)
+	add_legend_encounter(Vector2i(15, 10), "voltmonarch", 28,
+		"Lightning crowns the crystal. VOLTMONARCH descends — the storm's own sovereign. Static burns the air!")
+	add_npc(Vector2i(7, 14), "right", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_static_study",
+	}, Tiles.TRAINER_PATHS[11], 1)
 
 	# STORM GYM — seals the pass north to Mirage Hollow.
 	add_interact(Vector2i(11, 1), { "type": "sign", "text": "STORM TRIAL - Ranger Bolt guards Mirage Hollow. Earn the Charge Sigil to cross." })
@@ -73,7 +92,7 @@ func _build_map() -> void:
 		"id": "gym_storm", "name": "Ranger Bolt", "look": 11,
 		"party": [{ "id": "voltwing", "level": 20 }, { "id": "amperewolf", "level": 21 }, { "id": "stormraptor", "level": 22 }],
 		"reward": 5,
-		"reward_items": { "echo_capsule": 5 },
+		"reward_items": { "echo_capsule": 5, "thunder_sigil": 1, "great_capsule": 3 },
 		"gym": true, "ranger": true,
 		"intro": ["I am Bolt, Storm Route Ranger.", "The marsh answers only to those who master its current. Show me!"],
 		"win_line": "The storm bows to you. Mirage Hollow awaits beyond the pass.",
@@ -83,6 +102,9 @@ func _build_map() -> void:
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 18), "heart_salve", 2)
 	add_pickup(Vector2i(16, 4), "echo_capsule", 3)
+	add_pickup(Vector2i(5, 5), "great_capsule", 2)
+	add_pickup(Vector2i(17, 17), "super_salve", 1)
+	add_pickup(Vector2i(12, 10), "ultra_capsule", 1)
 
 
 func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:

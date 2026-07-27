@@ -47,6 +47,27 @@ func _build_map() -> void:
 		"intro": ["The desert tests every trainer.", "Show me your grit!"],
 		"win_line": "You carry the sun's courage. Take these Capsules.",
 	})
+	add_trainer(Vector2i(14, 8), "left", {
+		"id": "d1_asha", "name": "Sand Scout Asha", "look": 7,
+		"party": [{ "id": "sandnib", "level": 10 }, { "id": "cactling", "level": 11 }],
+		"reward": 3,
+		"intro": ["Mirages lie. Battles don't.", "Prove you're real!"],
+		"win_line": "Heat-hardened. Good.",
+	}, 4)
+	add_trainer(Vector2i(15, 18), "up", {
+		"id": "d1_rook", "name": "Caravan Rook", "look": 5,
+		"party": [{ "id": "coalpup", "level": 11 }, { "id": "dustmite", "level": 11 }, { "id": "torchit", "level": 12 }],
+		"reward": 3,
+		"intro": ["Supplies ride with the strong.", "Show me strength!"],
+		"win_line": "You've got caravan legs.",
+	}, 3)
+
+
+func _place_pickups() -> void:
+	add_pickup(Vector2i(3, 6), "heart_salve", 1)
+	add_pickup(Vector2i(16, 14), "echo_capsule", 2)
+	add_pickup(Vector2i(5, 19), "great_capsule", 1)
+	add_pickup(Vector2i(17, 5), "super_salve", 1)
 
 
 func _brush_patch(x0: int, y0: int, x1: int, y1: int) -> void:

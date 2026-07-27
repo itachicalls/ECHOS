@@ -120,6 +120,12 @@ func mark_seen(id: String) -> void: seen[id] = true
 func mark_caught(id: String) -> void:
 	seen[id] = true
 	caught[id] = true
+	# Post-game story flags for key static legends.
+	match id:
+		"solarch": flags["legend_solarch"] = true
+		"skysovereign": flags["legend_skysovereign"] = true
+		_:
+			pass
 
 
 func sync_from_battle(units: Array) -> void:

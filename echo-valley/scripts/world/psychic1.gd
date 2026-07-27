@@ -66,6 +66,22 @@ func _build_map() -> void:
 		"intro": ["The stones foretold your coming, keeper.", "But prophecy means nothing without proof!"],
 		"win_line": "The vision was true. You burn bright.",
 	}, 5)
+	add_trainer(Vector2i(4, 18), "right", {
+		"id": "psy_mira", "name": "Lucid Mira", "look": 15,
+		"party": [{ "id": "blinkit", "level": 29 }, { "id": "willowick", "level": 30 }, { "id": "lullabye", "level": 30 }],
+		"reward": 5,
+		"intro": ["Wake or dream — either way, we battle."],
+		"win_line": "You are lucid. Pass.",
+	}, 4)
+	add_trainer(Vector2i(16, 5), "down", {
+		"id": "psy_thane", "name": "Rune Thane", "look": 12,
+		"party": [{ "id": "sigilix", "level": 31 }, { "id": "astralynx", "level": 31 }],
+		"reward": 6,
+		"intro": ["The glyphs rearrange around you...", "Show me order in chaos!"],
+		"win_line": "The runes settle. You may proceed.",
+	}, 5)
+	add_legend_encounter(Vector2i(15, 16), "nyxarch", 36,
+		"Night folds inward. NYXARCH — dream-tyrant of the Reach — opens a single violet eye.")
 
 	# DREAM GYM — seals the way to the Hollow Barrows.
 	add_interact(Vector2i(11, 1), { "type": "sign", "text": "DREAM TRIAL - Ranger Sable guards the Hollow Barrows. Earn the Mind Sigil to pass." })
@@ -73,7 +89,7 @@ func _build_map() -> void:
 		"id": "gym_psychic", "name": "Ranger Sable", "look": 18,
 		"party": [{ "id": "mesmind", "level": 30 }, { "id": "sigilix", "level": 31 }, { "id": "hypnaura", "level": 33 }],
 		"reward": 6,
-		"reward_items": { "heart_salve": 4 },
+		"reward_items": { "heart_salve": 4, "mind_sigil": 1, "ultra_capsule": 2 },
 		"gym": true, "ranger": true,
 		"intro": ["I am Sable, keeper of the Reach.", "Beyond lies death's quiet garden. Only a settled mind may enter. Show me yours!"],
 		"win_line": "Your mind holds steady. The Barrows will not break you... I hope.",
@@ -81,8 +97,10 @@ func _build_map() -> void:
 
 
 func _place_pickups() -> void:
-	add_pickup(Vector2i(4, 18), "echo_capsule", 4)
+	add_pickup(Vector2i(3, 20), "echo_capsule", 4)
 	add_pickup(Vector2i(16, 10), "heart_salve", 3)
+	add_pickup(Vector2i(5, 6), "ultra_capsule", 1)
+	add_pickup(Vector2i(17, 19), "max_salve", 1)
 
 
 func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:

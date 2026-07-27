@@ -64,9 +64,32 @@ func _build_map() -> void:
 	}, Tiles.TRAINER_PATHS[18], 2)
 	add_interact(Vector2i(9, 20), { "type": "sign", "text": "SALTWIND COVE - last safe rest before the Voltmarsh. Stock up!" })
 
+	add_npc(Vector2i(13, 13), "left", Color(1, 1, 1), {
+		"type": "shop",
+		"shop_id": "cove_dock",
+		"cost": 8,
+		"give": { "ultra_capsule": 2, "super_salve": 2, "great_capsule": 3 },
+		"lines": [
+			"Dock shop! Eight capsules for storm-ready supplies.",
+			"Ultra Capsules and Super Salves — take the deal?",
+		],
+	}, Tiles.TRAINER_PATHS[14], 0)
+	add_npc(Vector2i(7, 18), "up", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_cove_stock",
+	}, Tiles.TRAINER_PATHS[10], 1)
+	add_trainer(Vector2i(14, 16), "left", {
+		"id": "cove_salt", "name": "Dockhand Salt", "look": 19,
+		"party": [{ "id": "fintot", "level": 14 }, { "id": "shellby", "level": 15 }],
+		"reward": 3,
+		"intro": ["Harbor rules: battle before you boast!", "Go!"],
+		"win_line": "Alright, alright — you're dock-cleared.",
+	}, 3)
+
 	for p in [Vector2i(6, 9), Vector2i(13, 15), Vector2i(5, 17)]:
 		set_ground(p, Tiles.FLOWERS)
 
 
 func _place_pickups() -> void:
 	add_pickup(Vector2i(12, 15), "echo_capsule", 3)
+	add_pickup(Vector2i(3, 16), "great_capsule", 2)
+	add_pickup(Vector2i(14, 8), "heart_salve", 2)

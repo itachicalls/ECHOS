@@ -48,9 +48,12 @@ func _build_map() -> void:
 	set_ground(Vector2i(9, 3), Tiles.CAVE_ALTAR)
 	set_ground(Vector2i(10, 3), Tiles.CAVE_ALTAR)
 
-	# The sealed Primordial — a static, catchable finale encounter.
+	# The sealed Primordial — finale encounter (catch or KO → ending).
+	if not bool(GameState.flags.get("story_complete", false)):
 	add_legend_encounter(Vector2i(9, 4), "primordius", 48,
 		"The barrow-mound splits. From the deepest Fracture-scar rises PRIMORDIUS, the dream older than the Chorus. Reality shudders - it acknowledges you at last!")
+	add_legend_encounter(Vector2i(16, 8), "mortarch", 46,
+		"A tomb lid slides. MORTARCH, death's quiet marshal, lifts a lantern of bone-light toward you.")
 
 	add_interact(Vector2i(9, 21), { "type": "sign", "text": "THE HOLLOW BARROWS - here the Fracture bleeds still. Shadow-Harmons keep the dead company." })
 	add_interact(Vector2i(11, 5), { "type": "sign", "text": "\"Beneath this mound sleeps the first resonance. Wake it, and the valley changes forever.\"" })
@@ -69,11 +72,31 @@ func _build_map() -> void:
 		"intro": ["I tend what the Fracture left behind.", "Prove you respect the resting - in battle!"],
 		"win_line": "Rest easy, they whisper. You've earned their peace.",
 	}, 5)
+	add_trainer(Vector2i(4, 7), "right", {
+		"id": "grave_ashes", "name": "Ash Cantor", "look": 9,
+		"party": [{ "id": "ghastling", "level": 40 }, { "id": "shroudmoth", "level": 41 }, { "id": "pyrewraith", "level": 42 }],
+		"reward": 7,
+		"intro": ["We sing for the Fracture-scarred.", "Join the hymn — or drown it!"],
+		"win_line": "Your voice is louder. Go.",
+	}, 4)
+	add_trainer(Vector2i(15, 20), "up", {
+		"id": "grave_veil", "name": "Veil Acolyte", "look": 18,
+		"party": [{ "id": "cryptid", "level": 41 }, { "id": "banshee", "level": 42 }],
+		"reward": 7,
+		"intro": ["The Veil watches even here...", "Prove you deserve the Primordial!"],
+		"win_line": "...Perhaps you do.",
+	}, 5)
+	add_npc(Vector2i(11, 20), "left", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_barrow_vigil",
+	}, Tiles.TRAINER_PATHS[4], 0)
 
 
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 20), "echo_capsule", 5)
 	add_pickup(Vector2i(16, 6), "heart_salve", 4)
+	add_pickup(Vector2i(6, 8), "ultra_capsule", 2)
+	add_pickup(Vector2i(14, 19), "max_salve", 2)
+	add_pickup(Vector2i(17, 12), "super_salve", 2)
 
 
 func _den(x0: int, y0: int, x1: int, y1: int) -> void:

@@ -56,6 +56,22 @@ func _build_map() -> void:
 		"intro": ["I knew you'd make it this far.", "This is where I surpass you!"],
 		"win_line": "...Fine. Next time I'll be stronger. Count on it.",
 	})
+	add_trainer(Vector2i(5, 10), "right", {
+		"id": "j3_briar", "name": "Briar Scout", "look": 2,
+		"party": [{ "id": "vinelet", "level": 18 }, { "id": "fungit", "level": 19 }, { "id": "leaflit", "level": 19 }],
+		"reward": 5,
+		"intro": ["The canopy has eyes!", "Prove you see deeper!"],
+		"win_line": "Clear path. The grove accepts you.",
+	}, 4)
+	add_trainer(Vector2i(15, 8), "left", {
+		"id": "j3_moss", "name": "Moss Witch Nia", "look": 9,
+		"party": [{ "id": "mosskit", "level": 19 }, { "id": "sporewalk", "level": 20 }],
+		"reward": 5,
+		"intro": ["Spores dance when strangers arrive...", "Dance with me!"],
+		"win_line": "Your rhythm wins.",
+	}, 5)
+	add_legend_encounter(Vector2i(4, 16), "sylvanking", 26,
+		"Roots part. SYLVANKING — crown of the Verdant — steps from the heartwood. Leaves fall like blades!")
 
 	# JUNGLE GYM — seals the northern cavern pass to the Crag Caverns.
 	add_interact(Vector2i(8, 3), { "type": "sign", "text": "GROVE TRIAL - Ranger Ivy guards the cavern pass. Earn her Sigil to descend!" })
@@ -66,6 +82,14 @@ func _build_map() -> void:
 		"intro": ["I am Ivy, Grove Route Ranger.", "Beyond lies the Crag Caverns. Earn your Sigil!"],
 		"win_line": "The vines part for you. The caverns await below.",
 	}, Vector2i(9, 2), "down", [Vector2i(9, 0), Vector2i(10, 0)], Vector2i(7, 3), [Vector2i(10, 2)])
+
+
+func _place_pickups() -> void:
+	add_pickup(Vector2i(3, 18), "echo_capsule", 3)
+	add_pickup(Vector2i(16, 6), "heart_salve", 2)
+	add_pickup(Vector2i(5, 8), "ultra_capsule", 1)
+	add_pickup(Vector2i(17, 19), "super_salve", 2)
+	add_pickup(Vector2i(4, 20), "max_salve", 1)
 
 
 func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:

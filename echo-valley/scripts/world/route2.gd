@@ -70,6 +70,24 @@ func _build_map() -> void:
 		"intro": ["So YOU'RE the trainer everyone's talking about.", "Let's find out if the hype is real!"],
 		"win_line": "...Not bad. This won't be our last battle.",
 	})
+	add_trainer(Vector2i(14, 17), "left", {
+		"id": "r2_brook", "name": "Angler Brook", "look": 10,
+		"party": [{ "id": "dewling", "level": 9 }, { "id": "puddlepaw", "level": 10 }],
+		"reward": 3,
+		"intro": ["The pond taught me patience.", "Your turn to wait — under pressure!"],
+		"win_line": "Caught me fair. Take the path west carefully.",
+	}, 3)
+	add_trainer(Vector2i(11, 9), "down", {
+		"id": "r2_kira", "name": "Camper Kira", "look": 7,
+		"party": [{ "id": "vinelet", "level": 9 }, { "id": "boltmoth", "level": 10 }, { "id": "ivylet", "level": 10 }],
+		"reward": 3,
+		"intro": ["Echowood nights are long.", "Warm up with a battle!"],
+		"win_line": "You're trail-ready. Respect.",
+	}, 4)
+
+	add_npc(Vector2i(10, 18), "left", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_rival_wager",
+	}, Tiles.TRAINER_PATHS[2])
 
 	# GRASS GYM — seals the pass to the Scorch Desert until defeated.
 	add_interact(Vector2i(5, 2), { "type": "sign", "text": "MEADOW TRIAL - Ranger Fern guards the desert pass. Earn her Sigil to cross!" })
@@ -82,6 +100,13 @@ func _build_map() -> void:
 		"intro": ["I am Fern, Meadow Route Ranger.", "None cross to the desert without proving your resonance!"],
 		"win_line": "The meadow yields to you. Take this rod — the desert oasis rewards patient fishers.",
 	}, Vector2i(3, 1), "down", [Vector2i(3, 0), Vector2i(4, 0)], Vector2i(2, 2), [Vector2i(4, 1)])
+
+
+func _place_pickups() -> void:
+	add_pickup(Vector2i(15, 14), "echo_capsule", 2)
+	add_pickup(Vector2i(6, 4), "heart_salve", 2)
+	add_pickup(Vector2i(12, 19), "great_capsule", 1)
+	add_pickup(Vector2i(5, 14), "repel_charm", 1)
 
 
 func _on_map_step(cell: Vector2i) -> void:

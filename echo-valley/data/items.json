@@ -4,14 +4,88 @@
     "desc": "Toss at a weakened wild Harmon to catch it.",
     "category": "capture",
     "battle": true,
-    "field": false
+    "field": false,
+    "catch_bonus": 0.0
+  },
+  "great_capsule": {
+    "name": "Great Capsule",
+    "desc": "A reinforced capsule with a better catch rate.",
+    "category": "capture",
+    "battle": true,
+    "field": false,
+    "catch_bonus": 0.18
+  },
+  "ultra_capsule": {
+    "name": "Ultra Capsule",
+    "desc": "The finest capsule — highest catch rate.",
+    "category": "capture",
+    "battle": true,
+    "field": false,
+    "catch_bonus": 0.35
   },
   "heart_salve": {
     "name": "Heart Salve",
     "desc": "Restores 60% HP to one Harmon.",
     "category": "heal",
     "battle": true,
-    "field": true
+    "field": true,
+    "heal_pct": 0.6
+  },
+  "super_salve": {
+    "name": "Super Salve",
+    "desc": "Fully restores one Harmon's HP.",
+    "category": "heal",
+    "battle": true,
+    "field": true,
+    "heal_pct": 1.0
+  },
+  "max_salve": {
+    "name": "Max Salve",
+    "desc": "Fully restores one Harmon (treats exhaustion).",
+    "category": "heal",
+    "battle": true,
+    "field": true,
+    "heal_pct": 1.0
+  },
+  "repel_charm": {
+    "name": "Repel Charm",
+    "desc": "Keeps wild Harmons away for about 100 steps.",
+    "category": "field",
+    "battle": false,
+    "field": true,
+    "repel_steps": 100
+  },
+  "power_band": {
+    "name": "Power Band",
+    "desc": "A trophy band worn by keepers who prove their strength.",
+    "category": "key",
+    "battle": false,
+    "field": false,
+    "key_item": true
+  },
+  "thunder_sigil": {
+    "name": "Thunder Sigil",
+    "desc": "A storm-etched trophy from the Voltmarsh.",
+    "category": "key",
+    "battle": false,
+    "field": false,
+    "key_item": true
+  },
+  "mind_sigil": {
+    "name": "Mind Sigil",
+    "desc": "A dream-carved trophy from Mirage Hollow.",
+    "category": "key",
+    "battle": false,
+    "field": false,
+    "key_item": true
+  },
+  "chorus_shard": {
+    "name": "Chorus Shard",
+    "desc": "A fragment of the old Chorus — a story trophy.",
+    "category": "key",
+    "battle": false,
+    "field": false,
+    "key_item": true
   },
   "fishing_rod": {
     "name": "Fishing Rod",

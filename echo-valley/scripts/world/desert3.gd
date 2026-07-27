@@ -57,6 +57,22 @@ func _build_map() -> void:
 		"intro": ["None pass the sun throne without proving themselves!", "Face the heat!"],
 		"win_line": "The desert crowns you champion. Until we meet again.",
 	})
+	add_trainer(Vector2i(6, 16), "up", {
+		"id": "d3_ember", "name": "Ember Scout", "look": 7,
+		"party": [{ "id": "cindermol", "level": 14 }, { "id": "torchit", "level": 15 }, { "id": "ashwing", "level": 15 }],
+		"reward": 4,
+		"intro": ["Heat haze plays tricks — my team doesn't!", "Burn bright!"],
+		"win_line": "Cooler heads... yours. Go on.",
+	}, 4)
+	add_trainer(Vector2i(18, 5), "down", {
+		"id": "d3_dune", "name": "Dune Rider Kai", "look": 8,
+		"party": [{ "id": "dustmite", "level": 15 }, { "id": "cactopup", "level": 16 }],
+		"reward": 4,
+		"intro": ["Sand in your eyes yet? Good.", "Battle!"],
+		"win_line": "You ride better than my mount.",
+	}, 5)
+	add_legend_encounter(Vector2i(4, 4), "pyrothrone", 24,
+		"Mirage becomes flesh. PYROTHRONE — a solar legend — crowns the oasis stone. The sand ignites!")
 
 	# DESERT GYM — seals the eastern pass to the Verdant Jungle.
 	add_interact(Vector2i(21, 10), { "type": "sign", "text": "SCORCH TRIAL - Ranger Sol blocks the jungle pass. Earn his Sigil to cross!" })
@@ -78,6 +94,11 @@ func _build_map() -> void:
 func _place_pickups() -> void:
 	add_pickup(Vector2i(4, 20), "heart_salve", 2)
 	add_pickup(Vector2i(20, 4), "echo_capsule", 3)
+	add_pickup(Vector2i(8, 14), "ultra_capsule", 1)
+	add_pickup(Vector2i(19, 18), "super_salve", 2)
+	add_pickup(Vector2i(3, 4), "max_salve", 1)
+	add_pickup(Vector2i(16, 18), "great_capsule", 2)
+	add_pickup(Vector2i(8, 4), "super_salve", 1)
 
 
 func _brush_patch(x0: int, y0: int, x1: int, y1: int) -> void:

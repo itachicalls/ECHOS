@@ -299,8 +299,11 @@ func place_house(origin: Vector2i) -> void:
 			block(cell)
 
 
-func add_warp(cell: Vector2i, target_map: String, target_cell: Vector2i, facing: String = "down") -> void:
-	warps[cell] = { "map": target_map, "cell": target_cell, "facing": facing }
+func add_warp(cell: Vector2i, target_map: String, target_cell: Vector2i, facing: String = "down", require_any: Array = [], blocked_text: String = "") -> void:
+	warps[cell] = {
+		"map": target_map, "cell": target_cell, "facing": facing,
+		"require_any": require_any, "blocked_text": blocked_text,
+	}
 
 
 func add_interact(cell: Vector2i, data: Dictionary) -> void:
@@ -574,12 +577,23 @@ func _release_cutscene() -> void:
 func on_player_step(cell: Vector2i) -> void:
 	if _transitioning:
 		return
+	_tick_repel()
 	if pickups.has(cell):
 		_collect_pickup(cell)
 	if hazards.has(cell):
 		_apply_hazard(cell)
 	if warps.has(cell):
 		var w: Dictionary = warps[cell]
+		var req: Array = w.get("require_any", [])
+		if req.size() > 0:
+			var open := false
+			for f in req:
+				if bool(GameState.flags.get(String(f), false)):
+					open = true
+					break
+			if not open:
+				EventBus.dialogue_requested.emit([String(w.get("blocked_text", "The path is sealed..."))])
+				return
 		_transitioning = true
 		_busy = true
 		if player and player.has_method("set_input_locked"):
@@ -593,6 +607,18 @@ func on_player_step(cell: Vector2i) -> void:
 	if is_grass(cell):
 		_roll_encounter()
 	_on_map_step(cell)
+
+
+func _tick_repel() -> void:
+	var left := int(GameState.flags.get("repel_steps", 0))
+	if left <= 0:
+		return
+	left -= 1
+	if left <= 0:
+		GameState.flags.erase("repel_steps")
+		EventBus.toast.emit("The Repel Charm's effect faded.")
+	else:
+		GameState.flags["repel_steps"] = left
 
 
 func _on_map_step(_cell: Vector2i) -> void:
@@ -634,11 +660,101 @@ func _handle_interact(data: Dictionary) -> void:
 		"greeter":
 			var gid := String(data.get("greeter", {}).get("id", ""))
 			await _on_greeter_interact(data.get("greeter", {}), _npc_gift_pos(gid))
+		"quest":
+			_on_quest_interact(data)
+		"shop":
+			_on_shop_interact(data)
+		"gated_warp":
+			_on_gated_warp(data)
+
+
+func _on_quest_interact(data: Dictionary) -> void:
+	var qid := String(data.get("quest_id", ""))
+	var q: Dictionary = QuestService.get_quest(qid)
+	if q.is_empty():
+		EventBus.dialogue_requested.emit(["..."])
+		return
+	if QuestService.is_complete(qid):
+		EventBus.dialogue_requested.emit(q.get("done_lines", ["Thanks again, keeper."]))
+		return
+	var req := String(q.get("require_flag", ""))
+	if req != "" and not bool(GameState.flags.get(req, false)):
+		EventBus.dialogue_requested.emit(q.get("incomplete_lines", q.get("lines", ["Not yet..."])))
+		return
+	if not QuestService.can_complete(qid):
+		EventBus.dialogue_requested.emit(q.get("incomplete_lines", ["Keep at it, keeper."]))
+		return
+	EventBus.dialogue_closed.connect(func() -> void:
+		if QuestService.complete(qid):
+			var reward: Dictionary = q.get("reward", {})
+			if reward.size() > 0 and player:
+				await _play_item_receive(reward, player.position + Vector2(-10, -12))
+			var parts: PackedStringArray = PackedStringArray()
+			for k in reward.keys():
+				parts.append("%d %s" % [int(reward[k]), ItemCatalog.display_name(String(k))])
+			if parts.size() > 0:
+				EventBus.toast.emit("Received: " + ", ".join(parts))
+	, CONNECT_ONE_SHOT)
+	EventBus.dialogue_requested.emit(q.get("lines", ["Thank you!"]))
+
+
+func _on_shop_interact(data: Dictionary) -> void:
+	var shop_id := String(data.get("shop_id", "shop"))
+	var flag := "shop_%s_bought" % shop_id
+	if bool(GameState.flags.get(flag, false)):
+		EventBus.dialogue_requested.emit(data.get("sold_out", ["Sold out for now — come back after your next adventure."]))
+		return
+	var cost := int(data.get("cost", 5))
+	var give: Dictionary = data.get("give", {})
+	var lines: Array = data.get("lines", [
+		"Welcome! Trade %d Echo Capsules for a bundle." % cost,
+		"Sound fair?"
+	]).duplicate()
+	EventBus.dialogue_closed.connect(func() -> void:
+		if not ItemCatalog.consume_item("echo_capsule", cost):
+			EventBus.toast.emit("Need %d Echo Capsules." % cost)
+			return
+		for k in give.keys():
+			ItemCatalog.add_item(String(k), int(give[k]))
+		GameState.flags[flag] = true
+		if player and give.size() > 0:
+			await _play_item_receive(give, player.position + Vector2(-10, -12))
+		var parts: PackedStringArray = PackedStringArray()
+		for k in give.keys():
+			parts.append("%d %s" % [int(give[k]), ItemCatalog.display_name(String(k))])
+		EventBus.toast.emit("Bought: " + ", ".join(parts))
+		SaveService.save_game()
+	, CONNECT_ONE_SHOT)
+	EventBus.dialogue_requested.emit(lines)
+
+
+func _on_gated_warp(data: Dictionary) -> void:
+	var flags: Array = data.get("require_any", [])
+	var open := false
+	for f in flags:
+		if bool(GameState.flags.get(String(f), false)):
+			open = true
+			break
+	if not open:
+		EventBus.dialogue_requested.emit([String(data.get("blocked_text", "The path is sealed..."))])
+		return
+	var map_id := String(data.get("map", ""))
+	var cell: Variant = data.get("cell", Vector2i(0, 0))
+	var facing := String(data.get("facing", "down"))
+	_transitioning = true
+	_busy = true
+	if player and player.has_method("set_input_locked"):
+		player.set_input_locked(true)
+	SceneRouter.go_to_map(
+		map_id,
+		Vector2i(cell.x, cell.y) if cell is Vector2i else Vector2i(int(cell.get("x", 0)), int(cell.get("y", 0))),
+		facing
+	)
 
 
 func _on_legend_interact(data: Dictionary) -> void:
 	var did := String(data.get("id", ""))
-	if bool(GameState.caught.get(did, false)):
+	if bool(GameState.caught.get(did, false)) or (did == "primordius" and bool(GameState.flags.get("story_complete", false))):
 		EventBus.dialogue_requested.emit(["The resonance here has fallen silent."])
 		return
 	if GameState.living_party().is_empty():
@@ -646,7 +762,10 @@ func _on_legend_interact(data: Dictionary) -> void:
 		return
 	var lvl := int(data.get("level", 45))
 	EventBus.dialogue_closed.connect(func() -> void:
-		SceneRouter.start_wild_battle(did, lvl)
+		if did == "primordius":
+			SceneRouter.start_finale_battle(did, lvl)
+		else:
+			SceneRouter.start_wild_battle(did, lvl)
 	, CONNECT_ONE_SHOT)
 	EventBus.dialogue_requested.emit([String(data.get("text", "A legendary presence stirs!"))])
 
@@ -950,6 +1069,8 @@ func _roll_encounter() -> void:
 	if _busy or _encounter_data.is_empty():
 		return
 	if GameState.living_party().is_empty():
+		return
+	if int(GameState.flags.get("repel_steps", 0)) > 0:
 		return
 	if randf() > float(_encounter_data.get("chance_per_step", 0.12)):
 		return

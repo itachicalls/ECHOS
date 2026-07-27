@@ -89,6 +89,27 @@ func _build_map() -> void:
 	}, Tiles.TRAINER_PATHS[1], 2)
 	add_interact(Vector2i(8, 21), { "type": "sign", "text": "WARNING: Trainers ahead battle on sight. Step lightly, or step up!" })
 
+	add_trainer(Vector2i(4, 8), "right", {
+		"id": "r1_brook", "name": "Hiker Brook", "look": 2,
+		"party": [{ "id": "aquari", "level": 5 }, { "id": "pebblit", "level": 6 }],
+		"reward": 2,
+		"intro": ["Trail's steep — and so is my training!", "Battle!"],
+		"win_line": "You climb faster than I do.",
+	}, 4)
+	add_trainer(Vector2i(16, 16), "left", {
+		"id": "r1_piper", "name": "Birdwatcher Piper", "look": 6,
+		"party": [{ "id": "zephyr", "level": 6 }, { "id": "boltmoth", "level": 7 }],
+		"reward": 2,
+		"intro": ["Shh — oh, too late. You spotted me!", "Air Harmons, go!"],
+		"win_line": "Noted. Your team's flight pattern is sharp.",
+	}, 4)
+	add_npc(Vector2i(7, 4), "down", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_fern_friend",
+	}, Tiles.TRAINER_PATHS[9], 1)
+	add_npc(Vector2i(14, 20), "up", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_moss_catalog",
+	}, Tiles.TRAINER_PATHS[1], 1)
+
 	# one-way ledges: hop south to shortcut back down the route
 	add_ledge(Vector2i(13, 12))
 	add_ledge(Vector2i(14, 12))
@@ -98,6 +119,8 @@ func _build_map() -> void:
 func _place_pickups() -> void:
 	add_pickup(Vector2i(4, 5), "echo_capsule", 2)
 	add_pickup(Vector2i(16, 18), "heart_salve", 1)
+	add_pickup(Vector2i(3, 14), "great_capsule", 1)
+	add_pickup(Vector2i(17, 7), "repel_charm", 1)
 
 
 func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:

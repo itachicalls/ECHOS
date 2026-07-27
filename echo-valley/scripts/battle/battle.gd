@@ -124,10 +124,11 @@ func _begin_intro() -> void:
 func _build_ui() -> void:
 	var map_id := String(request.get("return_map", GameState.current_map))
 	var is_ranger := bool(request.get("gym", false)) or bool(request.get("ranger", false))
-	_is_boss = bool(request.get("gym", false))
+	var battle_kind := String(request.get("kind", "wild"))
+	_is_boss = bool(request.get("gym", false)) or battle_kind == "finale"
 	var backdrop := preload("res://scripts/battle/battle_backdrop.gd").new()
 	backdrop.z_index = -1
-	backdrop.configure(map_id, is_ranger, String(request.get("kind", "wild")), _is_boss)
+	backdrop.configure(map_id, is_ranger, battle_kind, _is_boss)
 	add_child(backdrop)
 
 	_stage = Control.new()
@@ -470,6 +471,20 @@ func _paint_terrain(base: Control, resonance: int, sz: Vector2) -> void:
 			mist.position = Vector2(2, sz.y * 0.4)
 			mist.size = Vector2(sz.x - 4, sz.y * 0.45)
 			base.add_child(mist)
+		EchoTypes.Resonance.ELECTRIC:
+			for i in 4:
+				var bolt := ColorRect.new()
+				bolt.color = Color("fff6c2", 0.55)
+				bolt.position = Vector2(10 + i * 18, sz.y * 0.26 + (i % 2) * 4)
+				bolt.size = Vector2(2, 8)
+				base.add_child(bolt)
+		EchoTypes.Resonance.PSYCHIC:
+			for i in 3:
+				var orb := ColorRect.new()
+				orb.color = Color("fff0ff", 0.28)
+				orb.position = Vector2(12 + i * 22, sz.y * 0.34)
+				orb.size = Vector2(6, 6)
+				base.add_child(orb)
 		_:
 			pass
 
@@ -644,6 +659,11 @@ func _intro() -> void:
 	elif kind == "fishing":
 		var foe := _active("enemy")
 		await _say("Splash! A wild %s took the bait!" % foe.name)
+	elif kind == "finale":
+		var foe := _active("enemy")
+		await _say("The Fracture itself takes form...")
+		await _say("%s awakens!" % foe.name)
+		_set_encounter_badge("new")
 	elif kind == "trainer" or kind == "versus":
 		if bool(request.get("gym", false)):
 			await _say("%s %s stands guard!\nA Resonance trial begins!" % [GameStrings.RANGER, String(request.get("trainer_name", "???"))])
@@ -987,11 +1007,27 @@ func _on_fight() -> void:
 func _on_bag() -> void:
 	msg.visible = false
 	var items: Array = []
-	var salves := int(GameState.inventory.get("heart_salve", 0))
-	items.append({ "text": "Salve x%d" % salves, "cb": _use_salve, "enabled": salves > 0 })
+	for h in ItemCatalog.heal_items_owned():
+		var hid := String(h.id)
+		items.append({
+			"text": "%s x%d" % [ItemCatalog.display_name(hid), int(h.count)],
+			"cb": _use_salve.bind(hid),
+			"enabled": true,
+		})
+	if items.is_empty():
+		items.append({ "text": "Salve x0", "cb": _use_salve.bind("heart_salve"), "enabled": false })
 	if can_catch:
-		var cap := int(GameState.inventory.get("echo_capsule", 0))
-		items.append({ "text": "Capsule x%d" % cap, "cb": _on_catch, "enabled": cap > 0 })
+		var caps: Array = ItemCatalog.capture_items_owned()
+		if caps.is_empty():
+			items.append({ "text": "Capsule x0", "cb": _on_catch.bind("echo_capsule"), "enabled": false })
+		else:
+			for c in caps:
+				var cid := String(c.id)
+				items.append({
+					"text": "%s x%d" % [ItemCatalog.display_name(cid), int(c.count)],
+					"cb": _on_catch.bind(cid),
+					"enabled": true,
+				})
 	var rev := int(GameState.inventory.get("revive_capsule", 0))
 	items.append({ "text": "Revive x%d" % rev, "cb": _use_revive, "enabled": rev > 0 })
 	_open_submenu(items, _open_main_menu)
@@ -1016,12 +1052,11 @@ func _use_revive() -> void:
 	await _enemy_only_turn()
 
 
-func _use_salve() -> void:
+func _use_salve(item_id: String = "heart_salve") -> void:
 	_clear_menu()
 	phase = Phase.RESOLVING
-	var salves := int(GameState.inventory.get("heart_salve", 0))
-	if salves <= 0:
-		await _say("You have no Heart Salves!")
+	if not ItemCatalog.is_heal_item(item_id) or int(GameState.inventory.get(item_id, 0)) <= 0:
+		await _say("You have no %s!" % ItemCatalog.display_name(item_id))
 		_open_main_menu()
 		return
 	var u := _active("player")
@@ -1029,11 +1064,12 @@ func _use_salve() -> void:
 		await _say("%s is already at full HP." % u.name)
 		_open_main_menu()
 		return
-	ItemCatalog.consume_item("heart_salve", 1)
-	var heal := int(round(float(u.max_hp) * 0.6))
+	ItemCatalog.consume_item(item_id, 1)
+	var pct := ItemCatalog.heal_pct(item_id)
+	var heal := int(round(float(u.max_hp) * pct))
 	u.current_hp = mini(int(u.max_hp), int(u.current_hp) + heal)
 	_tween_hp_bar(player_info, int(u.current_hp), int(u.max_hp))
-	await _say("You used a Heart Salve. %s recovered %d HP!" % [u.name, heal])
+	await _say("You used a %s. %s recovered %d HP!" % [ItemCatalog.display_name(item_id), u.name, heal])
 	await _enemy_only_turn()
 
 
@@ -1069,30 +1105,32 @@ func _on_run() -> void:
 	_resolve({ "type": EchoTypes.ActionType.FLEE })
 
 
-func _on_catch() -> void:
+func _on_catch(capsule_id: String = "echo_capsule") -> void:
 	if not can_catch:
 		return
 	_clear_menu()
 	phase = Phase.RESOLVING
-	var capsules := int(GameState.inventory.get("echo_capsule", 0))
-	if capsules <= 0:
-		await _say("You have no Echo Capsules left!")
+	if not ItemCatalog.is_capture_item(capsule_id) or int(GameState.inventory.get(capsule_id, 0)) <= 0:
+		await _say("You have no %s left!" % ItemCatalog.display_name(capsule_id))
 		_open_main_menu()
 		return
-	ItemCatalog.consume_item("echo_capsule", 1)
+	ItemCatalog.consume_item(capsule_id, 1)
 	var u := _active("enemy")
-	await _say("You toss an Echo Capsule!")
+	await _say("You toss a %s!" % ItemCatalog.display_name(capsule_id))
 	var def := EchoCatalog.get_echo(String(u.definition_id))
 	var ratio := 1.0 - float(u.current_hp) / maxf(1.0, float(u.max_hp))
-	var chance := clampf((def.catch_rate if def else 0.3) + ratio * 0.55 + 0.08, 0.05, 0.96)
+	var bonus := ItemCatalog.catch_bonus(capsule_id)
+	var chance := clampf((def.catch_rate if def else 0.3) + ratio * 0.55 + 0.08 + bonus, 0.05, 0.98)
 	var success := randf() < chance
 	var shakes := 3 if success else randi_range(1, 2)
-	await _play_catch_animation(success, shakes)
+	await _play_catch_animation(success, shakes, capsule_id)
 	if success:
 		var caught := EchoCatalog.create_instance(String(u.definition_id), int(u.level))
 		caught.current_hp = int(u.current_hp)
 		GameState.add_echo(caught)
 		await _say("Gotcha! %s joined your team!" % u.name)
+		if String(request.get("kind", "wild")) == "finale":
+			await _finale_flourish()
 		_end_battle("caught")
 	else:
 		await _say("Oh no! %s broke free!" % u.name)
@@ -1100,14 +1138,14 @@ func _on_catch() -> void:
 
 
 # ------------------------------------------------------------------ catch FX
-func _play_catch_animation(success: bool, shakes: int) -> void:
+func _play_catch_animation(success: bool, shakes: int, capsule_id: String = "echo_capsule") -> void:
 	const CAP := 22
 	var half := float(CAP) * 0.5
 	var enemy_center := _sprite_center(enemy_sprite)
 	var throw_from := _sprite_center(player_sprite) - Vector2(half, half)
 	var cap_pos := enemy_center - Vector2(half, half)
 
-	var capsule := ItemIcon.make("echo_capsule", CAP)
+	var capsule := ItemIcon.make(capsule_id, CAP)
 	capsule.pivot_offset = Vector2(half, half)
 	capsule.position = throw_from
 	capsule.z_index = 25
@@ -2325,7 +2363,27 @@ func _victory() -> void:
 			if next_i < (request.ambush_chain as Array).size():
 				await _say("Another faction member steps forward...")
 
+	if kind == "finale":
+		await _finale_flourish()
+
+	# Post-game legend story progress (KO counts even if not caught).
+	for eid in request.get("enemy_team_ids", []):
+		match String(eid):
+			"solarch":
+				GameState.flags["legend_solarch"] = true
+			"skysovereign":
+				GameState.flags["legend_skysovereign"] = true
+
 	_end_battle("win")
+
+
+func _finale_flourish() -> void:
+	menu_root.visible = false
+	await _flash(0.35)
+	await _say("PRIMORDIUS falls silent...")
+	await _flash(0.22)
+	await _say("The Fracture stills. The valley holds its breath.")
+	await _say("Your journey has reached its end — and its beginning.")
 
 
 func _defeat() -> void:

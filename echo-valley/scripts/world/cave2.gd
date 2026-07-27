@@ -56,8 +56,23 @@ func _build_map() -> void:
 
 	add_heal_station(Vector2i(16, 21), Vector2i(16, 20), "down")
 	add_interact(Vector2i(9, 20), { "type": "sign", "text": "THE DEEP THRONE. The Valley Champion tests all who reach the heart of the crag." })
-	add_pickup(Vector2i(3, 3), "echo_capsule", 2)
 
+	add_trainer(Vector2i(5, 14), "right", {
+		"id": "cave2_guard", "name": "Throne Guard Rex", "look": 3,
+		"party": [{ "id": "graniteor", "level": 30 }, { "id": "bouldrake", "level": 31 }, { "id": "monolith", "level": 32 }],
+		"reward": 8,
+		"intro": ["None approach Vael untested!", "Rock and resolve!"],
+		"win_line": "The throne hears your footsteps. Go.",
+	}, 4)
+	add_trainer(Vector2i(14, 14), "left", {
+		"id": "cave2_echo", "name": "Echo Knight Vale", "look": 6,
+		"party": [{ "id": "duskmaw", "level": 31 }, { "id": "wraithorn", "level": 32 }, { "id": "golemith", "level": 32 }],
+		"reward": 10,
+		"intro": ["Shadows keep the Deep Throne.", "Can you silence them?"],
+		"win_line": "...The Champion awaits.",
+	}, 5)
+	add_legend_encounter(Vector2i(14, 3), "terralossus", 38,
+		"The cavern shudders. TERRALOSSUS — mountain made will — rises from the throne-side stone!")
 	add_trainer(Vector2i(9, 4), "down", {
 		"id": "champion", "name": "Champion Vael", "look": 3,
 		"party": [
@@ -74,8 +89,16 @@ func _build_map() -> void:
 			"I am Vael, Champion of Echo Valley.",
 			"Show me the bond you forged on this journey!",
 		],
-		"win_line": "...Magnificent. Echo Valley has a new legend. The title is yours.",
+		"win_line": "...Magnificent. Echo Valley has a new legend. The title is yours. West of town, the Fracture coast now listens.",
 	})
+
+
+func _place_pickups() -> void:
+	add_pickup(Vector2i(3, 3), "echo_capsule", 2)
+	add_pickup(Vector2i(16, 11), "heart_salve", 3)
+	add_pickup(Vector2i(4, 20), "ultra_capsule", 2)
+	add_pickup(Vector2i(15, 18), "max_salve", 2)
+	add_pickup(Vector2i(6, 11), "great_capsule", 3)
 
 
 func _rock_row(x0: int, x1: int, y: int) -> void:

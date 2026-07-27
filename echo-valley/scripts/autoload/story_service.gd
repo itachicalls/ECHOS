@@ -24,8 +24,8 @@ func _load() -> void:
 
 func _stage_done(stage: Dictionary) -> bool:
 	var flag := String(stage.get("flag", ""))
-	if flag == "__complete__":
-		return false
+	if flag == "__complete__" or flag == "story_complete":
+		return bool(GameState.flags.get("story_complete", false))
 	return bool(GameState.flags.get(flag, false))
 
 

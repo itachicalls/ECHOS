@@ -76,11 +76,32 @@ func _build_map() -> void:
 		"intro": ["The reef taught me patience.", "Show me the bond you've built!"],
 		"win_line": "The current favors you. Well fought.",
 	}, 4)
+	add_trainer(Vector2i(5, 10), "down", {
+		"id": "beach_rio", "name": "Tide Scout Rio", "look": 14,
+		"party": [{ "id": "coraline", "level": 12 }, { "id": "pearlet", "level": 13 }, { "id": "puddlepaw", "level": 12 }],
+		"reward": 4,
+		"intro": ["Coast patrol! Capsules ready?", "Prove you belong on this shore!"],
+		"win_line": "Tide turns for you. Carry on.",
+	}, 5)
+	add_trainer(Vector2i(16, 17), "up", {
+		"id": "beach_luma", "name": "Shell Collector Luma", "look": 16,
+		"party": [{ "id": "kelplet", "level": 13 }, { "id": "frostdew", "level": 13 }],
+		"reward": 3,
+		"intro": ["Don't step on my shells — battle me instead!"],
+		"win_line": "Fine, fine. Take the path. Leave the shells.",
+	}, 4)
+	add_legend_encounter(Vector2i(4, 4), "leviathos", 22,
+		"The tide pool boils. LEVIATHOS rises — a sea-legend older than Saltwind. It regards you as prey... or peer!")
+	add_npc(Vector2i(12, 12), "left", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_shell_song",
+	}, Tiles.TRAINER_PATHS[19], 1)
 
 
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 13), "echo_capsule", 2)
 	add_pickup(Vector2i(15, 3), "heart_salve", 2)
+	add_pickup(Vector2i(7, 17), "great_capsule", 2)
+	add_pickup(Vector2i(17, 15), "super_salve", 1)
 
 
 func _scrub_patch(x0: int, y0: int, x1: int, y1: int) -> void:

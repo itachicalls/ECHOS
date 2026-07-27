@@ -51,6 +51,27 @@ func _build_map() -> void:
 		"intro": ["The thicket is my classroom.", "Class is in session!"],
 		"win_line": "You read the jungle well. Impressive.",
 	})
+	add_trainer(Vector2i(5, 5), "down", {
+		"id": "j1_leaf", "name": "Leafweaver Nia", "look": 1,
+		"party": [{ "id": "acornel", "level": 13 }, { "id": "sporeling", "level": 14 }],
+		"reward": 4,
+		"intro": ["Vines listen to those who listen back.", "Hear me!"],
+		"win_line": "The canopy approves.",
+	}, 4)
+	add_trainer(Vector2i(17, 16), "left", {
+		"id": "j1_moss", "name": "Moss Guide Tor", "look": 8,
+		"party": [{ "id": "fungit", "level": 14 }, { "id": "bloomhound", "level": 14 }, { "id": "plumeria", "level": 15 }],
+		"reward": 4,
+		"intro": ["Lost already? Good. Battle clears the mind.", "Go!"],
+		"win_line": "North grows denser. Stay sharp.",
+	}, 3)
+
+
+func _place_pickups() -> void:
+	add_pickup(Vector2i(16, 5), "echo_capsule", 2)
+	add_pickup(Vector2i(4, 16), "heart_salve", 2)
+	add_pickup(Vector2i(18, 18), "great_capsule", 2)
+	add_pickup(Vector2i(6, 4), "super_salve", 1)
 
 
 func _grass_patch(x0: int, y0: int, x1: int, y1: int) -> void:

@@ -67,6 +67,28 @@ func _build_map() -> void:
 		"intro": ["The dark whispers of a challenger...", "Prove your light is worth following!"],
 		"win_line": "Your flame burns bright. Go on, seeker.",
 	})
+	add_trainer(Vector2i(5, 14), "right", {
+		"id": "cave1_pick", "name": "Pickaxe Mina", "look": 9,
+		"party": [{ "id": "clayling", "level": 24 }, { "id": "quartzid", "level": 25 }],
+		"reward": 8,
+		"intro": ["Ore sings under pressure.", "So will you!"],
+		"win_line": "Rich vein of talent.",
+	}, 4)
+	add_trainer(Vector2i(12, 19), "up", {
+		"id": "cave1_echo", "name": "Echo Delver", "look": 5,
+		"party": [{ "id": "gravelisk", "level": 25 }, { "id": "geodon", "level": 26 }, { "id": "crystallit", "level": 26 }],
+		"reward": 9,
+		"intro": ["Every footfall returns as a challenge.", "Answer!",],
+		"win_line": "The deep throne awaits the bold.",
+	}, 3)
+
+
+func _place_pickups() -> void:
+	add_pickup(Vector2i(16, 4), "echo_capsule", 3)
+	add_pickup(Vector2i(4, 18), "heart_salve", 2)
+	add_pickup(Vector2i(17, 18), "great_capsule", 2)
+	add_pickup(Vector2i(6, 7), "super_salve", 1)
+	add_pickup(Vector2i(14, 14), "ultra_capsule", 1)
 
 
 func _rock_row(x0: int, x1: int, y: int) -> void:

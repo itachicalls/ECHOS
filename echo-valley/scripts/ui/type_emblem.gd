@@ -54,6 +54,12 @@ class Emblem extends Control:
 			EchoTypes.Resonance.SHADOW:
 				_crescent(c, s, ink)
 				_spark(c + Vector2(s * 0.18, -s * 0.16), s * 0.09, Color("fff3b0"))
+			EchoTypes.Resonance.ELECTRIC:
+				_bolt(c, s, ink)
+				_bolt(c + Vector2(s * 0.02, -s * 0.02), s * 0.55, Color("fff6c2"))
+			EchoTypes.Resonance.PSYCHIC:
+				_eye_orb(c, s, ink)
+				draw_circle(c, s * 0.1, Color("fff0ff"))
 			_:
 				draw_circle(c, s * 0.12, ink)
 
@@ -120,3 +126,21 @@ class Emblem extends Control:
 	func _spark(c: Vector2, s: float, col: Color) -> void:
 		draw_rect(Rect2(c.x, c.y - s, 1, s * 2), col)
 		draw_rect(Rect2(c.x - s, c.y, s * 2, 1), col)
+
+	func _bolt(c: Vector2, s: float, col: Color) -> void:
+		var pts := PackedVector2Array([
+			c + Vector2(-s * 0.08, -s * 0.48),
+			c + Vector2(s * 0.22, -s * 0.48),
+			c + Vector2(0.0, -s * 0.06),
+			c + Vector2(s * 0.28, -s * 0.06),
+			c + Vector2(-s * 0.18, s * 0.5),
+			c + Vector2(-s * 0.02, s * 0.02),
+			c + Vector2(-s * 0.28, s * 0.02),
+		])
+		draw_colored_polygon(pts, col)
+
+	func _eye_orb(c: Vector2, s: float, col: Color) -> void:
+		draw_circle(c, s * 0.34, col)
+		var iris := Color("9b4dff")
+		draw_circle(c, s * 0.2, iris)
+		draw_circle(c + Vector2(-s * 0.05, -s * 0.04), s * 0.06, Color(1, 1, 1, 0.85))

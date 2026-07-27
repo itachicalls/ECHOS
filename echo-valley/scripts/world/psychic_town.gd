@@ -64,9 +64,25 @@ func _build_map() -> void:
 	}, Tiles.TRAINER_PATHS[18], 2)
 	add_interact(Vector2i(9, 20), { "type": "sign", "text": "MIRAGE HOLLOW - where dreamers gather. North: the Dream Reach." })
 
+	add_npc(Vector2i(14, 12), "left", Color(1, 1, 1), {
+		"type": "shop",
+		"shop_id": "hollow_market",
+		"cost": 10,
+		"give": { "ultra_capsule": 3, "max_salve": 1, "super_salve": 2 },
+		"lines": [
+			"Dream-market. Ten capsules for deep-route supplies.",
+			"Ultras and a Max Salve — yes?",
+		],
+	}, Tiles.TRAINER_PATHS[12], 0)
+	add_npc(Vector2i(7, 14), "right", Color(1, 1, 1), {
+		"type": "quest", "quest_id": "q_dream_ledger",
+	}, Tiles.TRAINER_PATHS[18], 1)
+
 	for p in [Vector2i(6, 8), Vector2i(14, 15), Vector2i(5, 17)]:
 		set_ground(p, Tiles.FLOWERS)
 
 
 func _place_pickups() -> void:
 	add_pickup(Vector2i(13, 16), "heart_salve", 3)
+	add_pickup(Vector2i(3, 15), "great_capsule", 2)
+	add_pickup(Vector2i(15, 18), "repel_charm", 1)

@@ -19,10 +19,13 @@ const MAPS := {
 	"psychic_town": "res://scenes/world/psychic_town.tscn",
 	"psychic1": "res://scenes/world/psychic1.tscn",
 	"graveyard1": "res://scenes/world/graveyard1.tscn",
+	"ashpeak1": "res://scenes/world/ashpeak1.tscn",
+	"skyreach1": "res://scenes/world/skyreach1.tscn",
 }
 const TITLE := "res://scenes/boot/title.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
 const VERSUS_SETUP := "res://scenes/boot/versus_setup.tscn"
+const ENDING := "res://scenes/boot/ending.tscn"
 
 var _battle_request: Dictionary = {}
 var _return_map: String = "route1"
@@ -85,6 +88,26 @@ func start_wild_battle(def_id: String, level: int) -> void:
 		"enemy_first_seen": not was_seen,
 	}
 	_run_transition(_swap_scene.bind(BATTLE))
+
+
+func start_finale_battle(def_id: String, level: int) -> void:
+	_return_map = GameState.current_map
+	var enemy := EchoCatalog.create_instance(def_id, level)
+	var was_caught := bool(GameState.caught.get(def_id, false))
+	var was_seen := bool(GameState.seen.get(def_id, false))
+	GameState.mark_seen(def_id)
+	_battle_request = {
+		"kind": "finale", "enemies": [enemy], "return_map": _return_map,
+		"can_flee": false, "can_catch": true, "level": level,
+		"enemy_team_ids": [def_id],
+		"enemy_was_caught": was_caught,
+		"enemy_first_seen": not was_seen,
+	}
+	_run_transition(_swap_scene.bind(BATTLE))
+
+
+func go_to_ending() -> void:
+	_run_transition(_swap_scene.bind(ENDING))
 
 
 func start_fishing_battle(map_id: String) -> void:
@@ -236,6 +259,7 @@ func finish_battle(result: Dictionary) -> void:
 
 func _finish_battle_async(result: Dictionary) -> void:
 	var res := String(result.get("result", ""))
+	var kind := String(_battle_request.get("kind", ""))
 	if res == "win" and _battle_request.get("ambush_chain") is Array:
 		var chain: Array = _battle_request.ambush_chain
 		var next_i := int(_battle_request.get("ambush_index", 0)) + 1
@@ -244,9 +268,12 @@ func _finish_battle_async(result: Dictionary) -> void:
 			await _launch_ambush_at(chain, next_i, map_id)
 			return
 		GameState.flags[_ambush_complete_flag] = true
-	if GameState.play_mode == "versus" or String(_battle_request.get("kind", "")) == "versus":
+	if GameState.play_mode == "versus" or kind == "versus":
 		GameState.play_mode = "solo"
 		await _swap_scene(TITLE)
+		return
+	if kind == "finale" and (res == "win" or res == "caught"):
+		await _swap_scene(ENDING)
 		return
 	if res == "loss":
 		await _swap_scene(MAPS["town"])
