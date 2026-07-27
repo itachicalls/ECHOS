@@ -50,9 +50,9 @@ func _build_map() -> void:
 
 	# The sealed Primordial — finale encounter (catch or KO → ending).
 	if not bool(GameState.flags.get("story_complete", false)):
-	add_legend_encounter(Vector2i(9, 4), "primordius", 48,
+	add_legend_encounter(Vector2i(9, 4), "primordius", 55,
 		"The barrow-mound splits. From the deepest Fracture-scar rises PRIMORDIUS, the dream older than the Chorus. Reality shudders - it acknowledges you at last!")
-	add_legend_encounter(Vector2i(16, 8), "mortarch", 46,
+	add_legend_encounter(Vector2i(16, 8), "mortarch", 52,
 		"A tomb lid slides. MORTARCH, death's quiet marshal, lifts a lantern of bone-light toward you.")
 
 	add_interact(Vector2i(9, 21), { "type": "sign", "text": "THE HOLLOW BARROWS - here the Fracture bleeds still. Shadow-Harmons keep the dead company." })
@@ -60,28 +60,28 @@ func _build_map() -> void:
 
 	add_trainer(Vector2i(5, 12), "right", {
 		"id": "grave_mourn", "name": "Warden Mourn", "look": 13,
-		"party": [{ "id": "tombkin", "level": 38 }, { "id": "wispire", "level": 39 }],
+		"party": [{ "id": "tombkin", "level": 44 }, { "id": "wispire", "level": 45 }],
 		"reward": 6,
 		"intro": ["Few keepers walk out of the Barrows.", "Let the tombs judge your resolve!"],
 		"win_line": "The dead grant you passage. Impressive.",
 	})
 	add_trainer(Vector2i(13, 16), "left", {
 		"id": "grave_yew", "name": "Gravekeeper Yew", "look": 16,
-		"party": [{ "id": "boneling", "level": 39 }, { "id": "gravemoss", "level": 40 }, { "id": "candleflit", "level": 41 }],
+		"party": [{ "id": "boneling", "level": 45 }, { "id": "gravemoss", "level": 46 }, { "id": "candleflit", "level": 47 }],
 		"reward": 7,
 		"intro": ["I tend what the Fracture left behind.", "Prove you respect the resting - in battle!"],
 		"win_line": "Rest easy, they whisper. You've earned their peace.",
 	}, 5)
 	add_trainer(Vector2i(4, 7), "right", {
 		"id": "grave_ashes", "name": "Ash Cantor", "look": 9,
-		"party": [{ "id": "ghastling", "level": 40 }, { "id": "shroudmoth", "level": 41 }, { "id": "pyrewraith", "level": 42 }],
+		"party": [{ "id": "ghastling", "level": 46 }, { "id": "shroudmoth", "level": 47 }, { "id": "pyrewraith", "level": 48 }],
 		"reward": 7,
 		"intro": ["We sing for the Fracture-scarred.", "Join the hymn — or drown it!"],
 		"win_line": "Your voice is louder. Go.",
 	}, 4)
 	add_trainer(Vector2i(15, 20), "up", {
 		"id": "grave_veil", "name": "Veil Acolyte", "look": 18,
-		"party": [{ "id": "cryptid", "level": 41 }, { "id": "banshee", "level": 42 }],
+		"party": [{ "id": "cryptid", "level": 47 }, { "id": "banshee", "level": 48 }],
 		"reward": 7,
 		"intro": ["The Veil watches even here...", "Prove you deserve the Primordial!"],
 		"win_line": "...Perhaps you do.",
@@ -138,21 +138,21 @@ func _start_grave_ambush() -> void:
 	var chain := [
 		{
 			"id": "faction_veil_final", "name": "Veil Oracle", "look": 9,
-			"party": [{ "id": "cryptid", "level": 40 }, { "id": "shroudmoth", "level": 41 }, { "id": "banshee", "level": 42 }],
+			"party": [{ "id": "cryptid", "level": 46 }, { "id": "shroudmoth", "level": 47 }, { "id": "banshee", "level": 48 }],
 			"reward": 8,
 			"intro": ["The Veil has waited a long time for one like you.", "Wake the dream with us - or be swept aside!"],
 			"win_line": "Then perhaps the dream chose wrongly... or perfectly.",
 		},
 		{
 			"id": "faction_ranger_final", "name": "Ranger Marshal", "look": 12,
-			"party": [{ "id": "amperewolf", "level": 41 }, { "id": "mesmind", "level": 42 }, { "id": "reaperwing", "level": 43 }],
+			"party": [{ "id": "amperewolf", "level": 47 }, { "id": "mesmind", "level": 48 }, { "id": "reaperwing", "level": 49 }],
 			"reward": 8,
 			"intro": ["Every Ranger of the valley stands behind me.", "If you'd hold this power, you'll answer to all of us!"],
 			"win_line": "...The routes were right to fear you. And to hope in you.",
 		},
 		{
 			"id": "faction_archive_final", "name": "Archive Primarch", "look": 4,
-			"party": [{ "id": "sarcolord", "level": 43 }, { "id": "hypnaura", "level": 44 }, { "id": "grimsovereign", "level": 45 }],
+			"party": [{ "id": "sarcolord", "level": 49 }, { "id": "hypnaura", "level": 50 }, { "id": "grimsovereign", "level": 52 }],
 			"reward": 12,
 			"intro": ["The Archive has recorded every keeper who came before.", "None reached this tomb. Let us write your final chapter!"],
 			"win_line": "It is written, then. The Primordial is yours to face.",

@@ -104,6 +104,18 @@
       "objective": "Ascend Skyreach Spire and face SKYSOVEREIGN.",
       "hint": "North of Ashpeak Caldera. Pack Ultras — the summit is unforgiving.",
       "flag": "legend_skysovereign"
+    },
+    {
+      "id": "s15_frostvale", "title": "Frostvale Reach",
+      "objective": "Cross the frozen ridge beyond Skyreach and claim HALLOWRAITH.",
+      "hint": "North of Skyreach Spire. Ice, stone, and shadow keep the hollow saint.",
+      "flag": "legend_hallowraith"
+    },
+    {
+      "id": "s16_deeprift", "title": "The Deep Rift",
+      "objective": "Descend the Deep Rift and face FRACTURAEL at the altar.",
+      "hint": "North of Frostvale Reach. Bring your strongest mind and shadow-ready team.",
+      "flag": "legend_fracturael"
     }
   ]
 }

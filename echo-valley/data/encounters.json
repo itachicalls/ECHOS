@@ -91,6 +91,30 @@
         "weight": 3,
         "level_min": 5,
         "level_max": 7
+      },
+      {
+        "id": "chirplet",
+        "weight": 6,
+        "level_min": 4,
+        "level_max": 6
+      },
+      {
+        "id": "seedbit",
+        "weight": 5,
+        "level_min": 4,
+        "level_max": 6
+      },
+      {
+        "id": "bubkit",
+        "weight": 5,
+        "level_min": 4,
+        "level_max": 6
+      },
+      {
+        "id": "boltkit",
+        "weight": 4,
+        "level_min": 5,
+        "level_max": 7
       }
     ]
   },
@@ -186,6 +210,30 @@
         "weight": 3,
         "level_min": 10,
         "level_max": 12
+      },
+      {
+        "id": "scrapkit",
+        "weight": 6,
+        "level_min": 7,
+        "level_max": 10
+      },
+      {
+        "id": "pebbit",
+        "weight": 5,
+        "level_min": 8,
+        "level_max": 11
+      },
+      {
+        "id": "cindbit",
+        "weight": 5,
+        "level_min": 8,
+        "level_max": 11
+      },
+      {
+        "id": "psybit",
+        "weight": 4,
+        "level_min": 9,
+        "level_max": 11
       }
     ]
   },
@@ -489,6 +537,30 @@
         "weight": 1,
         "level_min": 18,
         "level_max": 20
+      },
+      {
+        "id": "ruffalo",
+        "weight": 7,
+        "level_min": 15,
+        "level_max": 18
+      },
+      {
+        "id": "fuzall",
+        "weight": 6,
+        "level_min": 15,
+        "level_max": 18
+      },
+      {
+        "id": "flarebit",
+        "weight": 5,
+        "level_min": 16,
+        "level_max": 19
+      },
+      {
+        "id": "junkjaw",
+        "weight": 5,
+        "level_min": 16,
+        "level_max": 19
       }
     ]
   },
@@ -682,6 +754,24 @@
       },
       {
         "id": "mycelith",
+        "weight": 3,
+        "level_min": 18,
+        "level_max": 21
+      },
+      {
+        "id": "burrlock",
+        "weight": 8,
+        "level_min": 15,
+        "level_max": 18
+      },
+      {
+        "id": "thorncap",
+        "weight": 6,
+        "level_min": 16,
+        "level_max": 19
+      },
+      {
+        "id": "briarthorn",
         "weight": 3,
         "level_min": 18,
         "level_max": 21
@@ -1101,6 +1191,30 @@
         "weight": 1,
         "level_min": 14,
         "level_max": 16
+      },
+      {
+        "id": "merin",
+        "weight": 8,
+        "level_min": 11,
+        "level_max": 14
+      },
+      {
+        "id": "scallapod",
+        "weight": 7,
+        "level_min": 11,
+        "level_max": 14
+      },
+      {
+        "id": "maluga",
+        "weight": 4,
+        "level_min": 13,
+        "level_max": 16
+      },
+      {
+        "id": "foamjaw",
+        "weight": 5,
+        "level_min": 12,
+        "level_max": 15
       }
     ]
   },
@@ -1213,6 +1327,30 @@
         "id": "tempestria",
         "weight": 1,
         "level_min": 21,
+        "level_max": 23
+      },
+      {
+        "id": "spaero",
+        "weight": 8,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "coilfox",
+        "weight": 6,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "kackaburr",
+        "weight": 6,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "voltforge",
+        "weight": 3,
+        "level_min": 20,
         "level_max": 23
       }
     ]
@@ -1327,6 +1465,30 @@
         "weight": 1,
         "level_min": 32,
         "level_max": 34
+      },
+      {
+        "id": "grimlit",
+        "weight": 7,
+        "level_min": 27,
+        "level_max": 31
+      },
+      {
+        "id": "howler",
+        "weight": 6,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "orbkit",
+        "weight": 5,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "mindforge",
+        "weight": 3,
+        "level_min": 30,
+        "level_max": 33
       }
     ]
   },
@@ -1336,109 +1498,133 @@
       {
         "id": "tombkin",
         "weight": 12,
-        "level_min": 38,
-        "level_max": 41
+        "level_min": 44,
+        "level_max": 47
       },
       {
         "id": "boneling",
         "weight": 10,
-        "level_min": 38,
-        "level_max": 41
+        "level_min": 44,
+        "level_max": 47
       },
       {
         "id": "wispire",
         "weight": 8,
-        "level_min": 39,
-        "level_max": 42
+        "level_min": 45,
+        "level_max": 48
       },
       {
         "id": "gravemoss",
         "weight": 8,
-        "level_min": 39,
-        "level_max": 42
+        "level_min": 45,
+        "level_max": 48
       },
       {
         "id": "candleflit",
         "weight": 6,
-        "level_min": 40,
-        "level_max": 43
+        "level_min": 46,
+        "level_max": 49
       },
       {
         "id": "ghastling",
         "weight": 5,
-        "level_min": 40,
-        "level_max": 43
+        "level_min": 46,
+        "level_max": 49
       },
       {
         "id": "hexling",
         "weight": 7,
-        "level_min": 38,
-        "level_max": 41
+        "level_min": 44,
+        "level_max": 47
       },
       {
         "id": "phantling",
         "weight": 6,
-        "level_min": 39,
-        "level_max": 42
+        "level_min": 45,
+        "level_max": 48
       },
       {
         "id": "gloomkin",
         "weight": 6,
-        "level_min": 39,
-        "level_max": 42
+        "level_min": 45,
+        "level_max": 48
       },
       {
         "id": "cryptid",
         "weight": 5,
-        "level_min": 40,
-        "level_max": 43
+        "level_min": 46,
+        "level_max": 49
       },
       {
         "id": "shroudmoth",
         "weight": 5,
-        "level_min": 40,
-        "level_max": 43
+        "level_min": 46,
+        "level_max": 49
       },
       {
         "id": "banshee",
         "weight": 4,
-        "level_min": 41,
-        "level_max": 44
+        "level_min": 47,
+        "level_max": 50
       },
       {
         "id": "poltergeist",
         "weight": 4,
-        "level_min": 41,
-        "level_max": 44
+        "level_min": 47,
+        "level_max": 50
       },
       {
         "id": "reaperwing",
         "weight": 3,
-        "level_min": 42,
-        "level_max": 45
+        "level_min": 48,
+        "level_max": 51
       },
       {
         "id": "sarcophage",
         "weight": 3,
-        "level_min": 42,
-        "level_max": 45
+        "level_min": 48,
+        "level_max": 51
       },
       {
         "id": "mortarch",
         "weight": 1,
-        "level_min": 44,
-        "level_max": 46
+        "level_min": 50,
+        "level_max": 54
       },
       {
         "id": "hallowraith",
         "weight": 1,
-        "level_min": 44,
-        "level_max": 46
+        "level_min": 50,
+        "level_max": 54
       },
       {
         "id": "grimsovereign",
         "weight": 1,
-        "level_min": 44,
+        "level_min": 50,
+        "level_max": 54
+      },
+      {
+        "id": "glimbit",
+        "weight": 6,
+        "level_min": 39,
+        "level_max": 43
+      },
+      {
+        "id": "shadecap",
+        "weight": 5,
+        "level_min": 40,
+        "level_max": 44
+      },
+      {
+        "id": "voidhelm",
+        "weight": 3,
+        "level_min": 42,
+        "level_max": 46
+      },
+      {
+        "id": "leechrex",
+        "weight": 3,
+        "level_min": 43,
         "level_max": 46
       }
     ]
@@ -1446,33 +1632,489 @@
   "ashpeak1": {
     "chance_per_step": 0.2,
     "encounters": [
-      { "id": "magmapup", "weight": 14, "level_min": 40, "level_max": 44 },
-      { "id": "volcanid", "weight": 12, "level_min": 41, "level_max": 45 },
-      { "id": "infernost", "weight": 10, "level_min": 42, "level_max": 46 },
-      { "id": "phoenixar", "weight": 8, "level_min": 43, "level_max": 47 },
-      { "id": "pyrelynx", "weight": 8, "level_min": 42, "level_max": 46 },
-      { "id": "hellhoof", "weight": 7, "level_min": 43, "level_max": 47 },
-      { "id": "embertoad", "weight": 7, "level_min": 41, "level_max": 45 },
-      { "id": "calderoad", "weight": 6, "level_min": 43, "level_max": 47 },
-      { "id": "ashwing", "weight": 6, "level_min": 40, "level_max": 44 },
-      { "id": "cinderavian", "weight": 5, "level_min": 42, "level_max": 46 },
-      { "id": "pyrothrone", "weight": 1, "level_min": 46, "level_max": 48 },
-      { "id": "solarch", "weight": 1, "level_min": 48, "level_max": 50 }
+      {
+        "id": "magmapup",
+        "weight": 14,
+        "level_min": 46,
+        "level_max": 50
+      },
+      {
+        "id": "volcanid",
+        "weight": 12,
+        "level_min": 47,
+        "level_max": 51
+      },
+      {
+        "id": "infernost",
+        "weight": 10,
+        "level_min": 48,
+        "level_max": 52
+      },
+      {
+        "id": "phoenixar",
+        "weight": 8,
+        "level_min": 49,
+        "level_max": 53
+      },
+      {
+        "id": "pyrelynx",
+        "weight": 8,
+        "level_min": 48,
+        "level_max": 52
+      },
+      {
+        "id": "hellhoof",
+        "weight": 7,
+        "level_min": 49,
+        "level_max": 53
+      },
+      {
+        "id": "embertoad",
+        "weight": 7,
+        "level_min": 47,
+        "level_max": 51
+      },
+      {
+        "id": "calderoad",
+        "weight": 6,
+        "level_min": 49,
+        "level_max": 53
+      },
+      {
+        "id": "ashwing",
+        "weight": 6,
+        "level_min": 46,
+        "level_max": 50
+      },
+      {
+        "id": "cinderavian",
+        "weight": 5,
+        "level_min": 48,
+        "level_max": 52
+      },
+      {
+        "id": "pyrothrone",
+        "weight": 1,
+        "level_min": 54,
+        "level_max": 58
+      },
+      {
+        "id": "solarch",
+        "weight": 1,
+        "level_min": 58,
+        "level_max": 62
+      },
+      {
+        "id": "ashcoloss",
+        "weight": 6,
+        "level_min": 42,
+        "level_max": 47
+      },
+      {
+        "id": "cindbit",
+        "weight": 5,
+        "level_min": 40,
+        "level_max": 44
+      },
+      {
+        "id": "flarebit",
+        "weight": 5,
+        "level_min": 41,
+        "level_max": 45
+      }
     ]
   },
   "skyreach1": {
     "chance_per_step": 0.2,
     "encounters": [
-      { "id": "breezik", "weight": 12, "level_min": 44, "level_max": 48 },
-      { "id": "squallow", "weight": 12, "level_min": 45, "level_max": 49 },
-      { "id": "cyclonimbus", "weight": 10, "level_min": 46, "level_max": 50 },
-      { "id": "tempestwing", "weight": 8, "level_min": 47, "level_max": 51 },
-      { "id": "galewhisk", "weight": 8, "level_min": 45, "level_max": 49 },
-      { "id": "skytalon", "weight": 7, "level_min": 46, "level_max": 50 },
-      { "id": "thunderoc", "weight": 6, "level_min": 47, "level_max": 51 },
-      { "id": "glidewatt", "weight": 6, "level_min": 45, "level_max": 49 },
-      { "id": "tempestria", "weight": 2, "level_min": 48, "level_max": 52 },
-      { "id": "skysovereign", "weight": 1, "level_min": 50, "level_max": 52 }
+      {
+        "id": "breezik",
+        "weight": 12,
+        "level_min": 50,
+        "level_max": 54
+      },
+      {
+        "id": "squallow",
+        "weight": 12,
+        "level_min": 51,
+        "level_max": 55
+      },
+      {
+        "id": "cyclonimbus",
+        "weight": 10,
+        "level_min": 52,
+        "level_max": 56
+      },
+      {
+        "id": "tempestwing",
+        "weight": 8,
+        "level_min": 53,
+        "level_max": 57
+      },
+      {
+        "id": "galewhisk",
+        "weight": 8,
+        "level_min": 51,
+        "level_max": 55
+      },
+      {
+        "id": "skytalon",
+        "weight": 7,
+        "level_min": 52,
+        "level_max": 56
+      },
+      {
+        "id": "thunderoc",
+        "weight": 6,
+        "level_min": 53,
+        "level_max": 57
+      },
+      {
+        "id": "glidewatt",
+        "weight": 6,
+        "level_min": 51,
+        "level_max": 55
+      },
+      {
+        "id": "tempestria",
+        "weight": 2,
+        "level_min": 58,
+        "level_max": 64
+      },
+      {
+        "id": "skysovereign",
+        "weight": 1,
+        "level_min": 60,
+        "level_max": 64
+      },
+      {
+        "id": "kackaburr",
+        "weight": 7,
+        "level_min": 45,
+        "level_max": 50
+      },
+      {
+        "id": "nimbrawl",
+        "weight": 6,
+        "level_min": 46,
+        "level_max": 51
+      },
+      {
+        "id": "chirplet",
+        "weight": 4,
+        "level_min": 44,
+        "level_max": 48
+      }
+    ]
+  },
+  "frostvale1": {
+    "chance_per_step": 0.2,
+    "encounters": [
+      {
+        "id": "frostfin",
+        "weight": 12,
+        "level_min": 52,
+        "level_max": 58
+      },
+      {
+        "id": "glacielle",
+        "weight": 10,
+        "level_min": 53,
+        "level_max": 59
+      },
+      {
+        "id": "frostdew",
+        "weight": 10,
+        "level_min": 52,
+        "level_max": 58
+      },
+      {
+        "id": "snowmelt",
+        "weight": 8,
+        "level_min": 53,
+        "level_max": 59
+      },
+      {
+        "id": "glacierra",
+        "weight": 8,
+        "level_min": 54,
+        "level_max": 60
+      },
+      {
+        "id": "shardling",
+        "weight": 8,
+        "level_min": 52,
+        "level_max": 58
+      },
+      {
+        "id": "graniteor",
+        "weight": 7,
+        "level_min": 54,
+        "level_max": 60
+      },
+      {
+        "id": "quartzid",
+        "weight": 6,
+        "level_min": 53,
+        "level_max": 59
+      },
+      {
+        "id": "obsidraith",
+        "weight": 6,
+        "level_min": 55,
+        "level_max": 61
+      },
+      {
+        "id": "shadelet",
+        "weight": 7,
+        "level_min": 52,
+        "level_max": 58
+      },
+      {
+        "id": "hexling",
+        "weight": 6,
+        "level_min": 53,
+        "level_max": 59
+      },
+      {
+        "id": "wraithorn",
+        "weight": 5,
+        "level_min": 55,
+        "level_max": 61
+      },
+      {
+        "id": "avalanther",
+        "weight": 4,
+        "level_min": 56,
+        "level_max": 62
+      },
+      {
+        "id": "golemith",
+        "weight": 4,
+        "level_min": 56,
+        "level_max": 62
+      },
+      {
+        "id": "hallowraith",
+        "weight": 1,
+        "level_min": 62,
+        "level_max": 68
+      },
+      {
+        "id": "grimsovereign",
+        "weight": 1,
+        "level_min": 62,
+        "level_max": 68
+      },
+      {
+        "id": "orogenus",
+        "weight": 1,
+        "level_min": 60,
+        "level_max": 66
+      },
+      {
+        "id": "tempestria",
+        "weight": 1,
+        "level_min": 60,
+        "level_max": 66
+      },
+      {
+        "id": "fuzall",
+        "weight": 6,
+        "level_min": 52,
+        "level_max": 58
+      },
+      {
+        "id": "ruffalo",
+        "weight": 5,
+        "level_min": 53,
+        "level_max": 59
+      },
+      {
+        "id": "voidhelm",
+        "weight": 4,
+        "level_min": 54,
+        "level_max": 60
+      },
+      {
+        "id": "bastionox",
+        "weight": 4,
+        "level_min": 55,
+        "level_max": 61
+      },
+      {
+        "id": "howler",
+        "weight": 5,
+        "level_min": 53,
+        "level_max": 59
+      }
+    ]
+  },
+  "deeprift1": {
+    "chance_per_step": 0.2,
+    "encounters": [
+      {
+        "id": "shadelet",
+        "weight": 12,
+        "level_min": 56,
+        "level_max": 62
+      },
+      {
+        "id": "hexling",
+        "weight": 10,
+        "level_min": 56,
+        "level_max": 62
+      },
+      {
+        "id": "phantling",
+        "weight": 9,
+        "level_min": 57,
+        "level_max": 63
+      },
+      {
+        "id": "gloomkin",
+        "weight": 8,
+        "level_min": 57,
+        "level_max": 63
+      },
+      {
+        "id": "cryptid",
+        "weight": 7,
+        "level_min": 58,
+        "level_max": 64
+      },
+      {
+        "id": "voidmonarch",
+        "weight": 6,
+        "level_min": 58,
+        "level_max": 64
+      },
+      {
+        "id": "mesmind",
+        "weight": 8,
+        "level_min": 56,
+        "level_max": 62
+      },
+      {
+        "id": "hypnaura",
+        "weight": 7,
+        "level_min": 57,
+        "level_max": 63
+      },
+      {
+        "id": "mindflare",
+        "weight": 6,
+        "level_min": 58,
+        "level_max": 64
+      },
+      {
+        "id": "sigilix",
+        "weight": 6,
+        "level_min": 57,
+        "level_max": 63
+      },
+      {
+        "id": "astralynx",
+        "weight": 5,
+        "level_min": 58,
+        "level_max": 64
+      },
+      {
+        "id": "reaperwing",
+        "weight": 5,
+        "level_min": 59,
+        "level_max": 65
+      },
+      {
+        "id": "warppaw",
+        "weight": 6,
+        "level_min": 56,
+        "level_max": 62
+      },
+      {
+        "id": "telephase",
+        "weight": 5,
+        "level_min": 58,
+        "level_max": 64
+      },
+      {
+        "id": "hallowraith",
+        "weight": 1,
+        "level_min": 64,
+        "level_max": 70
+      },
+      {
+        "id": "grimsovereign",
+        "weight": 1,
+        "level_min": 64,
+        "level_max": 70
+      },
+      {
+        "id": "chorusprime",
+        "weight": 1,
+        "level_min": 66,
+        "level_max": 70
+      },
+      {
+        "id": "fracturael",
+        "weight": 1,
+        "level_min": 66,
+        "level_max": 70
+      },
+      {
+        "id": "abyssareign",
+        "weight": 1,
+        "level_min": 64,
+        "level_max": 70
+      },
+      {
+        "id": "orogenus",
+        "weight": 1,
+        "level_min": 62,
+        "level_max": 68
+      },
+      {
+        "id": "tempestria",
+        "weight": 1,
+        "level_min": 62,
+        "level_max": 68
+      },
+      {
+        "id": "grimlit",
+        "weight": 6,
+        "level_min": 56,
+        "level_max": 62
+      },
+      {
+        "id": "leechrex",
+        "weight": 5,
+        "level_min": 58,
+        "level_max": 64
+      },
+      {
+        "id": "mindforge",
+        "weight": 5,
+        "level_min": 58,
+        "level_max": 64
+      },
+      {
+        "id": "voidhelm",
+        "weight": 4,
+        "level_min": 57,
+        "level_max": 63
+      },
+      {
+        "id": "ashcoloss",
+        "weight": 4,
+        "level_min": 56,
+        "level_max": 62
+      },
+      {
+        "id": "voltforge",
+        "weight": 4,
+        "level_min": 57,
+        "level_max": 63
+      }
     ]
   }
 }

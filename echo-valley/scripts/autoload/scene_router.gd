@@ -21,6 +21,8 @@ const MAPS := {
 	"graveyard1": "res://scenes/world/graveyard1.tscn",
 	"ashpeak1": "res://scenes/world/ashpeak1.tscn",
 	"skyreach1": "res://scenes/world/skyreach1.tscn",
+	"frostvale1": "res://scenes/world/frostvale1.tscn",
+	"deeprift1": "res://scenes/world/deeprift1.tscn",
 }
 const TITLE := "res://scenes/boot/title.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -139,7 +141,10 @@ func _fishing_level_for_map(map_id: String) -> int:
 		"beach1", "tide_town": return randi_range(9, 14)
 		"storm1": return randi_range(16, 22)
 		"psychic1", "psychic_town": return randi_range(26, 32)
-		"graveyard1": return randi_range(36, 44)
+		"graveyard1": return randi_range(42, 50)
+		"ashpeak1", "skyreach1": return randi_range(48, 56)
+		"frostvale1": return randi_range(52, 60)
+		"deeprift1": return randi_range(56, 64)
 		_: return randi_range(5, 12)
 
 

@@ -124,6 +124,8 @@ func mark_caught(id: String) -> void:
 	match id:
 		"solarch": flags["legend_solarch"] = true
 		"skysovereign": flags["legend_skysovereign"] = true
+		"hallowraith": flags["legend_hallowraith"] = true
+		"fracturael": flags["legend_fracturael"] = true
 		_:
 			pass
 

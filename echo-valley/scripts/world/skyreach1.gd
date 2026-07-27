@@ -26,6 +26,8 @@ func _build_map() -> void:
 
 	add_warp(Vector2i(9, 23), "ashpeak1", Vector2i(9, 1), "down")
 	add_warp(Vector2i(10, 23), "ashpeak1", Vector2i(10, 1), "down")
+	add_warp(Vector2i(9, 0), "frostvale1", Vector2i(9, 22), "up")
+	add_warp(Vector2i(10, 0), "frostvale1", Vector2i(10, 22), "up")
 
 	for p in [Vector2i(4, 5), Vector2i(15, 6), Vector2i(5, 18), Vector2i(14, 17)]:
 		add_ground_prop(Tiles.CRYSTAL, p, true)
@@ -35,30 +37,30 @@ func _build_map() -> void:
 	_grass_patch(3, 3, 8, 8)
 	_grass_patch(12, 3, 16, 8)
 
-	add_interact(Vector2i(9, 21), { "type": "sign", "text": "SKYREACH SPIRE - winds older than the Chorus. A sky-legend roosts at the summit." })
+	add_interact(Vector2i(9, 21), { "type": "sign", "text": "SKYREACH SPIRE - winds older than the Chorus. North descends into Frostvale Reach." })
 
 	add_trainer(Vector2i(5, 14), "right", {
 		"id": "sky_gale", "name": "Gale Rider", "look": 11,
-		"party": [{ "id": "squallow", "level": 46 }, { "id": "cyclonimbus", "level": 47 }, { "id": "tempestwing", "level": 48 }],
+		"party": [{ "id": "squallow", "level": 52 }, { "id": "cyclonimbus", "level": 53 }, { "id": "tempestwing", "level": 54 }],
 		"reward": 10,
 		"intro": ["Up here, only the bold stay grounded!", "Fly with me!"],
 		"win_line": "You own the air.",
 	}, 4)
 	add_trainer(Vector2i(14, 8), "left", {
 		"id": "sky_cloud", "name": "Cloud Archivist", "look": 4,
-		"party": [{ "id": "galewhisk", "level": 47 }, { "id": "skytalon", "level": 48 }, { "id": "thunderoc", "level": 48 }],
+		"party": [{ "id": "galewhisk", "level": 53 }, { "id": "skytalon", "level": 54 }, { "id": "thunderoc", "level": 55 }],
 		"reward": 10,
 		"intro": ["I record every storm-name.", "Add yours in battle!"],
 		"win_line": "Written. You are legend-adjacent.",
 	}, 5)
 	add_trainer(Vector2i(6, 6), "down", {
 		"id": "sky_zeph", "name": "Zephyr Monk", "look": 17,
-		"party": [{ "id": "breezik", "level": 46 }, { "id": "glidewatt", "level": 47 }],
+		"party": [{ "id": "breezik", "level": 52 }, { "id": "glidewatt", "level": 53 }],
 		"reward": 9,
 		"intro": ["Breathe. Battle. Become wind."],
 		"win_line": "Peace. The summit is yours.",
 	}, 4)
-	add_legend_encounter(Vector2i(9, 5), "skysovereign", 52,
+	add_legend_encounter(Vector2i(9, 5), "skysovereign", 62,
 		"Clouds crown a throne of gale. SKYSOVEREIGN opens its wings — the sky itself answers!")
 
 	add_heal_station(Vector2i(12, 20), Vector2i(12, 19), "down")

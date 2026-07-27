@@ -59,29 +59,29 @@ func _build_map() -> void:
 
 	add_trainer(Vector2i(5, 14), "right", {
 		"id": "cave2_guard", "name": "Throne Guard Rex", "look": 3,
-		"party": [{ "id": "graniteor", "level": 30 }, { "id": "bouldrake", "level": 31 }, { "id": "monolith", "level": 32 }],
+		"party": [{ "id": "graniteor", "level": 32 }, { "id": "bouldrake", "level": 33 }, { "id": "monolith", "level": 34 }],
 		"reward": 8,
 		"intro": ["None approach Vael untested!", "Rock and resolve!"],
 		"win_line": "The throne hears your footsteps. Go.",
 	}, 4)
 	add_trainer(Vector2i(14, 14), "left", {
 		"id": "cave2_echo", "name": "Echo Knight Vale", "look": 6,
-		"party": [{ "id": "duskmaw", "level": 31 }, { "id": "wraithorn", "level": 32 }, { "id": "golemith", "level": 32 }],
+		"party": [{ "id": "duskmaw", "level": 33 }, { "id": "wraithorn", "level": 34 }, { "id": "golemith", "level": 34 }],
 		"reward": 10,
 		"intro": ["Shadows keep the Deep Throne.", "Can you silence them?"],
 		"win_line": "...The Champion awaits.",
 	}, 5)
-	add_legend_encounter(Vector2i(14, 3), "terralossus", 38,
+	add_legend_encounter(Vector2i(14, 3), "terralossus", 40,
 		"The cavern shudders. TERRALOSSUS — mountain made will — rises from the throne-side stone!")
 	add_trainer(Vector2i(9, 4), "down", {
 		"id": "champion", "name": "Champion Vael", "look": 3,
 		"party": [
-			{ "id": "titanag", "level": 34 },
-			{ "id": "naiaqua", "level": 34 },
-			{ "id": "cyclora", "level": 35 },
-			{ "id": "flintaur", "level": 35 },
-			{ "id": "obsidraith", "level": 36 },
-			{ "id": "avalanther", "level": 37 },
+			{ "id": "titanag", "level": 36 },
+			{ "id": "naiaqua", "level": 36 },
+			{ "id": "cyclora", "level": 37 },
+			{ "id": "flintaur", "level": 37 },
+			{ "id": "obsidraith", "level": 38 },
+			{ "id": "avalanther", "level": 39 },
 		],
 		"reward": 20, "gym": true,
 		"intro": [

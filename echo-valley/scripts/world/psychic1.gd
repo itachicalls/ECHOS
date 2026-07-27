@@ -46,7 +46,7 @@ func _build_map() -> void:
 	_grass_patch(12, 3, 16, 7)
 
 	# the meditating legend — a static, catchable encounter until claimed
-	add_legend_encounter(Vector2i(9, 12), "aeonmind", 34,
+	add_legend_encounter(Vector2i(9, 12), "aeonmind", 38,
 		"At the causeway's heart, Aeonmind hovers in silent meditation. Its gaze snaps open - the air folds. It tests your resolve!")
 
 	add_interact(Vector2i(9, 21), { "type": "sign", "text": "THE DREAM REACH - thought bends here. Mind-Harmons drift through the mist." })
@@ -54,40 +54,40 @@ func _build_map() -> void:
 
 	add_trainer(Vector2i(6, 11), "right", {
 		"id": "psy_esra", "name": "Dreamer Esra", "look": 12,
-		"party": [{ "id": "psybud", "level": 27 }, { "id": "dreamlet", "level": 28 }],
+		"party": [{ "id": "psybud", "level": 30 }, { "id": "dreamlet", "level": 31 }],
 		"reward": 5,
 		"intro": ["I walk the space between waking and sleep.", "Let us see which of us is the dream!"],
 		"win_line": "You are more real than I. Well dreamt.",
 	})
 	add_trainer(Vector2i(14, 14), "left", {
 		"id": "psy_orin", "name": "Seer Orin", "look": 18,
-		"party": [{ "id": "runelet", "level": 28 }, { "id": "orbitot", "level": 29 }],
+		"party": [{ "id": "runelet", "level": 31 }, { "id": "orbitot", "level": 32 }],
 		"reward": 5,
 		"intro": ["The stones foretold your coming, keeper.", "But prophecy means nothing without proof!"],
 		"win_line": "The vision was true. You burn bright.",
 	}, 5)
 	add_trainer(Vector2i(4, 18), "right", {
 		"id": "psy_mira", "name": "Lucid Mira", "look": 15,
-		"party": [{ "id": "blinkit", "level": 29 }, { "id": "willowick", "level": 30 }, { "id": "lullabye", "level": 30 }],
+		"party": [{ "id": "blinkit", "level": 32 }, { "id": "willowick", "level": 33 }, { "id": "lullabye", "level": 33 }],
 		"reward": 5,
 		"intro": ["Wake or dream — either way, we battle."],
 		"win_line": "You are lucid. Pass.",
 	}, 4)
 	add_trainer(Vector2i(16, 5), "down", {
 		"id": "psy_thane", "name": "Rune Thane", "look": 12,
-		"party": [{ "id": "sigilix", "level": 31 }, { "id": "astralynx", "level": 31 }],
+		"party": [{ "id": "sigilix", "level": 34 }, { "id": "astralynx", "level": 34 }],
 		"reward": 6,
 		"intro": ["The glyphs rearrange around you...", "Show me order in chaos!"],
 		"win_line": "The runes settle. You may proceed.",
 	}, 5)
-	add_legend_encounter(Vector2i(15, 16), "nyxarch", 36,
+	add_legend_encounter(Vector2i(15, 16), "nyxarch", 40,
 		"Night folds inward. NYXARCH — dream-tyrant of the Reach — opens a single violet eye.")
 
 	# DREAM GYM — seals the way to the Hollow Barrows.
 	add_interact(Vector2i(11, 1), { "type": "sign", "text": "DREAM TRIAL - Ranger Sable guards the Hollow Barrows. Earn the Mind Sigil to pass." })
 	add_gym_gate({
 		"id": "gym_psychic", "name": "Ranger Sable", "look": 18,
-		"party": [{ "id": "mesmind", "level": 30 }, { "id": "sigilix", "level": 31 }, { "id": "hypnaura", "level": 33 }],
+		"party": [{ "id": "mesmind", "level": 33 }, { "id": "sigilix", "level": 34 }, { "id": "hypnaura", "level": 36 }],
 		"reward": 6,
 		"reward_items": { "heart_salve": 4, "mind_sigil": 1, "ultra_capsule": 2 },
 		"gym": true, "ranger": true,

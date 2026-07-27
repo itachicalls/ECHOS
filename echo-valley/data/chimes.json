@@ -1850,5 +1850,613 @@
     "stat": "power",
     "stages": 1,
     "description": "Centers the mind to raise Power."
+  },
+  {
+    "id": "wildfire_nova",
+    "name": "Wildfire Nova",
+    "resonance": "fire",
+    "category": "attack",
+    "power": 88,
+    "accuracy": 0.9,
+    "description": "A blooming nova of wildfire."
+  },
+  {
+    "id": "solar_cataclysm",
+    "name": "Solar Cataclysm",
+    "resonance": "fire",
+    "category": "attack",
+    "power": 110,
+    "accuracy": 0.82,
+    "description": "A sun-crushing finale."
+  },
+  {
+    "id": "magma_mortar",
+    "name": "Magma Mortar",
+    "resonance": "fire",
+    "category": "attack",
+    "power": 78,
+    "accuracy": 0.92,
+    "description": "Lob molten shells."
+  },
+  {
+    "id": "cinder_barrage",
+    "name": "Cinder Barrage",
+    "resonance": "fire",
+    "category": "attack",
+    "power": 70,
+    "accuracy": 0.95,
+    "description": "A storm of cinders."
+  },
+  {
+    "id": "heat_mirage",
+    "name": "Heat Mirage",
+    "resonance": "fire",
+    "category": "buff",
+    "power": 0,
+    "accuracy": 1.0,
+    "description": "Raise Swift in shimmering heat.",
+    "stat": "swift",
+    "stages": 1
+  },
+  {
+    "id": "maelstrom_spin",
+    "name": "Maelstrom Spin",
+    "resonance": "water",
+    "category": "attack",
+    "power": 86,
+    "accuracy": 0.9,
+    "description": "Spin into a crushing whirl."
+  },
+  {
+    "id": "abyss_pressure",
+    "name": "Abyss Pressure",
+    "resonance": "water",
+    "category": "attack",
+    "power": 94,
+    "accuracy": 0.88,
+    "description": "Crush with trench pressure."
+  },
+  {
+    "id": "ocean_collapse",
+    "name": "Ocean Collapse",
+    "resonance": "water",
+    "category": "attack",
+    "power": 112,
+    "accuracy": 0.8,
+    "description": "The sea itself falls."
+  },
+  {
+    "id": "foam_lance",
+    "name": "Foam Lance",
+    "resonance": "water",
+    "category": "attack",
+    "power": 72,
+    "accuracy": 0.95,
+    "description": "A spear of hardened foam."
+  },
+  {
+    "id": "riptide_rush",
+    "name": "Riptide Rush",
+    "resonance": "water",
+    "category": "attack",
+    "power": 68,
+    "accuracy": 0.97,
+    "description": "A rushing undertow strike."
+  },
+  {
+    "id": "tide_ward",
+    "name": "Tide Ward",
+    "resonance": "water",
+    "category": "buff",
+    "power": 0,
+    "accuracy": 1.0,
+    "description": "Raise Guard with the tide.",
+    "stat": "guard",
+    "stages": 1
+  },
+  {
+    "id": "bloom_barrage",
+    "name": "Bloom Barrage",
+    "resonance": "grass",
+    "category": "attack",
+    "power": 84,
+    "accuracy": 0.92,
+    "description": "Petals become blades."
+  },
+  {
+    "id": "verdant_judgment",
+    "name": "Verdant Judgment",
+    "resonance": "grass",
+    "category": "attack",
+    "power": 96,
+    "accuracy": 0.88,
+    "description": "Nature's verdict."
+  },
+  {
+    "id": "gaia_rupture",
+    "name": "Gaia Rupture",
+    "resonance": "grass",
+    "category": "attack",
+    "power": 110,
+    "accuracy": 0.82,
+    "description": "The land ruptures green."
+  },
+  {
+    "id": "thorn_orbit",
+    "name": "Thorn Orbit",
+    "resonance": "grass",
+    "category": "attack",
+    "power": 74,
+    "accuracy": 0.95,
+    "description": "Thorns orbit then strike."
+  },
+  {
+    "id": "pollen_bomb",
+    "name": "Pollen Bomb",
+    "resonance": "grass",
+    "category": "attack",
+    "power": 66,
+    "accuracy": 0.95,
+    "description": "Explosive pollen burst."
+  },
+  {
+    "id": "photosurge",
+    "name": "Photosurge",
+    "resonance": "grass",
+    "category": "heal",
+    "power": 0,
+    "accuracy": 1.0,
+    "description": "Heal in a surge of light.",
+    "heal_pct": 0.45
+  },
+  {
+    "id": "tectonic_slam",
+    "name": "Tectonic Slam",
+    "resonance": "rock",
+    "category": "attack",
+    "power": 90,
+    "accuracy": 0.88,
+    "description": "A plate-shifting slam."
+  },
+  {
+    "id": "mountain_fall",
+    "name": "Mountain Fall",
+    "resonance": "rock",
+    "category": "attack",
+    "power": 98,
+    "accuracy": 0.85,
+    "description": "Drop a mountain."
+  },
+  {
+    "id": "world_fracture",
+    "name": "World Fracture",
+    "resonance": "rock",
+    "category": "attack",
+    "power": 115,
+    "accuracy": 0.78,
+    "description": "Crack the world open."
+  },
+  {
+    "id": "crystal_barrage",
+    "name": "Crystal Barrage",
+    "resonance": "rock",
+    "category": "attack",
+    "power": 76,
+    "accuracy": 0.93,
+    "description": "Shards rain down."
+  },
+  {
+    "id": "fault_line",
+    "name": "Fault Line",
+    "resonance": "rock",
+    "category": "attack",
+    "power": 80,
+    "accuracy": 0.9,
+    "description": "Split the ground."
+  },
+  {
+    "id": "iron_bulwark",
+    "name": "Iron Bulwark",
+    "resonance": "rock",
+    "category": "buff",
+    "power": 0,
+    "accuracy": 1.0,
+    "description": "Raise Guard sharply.",
+    "stat": "guard",
+    "stages": 1
+  },
+  {
+    "id": "tempest_crown",
+    "name": "Tempest Crown",
+    "resonance": "air",
+    "category": "attack",
+    "power": 97,
+    "accuracy": 0.88,
+    "description": "Crown the foe in storm."
+  },
+  {
+    "id": "sky_sovereign_blow",
+    "name": "Sky Sovereign Blow",
+    "resonance": "air",
+    "category": "attack",
+    "power": 112,
+    "accuracy": 0.8,
+    "description": "The sky's final decree."
+  },
+  {
+    "id": "wind_shear",
+    "name": "Wind Shear",
+    "resonance": "air",
+    "category": "attack",
+    "power": 70,
+    "accuracy": 0.97,
+    "description": "A shearing blade of wind."
+  },
+  {
+    "id": "jet_stream",
+    "name": "Jet Stream",
+    "resonance": "air",
+    "category": "attack",
+    "power": 64,
+    "accuracy": 1.0,
+    "description": "Ride the jet stream in."
+  },
+  {
+    "id": "tailwind",
+    "name": "Tailwind",
+    "resonance": "air",
+    "category": "buff",
+    "power": 0,
+    "accuracy": 1.0,
+    "description": "Raise Swift for the team.",
+    "stat": "swift",
+    "stages": 1
+  },
+  {
+    "id": "void_rift",
+    "name": "Void Rift",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 88,
+    "accuracy": 0.9,
+    "description": "Tear a rift of void."
+  },
+  {
+    "id": "reaper_scythe",
+    "name": "Reaper Scythe",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 98,
+    "accuracy": 0.86,
+    "description": "A scythe of night."
+  },
+  {
+    "id": "eclipse_finale",
+    "name": "Eclipse Finale",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 114,
+    "accuracy": 0.8,
+    "description": "Black out the sun."
+  },
+  {
+    "id": "nightmare_coil",
+    "name": "Nightmare Coil",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 76,
+    "accuracy": 0.92,
+    "description": "Coil of living nightmare."
+  },
+  {
+    "id": "soul_siphon",
+    "name": "Soul Siphon",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 70,
+    "accuracy": 0.95,
+    "description": "Drain the foe's soul.",
+    "lifesteal": 0.45
+  },
+  {
+    "id": "shade_cloak",
+    "name": "Shade Cloak",
+    "resonance": "shadow",
+    "category": "buff",
+    "power": 0,
+    "accuracy": 1.0,
+    "description": "Raise Guard in shadow.",
+    "stat": "guard",
+    "stages": 1
+  },
+  {
+    "id": "plasma_lance",
+    "name": "Plasma Lance",
+    "resonance": "electric",
+    "category": "attack",
+    "power": 90,
+    "accuracy": 0.9,
+    "description": "A lance of plasma."
+  },
+  {
+    "id": "storm_monarch",
+    "name": "Storm Monarch",
+    "resonance": "electric",
+    "category": "attack",
+    "power": 100,
+    "accuracy": 0.86,
+    "description": "Claim the storm's throne."
+  },
+  {
+    "id": "zero_point_arc",
+    "name": "Zero-Point Arc",
+    "resonance": "electric",
+    "category": "attack",
+    "power": 116,
+    "accuracy": 0.78,
+    "description": "An arc that unmakes."
+  },
+  {
+    "id": "ion_barrage",
+    "name": "Ion Barrage",
+    "resonance": "electric",
+    "category": "attack",
+    "power": 74,
+    "accuracy": 0.95,
+    "description": "A rain of ions."
+  },
+  {
+    "id": "static_nova",
+    "name": "Static Nova",
+    "resonance": "electric",
+    "category": "attack",
+    "power": 82,
+    "accuracy": 0.92,
+    "description": "A nova of static."
+  },
+  {
+    "id": "dream_collapse",
+    "name": "Dream Collapse",
+    "resonance": "psychic",
+    "category": "attack",
+    "power": 96,
+    "accuracy": 0.88,
+    "description": "Collapse the dreamspace."
+  },
+  {
+    "id": "chorus_singularity",
+    "name": "Chorus Singularity",
+    "resonance": "psychic",
+    "category": "attack",
+    "power": 118,
+    "accuracy": 0.78,
+    "description": "The Chorus becomes a point."
+  },
+  {
+    "id": "orbit_crush",
+    "name": "Orbit Crush",
+    "resonance": "psychic",
+    "category": "attack",
+    "power": 84,
+    "accuracy": 0.9,
+    "description": "Crush with orbital force."
+  },
+  {
+    "id": "mirage_barrage",
+    "name": "Mirage Barrage",
+    "resonance": "psychic",
+    "category": "attack",
+    "power": 72,
+    "accuracy": 0.95,
+    "description": "Illusions strike as one."
+  },
+  {
+    "id": "thought_spike",
+    "name": "Thought Spike",
+    "resonance": "psychic",
+    "category": "attack",
+    "power": 68,
+    "accuracy": 0.97,
+    "description": "A spike of pure thought."
+  },
+  {
+    "id": "mind_fortress",
+    "name": "Mind Fortress",
+    "resonance": "psychic",
+    "category": "buff",
+    "power": 0,
+    "accuracy": 1.0,
+    "description": "Raise Guard of the mind.",
+    "stat": "guard",
+    "stages": 1
+  },
+  {
+    "id": "nova_burst",
+    "name": "Nova Burst",
+    "resonance": "none",
+    "category": "attack",
+    "power": 80,
+    "accuracy": 0.92,
+    "description": "A colorless nova."
+  },
+  {
+    "id": "barrage",
+    "name": "Barrage",
+    "resonance": "none",
+    "category": "attack",
+    "power": 65,
+    "accuracy": 0.98,
+    "description": "A relentless barrage."
+  },
+  {
+    "id": "orbit_strike",
+    "name": "Orbit Strike",
+    "resonance": "none",
+    "category": "attack",
+    "power": 70,
+    "accuracy": 0.95,
+    "description": "Strike from every angle."
+  },
+  {
+    "id": "quake_pulse",
+    "name": "Quake Pulse",
+    "resonance": "rock",
+    "category": "attack",
+    "power": 75,
+    "accuracy": 0.93,
+    "description": "A pulsing quake."
+  },
+  {
+    "id": "mirror_shard",
+    "name": "Mirror Shard",
+    "resonance": "psychic",
+    "category": "attack",
+    "power": 60,
+    "accuracy": 1.0,
+    "description": "Shatter mirrored light."
+  },
+  {
+    "id": "hex_nova",
+    "name": "Hex Nova",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 85,
+    "accuracy": 0.9,
+    "description": "A nova of hexes."
+  },
+  {
+    "id": "bubble_pop",
+    "name": "Bubble Pop",
+    "resonance": "none",
+    "category": "attack",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A plain full-body tackle."
+  },
+  {
+    "id": "leaf_cut",
+    "name": "Leaf Cut",
+    "resonance": "none",
+    "category": "attack",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A plain full-body tackle."
+  },
+  {
+    "id": "pebble_toss",
+    "name": "Pebble Toss",
+    "resonance": "none",
+    "category": "attack",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A plain full-body tackle."
+  },
+  {
+    "id": "gust",
+    "name": "Gust",
+    "resonance": "none",
+    "category": "attack",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A plain full-body tackle."
+  },
+  {
+    "id": "shadow_nip",
+    "name": "Shadow Nip",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 45,
+    "accuracy": 0.95,
+    "description": "A bite from the dark."
+  },
+  {
+    "id": "aqua_slash",
+    "name": "Aqua Slash",
+    "resonance": "none",
+    "category": "attack",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A plain full-body tackle."
+  },
+  {
+    "id": "stone_bash",
+    "name": "Stone Bash",
+    "resonance": "none",
+    "category": "attack",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A plain full-body tackle."
+  },
+  {
+    "id": "wing_slash",
+    "name": "Wing Slash",
+    "resonance": "air",
+    "category": "attack",
+    "power": 58,
+    "accuracy": 0.95,
+    "description": "A slicing blade of air."
+  },
+  {
+    "id": "night_slash",
+    "name": "Night Slash",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 58,
+    "accuracy": 0.95,
+    "description": "A raking claw of dusk."
+  },
+  {
+    "id": "inferno_pulse",
+    "name": "Inferno Pulse",
+    "resonance": "fire",
+    "category": "attack",
+    "power": 84,
+    "accuracy": 0.82,
+    "description": "An all-consuming blaze."
+  },
+  {
+    "id": "tide_surge",
+    "name": "Tide Surge",
+    "resonance": "none",
+    "category": "attack",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A plain full-body tackle."
+  },
+  {
+    "id": "boulder_crash",
+    "name": "Boulder Crash",
+    "resonance": "rock",
+    "category": "attack",
+    "power": 72,
+    "accuracy": 0.95,
+    "description": "A rock-attuned strike."
+  },
+  {
+    "id": "gale_force",
+    "name": "Gale Force",
+    "resonance": "none",
+    "category": "attack",
+    "power": 35,
+    "accuracy": 1.0,
+    "description": "A plain full-body tackle."
+  },
+  {
+    "id": "curse_wail",
+    "name": "Curse Wail",
+    "resonance": "shadow",
+    "category": "attack",
+    "power": 58,
+    "accuracy": 1,
+    "description": "A shadow-attuned strike."
+  },
+  {
+    "id": "psy_nudge",
+    "name": "Psy Nudge",
+    "resonance": "psychic",
+    "category": "attack",
+    "power": 55,
+    "accuracy": 1,
+    "description": "A psychic-attuned strike."
   }
 ]

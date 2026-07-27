@@ -43,26 +43,26 @@ func _build_map() -> void:
 
 	add_trainer(Vector2i(5, 10), "right", {
 		"id": "ash_cinder", "name": "Cinder Monk", "look": 7,
-		"party": [{ "id": "magmapup", "level": 42 }, { "id": "volcanid", "level": 43 }, { "id": "infernost", "level": 44 }],
+		"party": [{ "id": "magmapup", "level": 48 }, { "id": "volcanid", "level": 49 }, { "id": "infernost", "level": 50 }],
 		"reward": 8,
 		"intro": ["The caldera forges legends.", "Step into the heat!"],
 		"win_line": "Tempered. Ascend.",
 	}, 4)
 	add_trainer(Vector2i(14, 15), "left", {
 		"id": "ash_flare", "name": "Flare Knight", "look": 5,
-		"party": [{ "id": "phoenixar", "level": 44 }, { "id": "pyrelynx", "level": 45 }, { "id": "hellhoof", "level": 45 }],
+		"party": [{ "id": "phoenixar", "level": 50 }, { "id": "pyrelynx", "level": 51 }, { "id": "hellhoof", "level": 51 }],
 		"reward": 9,
 		"intro": ["Ash rains. Blades rise.", "Prove your flame!"],
 		"win_line": "Your fire outshines mine.",
 	}, 5)
 	add_trainer(Vector2i(6, 18), "up", {
 		"id": "ash_vein", "name": "Magma Surveyor", "look": 8,
-		"party": [{ "id": "embertoad", "level": 43 }, { "id": "calderoad", "level": 44 }],
+		"party": [{ "id": "embertoad", "level": 49 }, { "id": "calderoad", "level": 50 }],
 		"reward": 8,
 		"intro": ["Readings spike — battle incoming!"],
 		"win_line": "Data logged. You're volcanic.",
 	}, 4)
-	add_legend_encounter(Vector2i(9, 6), "solarch", 50,
+	add_legend_encounter(Vector2i(9, 6), "solarch", 60,
 		"The caldera sun collapses into form. SOLARCH — dayfire incarnate — crowns the peak!")
 
 	add_npc(Vector2i(11, 20), "left", Color(1, 1, 1), {

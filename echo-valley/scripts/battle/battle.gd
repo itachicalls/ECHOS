@@ -1316,6 +1316,16 @@ func _animate_attack(
 			await _atk_meteor(target, col)
 		"spore":
 			await _atk_spore(target, col)
+		"nova":
+			await _atk_nova(target, col)
+		"barrage":
+			await _atk_barrage(attacker, target, col, resonance)
+		"orbit":
+			await _atk_orbit(target, col)
+		"quake":
+			await _atk_quake(target, col)
+		"mirror":
+			await _atk_mirror(attacker, target, col)
 		_:
 			await _fire_projectile(_sprite_center(attacker), _sprite_center(target), col, resonance)
 
@@ -1348,11 +1358,21 @@ func _attack_style(name_lc: String, lifesteal: float, power: int) -> String:
 	# Themed styles are checked before the generic ones so new moves look new.
 	if lifesteal > 0.0 or _has_any(name_lc, ["drain", "leech"]):
 		return "drain"
+	if _has_any(name_lc, ["nova", "cataclysm", "singularity", "collapse", "finale", "zero-point", "zero point"]):
+		return "nova"
+	if _has_any(name_lc, ["barrage", "mortar", "bombard", "hail of", "rain of"]):
+		return "barrage"
+	if _has_any(name_lc, ["orbit", "coil", "spiral"]):
+		return "orbit"
+	if _has_any(name_lc, ["quake", "tectonic", "fault", "tremor", "seismic"]):
+		return "quake"
+	if _has_any(name_lc, ["mirror", "mirage", "reflect"]):
+		return "mirror"
 	if _has_any(name_lc, ["bolt", "volt", "thunder", "spark", "shock", "zap", "discharge", "static", "plasma", "arc ", "lightning", "voltage", "electro", "ion ", "galvan", "charge"]):
 		return "storm"
-	if _has_any(name_lc, ["psy", "mind", "hypno", "dream", "confus", "mystic", "aura", "telekin", "cosmic", "astral", "rune", "warp"]):
+	if _has_any(name_lc, ["psy", "mind", "hypno", "dream", "confus", "mystic", "aura", "telekin", "cosmic", "astral", "rune", "warp", "chorus", "thought", "psi "]):
 		return "psy"
-	if _has_any(name_lc, ["curse", "hex", "haunt", "doom", "spirit", "phantom", "wail", "tomb", "soul", "dread", "nightmare", "reaper", "wraith", "bone", "grave", "banshee", "eclipse"]):
+	if _has_any(name_lc, ["curse", "hex", "haunt", "doom", "spirit", "phantom", "wail", "tomb", "soul", "dread", "nightmare", "reaper", "wraith", "bone", "grave", "banshee", "eclipse", "void"]):
 		return "curse"
 	if _has_any(name_lc, ["geyser", "splash", "torrent", "whirl", "maelstrom", "cascade", "hydro", "deluge", "riptide", "foam", "aqua"]):
 		return "geyser"
@@ -1681,6 +1701,114 @@ func _atk_meteor(target: TextureRect, col: Color) -> void:
 	_impact_burst(c, col, 1.3)
 	_stage_shake()
 	await get_tree().create_timer(0.1).timeout
+
+
+func _atk_nova(target: TextureRect, col: Color) -> void:
+	# Expanding nova rings + white flash.
+	var c := _sprite_center(target)
+	_flash(0.18)
+	for i in 4:
+		var ring := ColorRect.new()
+		ring.color = Color(col.r, col.g, col.b, 0.85)
+		ring.size = Vector2(4, 4)
+		ring.pivot_offset = Vector2(2, 2)
+		ring.position = c - Vector2(2, 2)
+		ring.z_index = 26
+		_stage.add_child(ring)
+		var tw := create_tween()
+		tw.tween_interval(float(i) * 0.05)
+		tw.set_parallel(true)
+		tw.tween_property(ring, "scale", Vector2(10.0 + float(i) * 2.0, 10.0 + float(i) * 2.0), 0.28).set_trans(Tween.TRANS_QUAD)
+		tw.tween_property(ring, "modulate:a", 0.0, 0.28)
+		tw.chain().tween_callback(ring.queue_free)
+	_stage_shake()
+	await get_tree().create_timer(0.36).timeout
+
+
+func _atk_barrage(attacker: TextureRect, target: TextureRect, col: Color, resonance: int) -> void:
+	# Rapid multi-hit projectiles.
+	var from := _sprite_center(attacker)
+	var to := _sprite_center(target)
+	for i in 6:
+		var off := Vector2(randf_range(-10, 10), randf_range(-8, 8))
+		await _fire_projectile(from + off, to + off * 0.3, col, resonance)
+		await get_tree().create_timer(0.03).timeout
+	_impact_burst(to, col, 1.2)
+
+
+func _atk_orbit(target: TextureRect, col: Color) -> void:
+	# Particles orbit then implode into the target.
+	var c := _sprite_center(target)
+	var bits: Array = []
+	for i in 8:
+		var b := ColorRect.new()
+		b.color = col
+		b.size = Vector2(3, 3)
+		var ang := float(i) * TAU / 8.0
+		b.position = c + Vector2(cos(ang), sin(ang)) * 28.0
+		b.z_index = 24
+		_stage.add_child(b)
+		bits.append(b)
+	var tw := create_tween()
+	for step in 10:
+		var t := float(step) / 10.0
+		tw.tween_callback(func() -> void:
+			for i in bits.size():
+				var ang2 := float(i) * TAU / 8.0 + t * TAU
+				var rad := 28.0 * (1.0 - t * 0.85)
+				(bits[i] as ColorRect).position = c + Vector2(cos(ang2), sin(ang2)) * rad
+		)
+		tw.tween_interval(0.03)
+	await tw.finished
+	for b in bits:
+		if is_instance_valid(b):
+			b.queue_free()
+	_flash_ring(c, col)
+	_stage_shake()
+
+
+func _atk_quake(target: TextureRect, col: Color) -> void:
+	# Ground cracks rise under the target.
+	var c := _sprite_center(target)
+	_stage_shake()
+	for i in 7:
+		var crack := ColorRect.new()
+		crack.color = Color(col.r, col.g, col.b, 0.9)
+		crack.size = Vector2(3, 2)
+		var x := c.x + float(i - 3) * 6.0
+		crack.position = Vector2(x, c.y + 14.0)
+		crack.z_index = 23
+		_stage.add_child(crack)
+		var tw := create_tween()
+		tw.tween_interval(float(i) * 0.02)
+		tw.tween_property(crack, "size", Vector2(3, 18), 0.12).set_trans(Tween.TRANS_BACK)
+		tw.parallel().tween_property(crack, "position:y", c.y - 2.0, 0.12)
+		tw.tween_property(crack, "modulate:a", 0.0, 0.14)
+		tw.chain().tween_callback(crack.queue_free)
+	await get_tree().create_timer(0.34).timeout
+	_stage_shake()
+
+
+func _atk_mirror(attacker: TextureRect, target: TextureRect, col: Color) -> void:
+	# Ghost copies of the attacker flash and converge.
+	var home_a := _home_pos(attacker)
+	var to := _sprite_center(target) - attacker.size * 0.5
+	for i in 3:
+		var ghost := TextureRect.new()
+		ghost.texture = attacker.texture
+		ghost.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		ghost.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ghost.size = attacker.size
+		ghost.modulate = Color(col.r, col.g, col.b, 0.55)
+		ghost.position = home_a + Vector2(float(i - 1) * 10.0, float(i) * -4.0)
+		ghost.z_index = 21
+		_stage.add_child(ghost)
+		var tw := create_tween()
+		tw.tween_property(ghost, "position", to, 0.18).set_trans(Tween.TRANS_QUAD)
+		tw.tween_property(ghost, "modulate:a", 0.0, 0.1)
+		tw.chain().tween_callback(ghost.queue_free)
+	await get_tree().create_timer(0.28).timeout
+	_flash_ring(_sprite_center(target), col)
 
 
 func _atk_spore(target: TextureRect, col: Color) -> void:
@@ -2373,6 +2501,10 @@ func _victory() -> void:
 				GameState.flags["legend_solarch"] = true
 			"skysovereign":
 				GameState.flags["legend_skysovereign"] = true
+			"hallowraith":
+				GameState.flags["legend_hallowraith"] = true
+			"fracturael":
+				GameState.flags["legend_fracturael"] = true
 
 	_end_battle("win")
 
