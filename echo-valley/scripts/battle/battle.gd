@@ -21,6 +21,7 @@ var can_flee: bool = true
 var can_catch: bool = true
 var _online: bool = false
 var _online_host: bool = false
+var _net_drop: bool = false
 
 # UI refs
 var enemy_sprite: TextureRect
@@ -54,6 +55,8 @@ func _ready() -> void:
 	can_catch = bool(request.get("can_catch", true))
 	_online = bool(request.get("online", false))
 	_online_host = String(request.get("online_role", "")) == "host"
+	if _online:
+		VersusNet.net_error.connect(_on_net_drop)
 	_load_teams_from_request()
 	if player_party.is_empty() or enemy_party.is_empty():
 		push_error("Battle missing team (player=%d enemy=%d kind=%s)" % [
@@ -93,6 +96,24 @@ func _load_teams_from_request() -> void:
 
 func _abort_empty_battle() -> void:
 	SceneRouter.finish_battle({ "result": "flee" })
+
+
+func _on_net_drop(_msg: String) -> void:
+	if phase == Phase.ENDED or _net_drop:
+		return
+	_net_drop = true
+	call_deferred("_finish_net_drop")
+
+
+func _finish_net_drop() -> void:
+	if phase == Phase.ENDED:
+		return
+	if _online_host:
+		await _say("Your opponent disconnected. You win!")
+		_end_battle("win")
+	else:
+		await _say("Connection lost...")
+		_end_battle("loss")
 
 
 func _begin_intro() -> void:
@@ -2065,16 +2086,20 @@ func _resolve(player_action: Dictionary) -> void:
 	if _online:
 		if _online_host:
 			var guest_action: Dictionary = await VersusNet.wait_guest_action()
-			if guest_action.is_empty():
-				guest_action = { "type": EchoTypes.ActionType.WAIT }
+			if _net_drop or guest_action.is_empty():
+				return
 			state = CombatResolver.resolve_turn(state, player_action, guest_action)
 			await _play_log(state.get("log", []))
+			if _net_drop:
+				return
 			VersusNet.send_turn_result(state)
 			if state.get("finished", false):
 				VersusNet.send_battle_end(String(state.get("winner", "")))
 		else:
 			VersusNet.send_guest_action(player_action)
 			var pkt: Dictionary = await VersusNet.wait_turn_result()
+			if _net_drop or pkt.is_empty():
+				return
 			state = pkt.get("state", state)
 			state["log"] = []
 			await _play_log(pkt.get("log", []))

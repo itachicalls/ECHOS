@@ -239,6 +239,13 @@ func _on_toast(text: String) -> void:
 
 
 func _on_dialogue(lines: Array) -> void:
+	# If dialogue is already showing, swap the text in-place (don't emit
+	# dialogue_closed — that would accidentally launch pending battles).
+	if _open:
+		_lines = lines
+		_index = 0
+		_show_current()
+		return
 	_lines = lines
 	_index = 0
 	_open = true

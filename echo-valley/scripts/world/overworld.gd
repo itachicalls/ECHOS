@@ -65,7 +65,16 @@ func _ready() -> void:
 	add_child(HudScene.instantiate())
 	add_child(PauseMenuScript.new())
 	_place_pickups()
+	_reset_input_state()
 	StoryService.notify_progress.call_deferred()
+
+
+func _reset_input_state() -> void:
+	_busy = false
+	_cutscene = false
+	_transitioning = false
+	if player and player.has_method("set_input_locked"):
+		player.set_input_locked(false)
 
 
 # --- override in subclasses ---
@@ -535,6 +544,9 @@ func play_ambush_surround(actor_defs: Array, lines: Array, on_dialogue_done: Cal
 
 	for actor in actors:
 		await (actor as AmbushActor).walk_to_target()
+		if not is_inside_tree():
+			_release_cutscene()
+			return
 
 	if player:
 		for actor in actors:
@@ -548,10 +560,15 @@ func play_ambush_surround(actor_defs: Array, lines: Array, on_dialogue_done: Cal
 				actor.queue_free()
 		if on_dialogue_done.is_valid():
 			on_dialogue_done.call()
-		if player and player.has_method("set_input_locked"):
-			player.set_input_locked(false)
-		_cutscene = false
+		_release_cutscene()
 	, CONNECT_ONE_SHOT)
+
+
+func _release_cutscene() -> void:
+	_cutscene = false
+	_busy = false
+	if player and player.has_method("set_input_locked"):
+		player.set_input_locked(false)
 
 
 func on_player_step(cell: Vector2i) -> void:

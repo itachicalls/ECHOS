@@ -35,7 +35,12 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if peer == null:
 		return
+	var st := peer.get_ready_state()
 	peer.poll()
+	if _open and st == WebSocketPeer.STATE_CLOSED:
+		_open = false
+		disconnected.emit()
+		net_error.emit("Connection lost")
 	while peer.get_available_packet_count() > 0:
 		var raw := peer.get_packet().get_string_from_utf8()
 		_handle_raw(raw)
@@ -184,23 +189,42 @@ func _handle_raw(raw: String) -> void:
 			net_error.emit(msg)
 
 
-func wait_guest_action() -> Dictionary:
+func wait_guest_action(timeout: float = 90.0) -> Dictionary:
 	if _has_guest_action:
-		var a := _pending_guest_action
-		_has_guest_action = false
-		_pending_guest_action = {}
-		return a
-	var action: Dictionary = await guest_action_received
+		return _take_guest_action()
+	var elapsed := 0.0
+	while elapsed < timeout:
+		if _has_guest_action:
+			return _take_guest_action()
+		if not lobby_open():
+			net_error.emit("Opponent disconnected")
+			return {}
+		elapsed += get_process_delta_time()
+		await get_tree().process_frame
+	net_error.emit("Opponent timed out")
+	return {}
+
+
+func wait_turn_result(timeout: float = 90.0) -> Dictionary:
+	_turn_packet = {}
+	var elapsed := 0.0
+	while _turn_packet.is_empty() and elapsed < timeout:
+		if not lobby_open():
+			net_error.emit("Opponent disconnected")
+			return {}
+		elapsed += get_process_delta_time()
+		await get_tree().process_frame
+	if _turn_packet.is_empty():
+		net_error.emit("Opponent timed out")
+		return {}
+	return _turn_packet.duplicate(true)
+
+
+func _take_guest_action() -> Dictionary:
+	var a := _pending_guest_action
 	_has_guest_action = false
 	_pending_guest_action = {}
-	return action
-
-
-func wait_turn_result() -> Dictionary:
-	_turn_packet = {}
-	while _turn_packet.is_empty():
-		await turn_result_received
-	return _turn_packet.duplicate(true)
+	return a
 
 
 func wait_connected(timeout: float = 6.0) -> bool:

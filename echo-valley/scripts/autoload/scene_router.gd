@@ -217,10 +217,17 @@ func get_battle_request() -> Dictionary:
 
 func ensure_visible() -> void:
 	_busy = false
+	_lock_players(false)
 	if _draining_queue and _transition_queue.is_empty():
 		_draining_queue = false
 	if not _draining_queue and _transition_queue.size() > 0:
 		_drain_queue_async()
+
+
+func _notification(what: int) -> void:
+	# Web tab refocus / alt-tab back — clear stale transition locks.
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
+		ensure_visible()
 
 
 func finish_battle(result: Dictionary) -> void:
