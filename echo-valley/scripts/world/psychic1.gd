@@ -96,6 +96,18 @@ func _build_map() -> void:
 	}, Vector2i(9, 1), "down", [Vector2i(9, 0), Vector2i(10, 0)], Vector2i(7, 1), [Vector2i(10, 1)])
 
 
+
+
+
+	# discovery: forgotten_library
+	open_passage(Vector2i(1, 10), Tiles.PATH)
+	open_passage(Vector2i(2, 10), Tiles.PATH)
+	open_passage(Vector2i(1, 11), Tiles.PATH)
+	open_passage(Vector2i(2, 11), Tiles.PATH)
+	add_warp(Vector2i(1, 10), "forgotten_library", Vector2i(9, 22), "left", ["trainer_gym_psychic"], "Side path sealed for now...")
+	add_warp(Vector2i(1, 11), "forgotten_library", Vector2i(10, 22), "left", ["trainer_gym_psychic"], "Side path sealed for now...")
+	add_interact(Vector2i(2, 10), { "type": "sign", "text": "FORGOTTEN LIBRARY - after Dream Sigil." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 20), "echo_capsule", 4)
 	add_pickup(Vector2i(16, 10), "heart_salve", 3)

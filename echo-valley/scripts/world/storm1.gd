@@ -99,6 +99,18 @@ func _build_map() -> void:
 	}, Vector2i(9, 1), "down", [Vector2i(9, 0), Vector2i(10, 0)], Vector2i(7, 1), [Vector2i(10, 1)])
 
 
+
+
+
+	# discovery: thunder_spire
+	open_passage(Vector2i(17, 10), Tiles.PATH)
+	open_passage(Vector2i(18, 10), Tiles.PATH)
+	open_passage(Vector2i(17, 11), Tiles.PATH)
+	open_passage(Vector2i(18, 11), Tiles.PATH)
+	add_warp(Vector2i(18, 10), "thunder_spire", Vector2i(9, 22), "right", ["trainer_gym_storm"], "Side path sealed for now...")
+	add_warp(Vector2i(18, 11), "thunder_spire", Vector2i(10, 22), "right", ["trainer_gym_storm"], "Side path sealed for now...")
+	add_interact(Vector2i(16, 10), { "type": "sign", "text": "THUNDER SPIRE - after Charge Sigil." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 18), "heart_salve", 2)
 	add_pickup(Vector2i(16, 4), "echo_capsule", 3)

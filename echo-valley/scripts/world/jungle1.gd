@@ -67,6 +67,18 @@ func _build_map() -> void:
 	}, 3)
 
 
+
+
+
+	# discovery: vine_cathedral
+	open_passage(Vector2i(19, 10), Tiles.PATH)
+	open_passage(Vector2i(20, 10), Tiles.PATH)
+	open_passage(Vector2i(19, 11), Tiles.PATH)
+	open_passage(Vector2i(20, 11), Tiles.PATH)
+	add_warp(Vector2i(20, 10), "vine_cathedral", Vector2i(9, 22), "right")
+	add_warp(Vector2i(20, 11), "vine_cathedral", Vector2i(10, 22), "right")
+	add_interact(Vector2i(18, 10), { "type": "sign", "text": "VINE CATHEDRAL - living nave." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(16, 5), "echo_capsule", 2)
 	add_pickup(Vector2i(4, 16), "heart_salve", 2)

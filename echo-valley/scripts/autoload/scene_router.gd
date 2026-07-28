@@ -23,6 +23,37 @@ const MAPS := {
 	"skyreach1": "res://scenes/world/skyreach1.tscn",
 	"frostvale1": "res://scenes/world/frostvale1.tscn",
 	"deeprift1": "res://scenes/world/deeprift1.tscn",
+	# --- discovery atlas ---
+	"willow_fen": "res://scenes/world/willow_fen.tscn",
+	"scarlet_orchard": "res://scenes/world/scarlet_orchard.tscn",
+	"mushroom_grotto": "res://scenes/world/mushroom_grotto.tscn",
+	"haunted_manor1": "res://scenes/world/haunted_manor1.tscn",
+	"haunted_manor2": "res://scenes/world/haunted_manor2.tscn",
+	"haunted_manor3": "res://scenes/world/haunted_manor3.tscn",
+	"belltower1": "res://scenes/world/belltower1.tscn",
+	"belltower2": "res://scenes/world/belltower2.tscn",
+	"belltower3": "res://scenes/world/belltower3.tscn",
+	"ember_forge": "res://scenes/world/ember_forge.tscn",
+	"salt_catacombs": "res://scenes/world/salt_catacombs.tscn",
+	"vine_cathedral": "res://scenes/world/vine_cathedral.tscn",
+	"crystal_mines1": "res://scenes/world/crystal_mines1.tscn",
+	"crystal_mines2": "res://scenes/world/crystal_mines2.tscn",
+	"whispering_gallery": "res://scenes/world/whispering_gallery.tscn",
+	"coral_cathedral": "res://scenes/world/coral_cathedral.tscn",
+	"sunken_ruins": "res://scenes/world/sunken_ruins.tscn",
+	"thunder_spire": "res://scenes/world/thunder_spire.tscn",
+	"mirror_marsh": "res://scenes/world/mirror_marsh.tscn",
+	"forgotten_library": "res://scenes/world/forgotten_library.tscn",
+	"windmill_ridge": "res://scenes/world/windmill_ridge.tscn",
+	"abandoned_lab": "res://scenes/world/abandoned_lab.tscn",
+	"clockwork_vault": "res://scenes/world/clockwork_vault.tscn",
+	"moonlit_lake": "res://scenes/world/moonlit_lake.tscn",
+	"starfall_crater": "res://scenes/world/starfall_crater.tscn",
+	"thornwall_keep": "res://scenes/world/thornwall_keep.tscn",
+	"cloud_garden": "res://scenes/world/cloud_garden.tscn",
+	"bonebridge": "res://scenes/world/bonebridge.tscn",
+	"aurora_cliff": "res://scenes/world/aurora_cliff.tscn",
+	"glacial_archive": "res://scenes/world/glacial_archive.tscn",
 }
 const TITLE := "res://scenes/boot/title.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -138,13 +169,13 @@ func _fishing_level_for_map(map_id: String) -> int:
 		"route2": return randi_range(7, 10)
 		"desert1", "desert2": return randi_range(9, 12)
 		"jungle1", "jungle2": return randi_range(12, 16)
-		"beach1", "tide_town": return randi_range(9, 14)
-		"storm1": return randi_range(16, 22)
-		"psychic1", "psychic_town": return randi_range(26, 32)
+		"beach1", "tide_town", "coral_cathedral", "sunken_ruins", "moonlit_lake": return randi_range(9, 14)
+		"storm1", "thunder_spire": return randi_range(16, 22)
+		"psychic1", "psychic_town", "mirror_marsh", "forgotten_library": return randi_range(26, 32)
 		"graveyard1": return randi_range(42, 50)
-		"ashpeak1", "skyreach1": return randi_range(48, 56)
-		"frostvale1": return randi_range(52, 60)
-		"deeprift1": return randi_range(56, 64)
+		"ashpeak1", "skyreach1", "starfall_crater", "cloud_garden": return randi_range(48, 56)
+		"frostvale1", "aurora_cliff", "glacial_archive": return randi_range(52, 60)
+		"deeprift1", "bonebridge": return randi_range(56, 64)
 		_: return randi_range(5, 12)
 
 

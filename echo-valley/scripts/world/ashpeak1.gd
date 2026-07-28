@@ -74,6 +74,18 @@ func _build_map() -> void:
 	}, Tiles.TRAINER_PATHS[5], 1)
 
 
+
+
+
+	# discovery: starfall_crater
+	open_passage(Vector2i(17, 10), Tiles.PATH)
+	open_passage(Vector2i(18, 10), Tiles.PATH)
+	open_passage(Vector2i(17, 11), Tiles.PATH)
+	open_passage(Vector2i(18, 11), Tiles.PATH)
+	add_warp(Vector2i(18, 10), "starfall_crater", Vector2i(9, 22), "right", ["story_complete"], "Side path sealed for now...")
+	add_warp(Vector2i(18, 11), "starfall_crater", Vector2i(10, 22), "right", ["story_complete"], "Side path sealed for now...")
+	add_interact(Vector2i(16, 10), { "type": "sign", "text": "STARFALL CRATER - post-fate bruise." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 19), "ultra_capsule", 2)
 	add_pickup(Vector2i(16, 5), "max_salve", 2)

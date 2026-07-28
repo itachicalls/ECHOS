@@ -16,6 +16,7 @@ var _tap_hint: Label
 var _bag_btn: Control
 var _menu_btn: Control
 var _quick_bar: Panel
+var _mobility: Label
 var _lines: Array = []
 var _index: int = 0
 var _open: bool = false
@@ -45,10 +46,13 @@ func _build() -> void:
 	_box.position = Vector2(4, 106)
 	_box.size = Vector2(VIEW_W - 8, 50)
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color("1d2b3a")
-	sb.border_color = Color("cfe8ff")
+	sb.bg_color = Color("121f2c")
+	sb.border_color = Color("d7ecff")
 	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(3)
+	sb.set_corner_radius_all(4)
+	sb.shadow_color = Color(0.05, 0.12, 0.2, 0.45)
+	sb.shadow_size = 3
+	sb.shadow_offset = Vector2(0, 1)
 	sb.content_margin_left = 6
 	sb.content_margin_top = 4
 	sb.content_margin_right = 6
@@ -102,6 +106,16 @@ func _build() -> void:
 	_tap_btn.z_index = 3
 	_tap_btn.pressed.connect(_advance)
 	_box.add_child(_tap_btn)
+
+	_mobility = Label.new()
+	_mobility.add_theme_font_size_override("font_size", 6)
+	_mobility.add_theme_color_override("font_color", Color("8ec8ff"))
+	_mobility.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+	_mobility.add_theme_constant_override("outline_size", 2)
+	_mobility.position = Vector2(4, 4)
+	_mobility.size = Vector2(90, 10)
+	_mobility.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_mobility)
 
 	_build_quick_bar()
 	if TouchUtil != null and TouchUtil.is_touch_ui_enabled():
@@ -225,6 +239,16 @@ func _process(delta: float) -> void:
 		_quick_bar.visible = hud_visible
 	_bag_btn.visible = hud_visible
 	_menu_btn.visible = hud_visible
+	if _mobility:
+		_mobility.visible = hud_visible
+		if bool(GameState.flags.get("bike_mounted", false)):
+			_mobility.text = "BIKE"
+			_mobility.add_theme_color_override("font_color", Color("6ec8ff"))
+		elif ItemCatalog.has_item("running_shoes"):
+			_mobility.text = "DASH"
+			_mobility.add_theme_color_override("font_color", Color("e07040"))
+		else:
+			_mobility.text = ""
 	if _open:
 		_arrow.visible = int(Time.get_ticks_msec() / 350) % 2 == 0
 		_tap_hint.visible = TouchUtil != null and TouchUtil.is_touch_ui_enabled()

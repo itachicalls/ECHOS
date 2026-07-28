@@ -1,9 +1,12 @@
 extends Node2D
 
 ## Grid-based Pokemon-style movement with a 4-direction animated sprite.
+## Running Shoes speed you up; Resonance Bike mounts for outdoor dashes.
 
 const TILE := 16
-const STEP_TIME := 0.16
+const STEP_WALK := 0.16
+const STEP_RUN := 0.10
+const STEP_BIKE := 0.065
 
 const PlayerAvatarScript := preload("res://scripts/core/player_avatar.gd")
 
@@ -15,6 +18,7 @@ var input_locked: bool = false
 
 var sprite: AnimatedSprite2D
 var cam: Camera2D
+var _bike_glow: ColorRect
 
 const DIRS := {
 	"up": Vector2i(0, -1),
@@ -24,12 +28,20 @@ const DIRS := {
 }
 const ROW := { "down": 0, "right": 1, "up": 2, "left": 3 }
 
+const BIKE_BLOCKED := [
+	"cave1", "cave2", "haunted_manor1", "haunted_manor2", "haunted_manor3",
+	"crystal_mines1", "crystal_mines2", "whispering_gallery", "salt_catacombs",
+	"forgotten_library", "abandoned_lab", "clockwork_vault", "glacial_archive",
+	"deeprift1",
+]
+
 
 func setup(p_world: Node2D, p_cell: Vector2i, p_facing: String) -> void:
 	world = p_world
 	cell = p_cell
 	facing = p_facing if p_facing != "" else "down"
 	position = Vector2(cell.x * TILE, cell.y * TILE)
+	_enforce_bike_indoors()
 
 
 func _ready() -> void:
@@ -40,6 +52,13 @@ func _ready() -> void:
 	sprite.offset = Vector2(0, -16)
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(sprite)
+
+	_bike_glow = ColorRect.new()
+	_bike_glow.size = Vector2(14, 4)
+	_bike_glow.position = Vector2(1, 12)
+	_bike_glow.color = Color("6ec8ff", 0.0)
+	_bike_glow.z_index = -1
+	add_child(_bike_glow)
 
 	cam = Camera2D.new()
 	cam.position = Vector2(8, 4)
@@ -54,6 +73,7 @@ func _ready() -> void:
 	cam.make_current()
 
 	_play_idle()
+	_refresh_bike_visual()
 
 
 func _build_frames() -> SpriteFrames:
@@ -70,9 +90,7 @@ func _build_frames() -> SpriteFrames:
 		sf.set_animation_loop(walk, true)
 		sf.set_animation_speed(idle, 2.0)
 		sf.set_animation_speed(walk, 9.0)
-		# idle uses frame 0
 		sf.add_frame(idle, _frame(tex, 0, r))
-		# walk cycle 0,1,2,3
 		for c in 4:
 			sf.add_frame(walk, _frame(tex, c, r))
 	return sf
@@ -103,7 +121,6 @@ func _process(_delta: float) -> void:
 	facing = dir
 	GameState.player_facing = facing
 	var target: Vector2i = cell + DIRS[dir]
-	# South-facing ledges: hop down across them for a two-tile jump.
 	if world and dir == "down" and world.has_method("is_ledge") and world.is_ledge(target):
 		var landing: Vector2i = target + DIRS["down"]
 		if not world.is_blocked(landing):
@@ -115,15 +132,32 @@ func _process(_delta: float) -> void:
 	_step(target)
 
 
+func _step_time() -> float:
+	if bool(GameState.flags.get("bike_mounted", false)):
+		return STEP_BIKE
+	if ItemCatalog.has_item("running_shoes"):
+		return STEP_RUN
+	return STEP_WALK
+
+
+func _walk_anim_speed() -> float:
+	if bool(GameState.flags.get("bike_mounted", false)):
+		return 16.0
+	if ItemCatalog.has_item("running_shoes"):
+		return 12.0
+	return 9.0
+
+
 func _hop(landing: Vector2i) -> void:
 	moving = true
+	sprite.sprite_frames.set_animation_speed("walk_%s" % facing, _walk_anim_speed())
 	sprite.play("walk_%s" % facing)
+	var t := _step_time()
 	var tween := create_tween()
-	tween.tween_property(self, "position", Vector2(landing.x * TILE, landing.y * TILE), STEP_TIME * 2.0).set_trans(Tween.TRANS_SINE)
-	# little arc via sprite offset
+	tween.tween_property(self, "position", Vector2(landing.x * TILE, landing.y * TILE), t * 2.0).set_trans(Tween.TRANS_SINE)
 	var hop := create_tween()
-	hop.tween_property(sprite, "offset:y", -22.0, STEP_TIME).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	hop.tween_property(sprite, "offset:y", -16.0, STEP_TIME).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	hop.tween_property(sprite, "offset:y", -22.0, t).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	hop.tween_property(sprite, "offset:y", -16.0, t).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	await tween.finished
 	cell = landing
 	GameState.player_cell = cell
@@ -134,9 +168,10 @@ func _hop(landing: Vector2i) -> void:
 
 func _step(target: Vector2i) -> void:
 	moving = true
+	sprite.sprite_frames.set_animation_speed("walk_%s" % facing, _walk_anim_speed())
 	sprite.play("walk_%s" % facing)
 	var tween := create_tween()
-	tween.tween_property(self, "position", Vector2(target.x * TILE, target.y * TILE), STEP_TIME)
+	tween.tween_property(self, "position", Vector2(target.x * TILE, target.y * TILE), _step_time())
 	await tween.finished
 	cell = target
 	GameState.player_cell = cell
@@ -154,3 +189,46 @@ func set_input_locked(v: bool) -> void:
 	input_locked = v
 	if v:
 		_play_idle()
+
+
+func _enforce_bike_indoors() -> void:
+	if not bool(GameState.flags.get("bike_mounted", false)):
+		return
+	var map_id := String(GameState.current_map)
+	if map_id in BIKE_BLOCKED:
+		GameState.flags["bike_mounted"] = false
+		_refresh_bike_visual()
+
+
+func _refresh_bike_visual() -> void:
+	if _bike_glow == null:
+		return
+	var on := bool(GameState.flags.get("bike_mounted", false))
+	_bike_glow.color = Color("6ec8ff", 0.55 if on else 0.0)
+	if sprite:
+		sprite.modulate = Color("c8e8ff") if on else Color.WHITE
+
+
+static func can_mount_bike_here() -> bool:
+	return String(GameState.current_map) not in BIKE_BLOCKED
+
+
+static func toggle_bike() -> String:
+	if not ItemCatalog.has_item("resonance_bike"):
+		return "You don't have a Resonance Bike."
+	var tree := Engine.get_main_loop() as SceneTree
+	if bool(GameState.flags.get("bike_mounted", false)):
+		GameState.flags["bike_mounted"] = false
+		if tree:
+			for p in tree.get_nodes_in_group("player"):
+				if p.has_method("_refresh_bike_visual"):
+					p._refresh_bike_visual()
+		return "You hop off the Resonance Bike."
+	if not can_mount_bike_here():
+		return "Too tight to bike here — try the open routes."
+	GameState.flags["bike_mounted"] = true
+	if tree:
+		for p in tree.get_nodes_in_group("player"):
+			if p.has_method("_refresh_bike_visual"):
+				p._refresh_bike_visual()
+	return "You mount the Resonance Bike!"

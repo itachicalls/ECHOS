@@ -252,6 +252,12 @@ func block(cell: Vector2i) -> void:
 	blocked[cell] = true
 
 
+func open_passage(cell: Vector2i, tile: Vector3i = Tiles.PATH) -> void:
+	blocked.erase(cell)
+	grass.erase(cell)
+	set_ground(cell, tile)
+
+
 func place_bush(cell: Vector2i) -> void:
 	set_decor(cell, Tiles.BUSH)
 	block(cell)
@@ -623,6 +629,43 @@ func _tick_repel() -> void:
 
 func _on_map_step(_cell: Vector2i) -> void:
 	pass
+
+
+## Shared themed ambush used by discovery routes. Triggers once on the north path.
+func try_path_ambush(flag: String, lines: Array, chain: Array, cells: Array = []) -> void:
+	if bool(GameState.flags.get(flag, false)):
+		return
+	if player == null or _cutscene or _busy:
+		return
+	var hit := false
+	var check: Array = cells if cells.size() > 0 else [Vector2i(9, 12), Vector2i(10, 12)]
+	for c in check:
+		if player.cell == c:
+			hit = true
+			break
+	if not hit:
+		return
+	var pc: Vector2i = player.cell
+	var surround := [
+		pc + Vector2i(-1, 0),
+		pc + Vector2i(1, 0),
+		pc + Vector2i(0, -1),
+	]
+	var spawns := [
+		pc + Vector2i(-4, 0),
+		pc + Vector2i(4, 0),
+		pc + Vector2i(0, -4),
+	]
+	var actor_defs := []
+	for i in mini(3, chain.size()):
+		actor_defs.append({
+			"look": int(chain[i].get("look", 4 + i)),
+			"spawn": spawns[i],
+			"surround": surround[i],
+		})
+	play_ambush_surround(actor_defs, lines, func():
+		SceneRouter.start_ambush_chain(chain, String(GameState.current_map), flag)
+	)
 
 
 func _handle_interact(data: Dictionary) -> void:
@@ -1013,7 +1056,20 @@ func _play_heal_animation() -> void:
 func _on_trainer_interact(trainer: Dictionary) -> void:
 	var id := String(trainer.get("id", ""))
 	if bool(GameState.flags.get("trainer_" + id, false)):
-		EventBus.dialogue_requested.emit([String(trainer.get("win_line", "That was a great battle!"))])
+		var after = trainer.get("after_lines", [])
+		if after is Array and after.size() > 0:
+			EventBus.dialogue_requested.emit(after)
+			return
+		var lines: Array = []
+		var win_line := String(trainer.get("win_line", "That was a great battle!"))
+		if win_line != "":
+			lines.append(win_line)
+		var hint := String(trainer.get("hint", ""))
+		if hint != "":
+			lines.append(hint)
+		if lines.is_empty():
+			lines.append("That was a great battle!")
+		EventBus.dialogue_requested.emit(lines)
 		return
 	if GameState.living_party().is_empty():
 		EventBus.dialogue_requested.emit(["Your %s are too tired to battle..." % GameStrings.CREATURE_PLURAL_LOWER])
@@ -1036,6 +1092,7 @@ func _launch_trainer() -> void:
 	SceneRouter.start_trainer_battle(enemies, String(trainer.get("name", "Rival")), GameState.current_map, {
 		"trainer_id": String(trainer.get("id", "")),
 		"reward": int(trainer.get("reward", 2)),
+		"reward_items": trainer.get("reward_items", {}),
 		"win_line": String(trainer.get("win_line", "")),
 		"gym": bool(trainer.get("gym", false)),
 		"ranger": bool(trainer.get("ranger", false)),

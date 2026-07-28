@@ -73,7 +73,28 @@ func _build_map() -> void:
 	add_warp(Vector2i(0, 15), "beach1", Vector2i(18, 11), "left",
 		["trainer_champion", "trainer_j3_rival"],
 		"The western trail is still sealed by the Fracture...")
-	add_interact(Vector2i(2, 16), { "type": "sign", "text": "TIDECROSS TRAIL - west to the shore. Rumor says stranger Harmons wash up along the coast..." })
+	add_interact(Vector2i(2, 16), { "type": "sign", "text": "TIDECROSS TRAIL - west to the shore. Opens after Champion Vael (or Rival Sabo in Verdant Route 3)." })
+
+	# discovery doors — off the main west corridor so Tidecross stays clear
+	open_passage(Vector2i(2, 12), Tiles.PATH)
+	open_passage(Vector2i(3, 12), Tiles.PATH)
+	add_warp(Vector2i(2, 12), "windmill_ridge", Vector2i(9, 22), "up",
+		["trainer_champion"],
+		"Windmill Ridge is quiet until a Champion returns to Harmona Rest.")
+	add_warp(Vector2i(3, 12), "windmill_ridge", Vector2i(10, 22), "up",
+		["trainer_champion"],
+		"Windmill Ridge is quiet until a Champion returns to Harmona Rest.")
+	add_interact(Vector2i(4, 12), { "type": "sign", "text": "WINDMILL RIDGE - side trail. Unlocks after Champion Vael." })
+
+	open_passage(Vector2i(20, 8), Tiles.PATH)
+	open_passage(Vector2i(21, 8), Tiles.PATH)
+	add_warp(Vector2i(20, 8), "abandoned_lab", Vector2i(9, 22), "up",
+		["trainer_champion"],
+		"The Archive Lab stays sealed until the Champion's title is claimed.")
+	add_warp(Vector2i(21, 8), "abandoned_lab", Vector2i(10, 22), "up",
+		["trainer_champion"],
+		"The Archive Lab stays sealed until the Champion's title is claimed.")
+	add_interact(Vector2i(20, 9), { "type": "sign", "text": "ARCHIVE LAB RUINS - east annex. Unlocks after Champion Vael." })
 
 	# cobble plaza in the center
 	fill_ground(11, 14, 15, 16, Tiles.STONE)
@@ -114,6 +135,8 @@ func _build_map() -> void:
 		"lines": [
 			"Long ago The Chorus linked every creature to the land.",
 			"The Fracture shattered that bond — but Harmons still carry its memories.",
+			"Beat trainers, then talk to them again — they share path rumors.",
+			"After the Champion, go WEST for Tidecross. After Primordius, go SOUTH for Ashpeak.",
 		],
 	}, Tiles.TRAINER_PATHS[3], 2)
 	add_npc(Vector2i(20, 13), "left", Color(1, 1, 1), {

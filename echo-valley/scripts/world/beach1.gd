@@ -68,6 +68,10 @@ func _build_map() -> void:
 		"reward": 3, "ranger": false,
 		"intro": ["Caught the tide just right, huh?", "Let's see if your team can ride the waves!"],
 		"win_line": "Whoa, totally swept me out. Nice one!",
+		"after_lines": [
+			"Still surfing these dunes?",
+			"West reef path: Coral Cathedral. North is Saltwind Cove — then the Voltmarsh.",
+		],
 	}, 4)
 	add_trainer(Vector2i(14, 8), "down", {
 		"id": "beach_nerissa", "name": "Diver Nerissa", "look": 15,
@@ -96,6 +100,18 @@ func _build_map() -> void:
 		"type": "quest", "quest_id": "q_shell_song",
 	}, Tiles.TRAINER_PATHS[19], 1)
 
+
+
+
+
+	# discovery: coral_cathedral
+	open_passage(Vector2i(1, 10), Tiles.PATH)
+	open_passage(Vector2i(2, 10), Tiles.PATH)
+	open_passage(Vector2i(1, 11), Tiles.PATH)
+	open_passage(Vector2i(2, 11), Tiles.PATH)
+	add_warp(Vector2i(1, 10), "coral_cathedral", Vector2i(9, 22), "left")
+	add_warp(Vector2i(1, 11), "coral_cathedral", Vector2i(10, 22), "left")
+	add_interact(Vector2i(2, 10), { "type": "sign", "text": "CORAL CATHEDRAL - reef spires." })
 
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 13), "echo_capsule", 2)

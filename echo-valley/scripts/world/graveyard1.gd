@@ -91,6 +91,18 @@ func _build_map() -> void:
 	}, Tiles.TRAINER_PATHS[4], 0)
 
 
+
+
+
+	# discovery: bonebridge
+	open_passage(Vector2i(17, 10), Tiles.PATH)
+	open_passage(Vector2i(18, 10), Tiles.PATH)
+	open_passage(Vector2i(17, 11), Tiles.PATH)
+	open_passage(Vector2i(18, 11), Tiles.PATH)
+	add_warp(Vector2i(18, 10), "bonebridge", Vector2i(9, 22), "right")
+	add_warp(Vector2i(18, 11), "bonebridge", Vector2i(10, 22), "right")
+	add_interact(Vector2i(16, 10), { "type": "sign", "text": "BONEBRIDGE - rib causeway." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 20), "echo_capsule", 5)
 	add_pickup(Vector2i(16, 6), "heart_salve", 4)

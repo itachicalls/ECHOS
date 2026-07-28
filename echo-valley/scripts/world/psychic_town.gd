@@ -82,6 +82,18 @@ func _build_map() -> void:
 		set_ground(p, Tiles.FLOWERS)
 
 
+
+
+
+	# discovery: mirror_marsh
+	open_passage(Vector2i(17, 10), Tiles.PATH)
+	open_passage(Vector2i(18, 10), Tiles.PATH)
+	open_passage(Vector2i(17, 11), Tiles.PATH)
+	open_passage(Vector2i(18, 11), Tiles.PATH)
+	add_warp(Vector2i(18, 10), "mirror_marsh", Vector2i(9, 22), "right")
+	add_warp(Vector2i(18, 11), "mirror_marsh", Vector2i(10, 22), "right")
+	add_interact(Vector2i(16, 10), { "type": "sign", "text": "MIRROR MARSH - still pools." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(13, 16), "heart_salve", 3)
 	add_pickup(Vector2i(3, 15), "great_capsule", 2)

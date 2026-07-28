@@ -84,6 +84,18 @@ func _build_map() -> void:
 	}, Vector2i(9, 2), "down", [Vector2i(9, 0), Vector2i(10, 0)], Vector2i(7, 3), [Vector2i(10, 2)])
 
 
+
+
+
+	# discovery: thornwall_keep
+	open_passage(Vector2i(1, 10), Tiles.PATH)
+	open_passage(Vector2i(2, 10), Tiles.PATH)
+	open_passage(Vector2i(1, 11), Tiles.PATH)
+	open_passage(Vector2i(2, 11), Tiles.PATH)
+	add_warp(Vector2i(1, 10), "thornwall_keep", Vector2i(9, 22), "left", ["trainer_j3_rival"], "Side path sealed for now...")
+	add_warp(Vector2i(1, 11), "thornwall_keep", Vector2i(10, 22), "left", ["trainer_j3_rival"], "Side path sealed for now...")
+	add_interact(Vector2i(2, 10), { "type": "sign", "text": "THORNWALL KEEP - after Rival Sabo." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 18), "echo_capsule", 3)
 	add_pickup(Vector2i(16, 6), "heart_salve", 2)

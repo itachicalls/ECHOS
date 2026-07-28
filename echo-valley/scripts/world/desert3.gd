@@ -91,6 +91,18 @@ func _build_map() -> void:
 	add_interact(Vector2i(9, 12), { "type": "sign", "text": "CAUTION: jagged rocks ahead sting careless Harmons." })
 
 
+
+
+
+	# discovery: salt_catacombs
+	open_passage(Vector2i(21, 10), Tiles.PATH)
+	open_passage(Vector2i(22, 10), Tiles.PATH)
+	open_passage(Vector2i(21, 11), Tiles.PATH)
+	open_passage(Vector2i(22, 11), Tiles.PATH)
+	add_warp(Vector2i(22, 10), "salt_catacombs", Vector2i(9, 22), "right", ["trainer_gym_desert"], "Side path sealed for now...")
+	add_warp(Vector2i(22, 11), "salt_catacombs", Vector2i(10, 22), "right", ["trainer_gym_desert"], "Side path sealed for now...")
+	add_interact(Vector2i(20, 10), { "type": "sign", "text": "SALT CATACOMBS - after Scorch Sigil." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(4, 20), "heart_salve", 2)
 	add_pickup(Vector2i(20, 4), "echo_capsule", 3)

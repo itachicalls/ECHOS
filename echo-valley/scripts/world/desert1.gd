@@ -63,6 +63,18 @@ func _build_map() -> void:
 	}, 3)
 
 
+
+
+
+	# discovery: belltower1
+	open_passage(Vector2i(17, 10), Tiles.PATH)
+	open_passage(Vector2i(18, 10), Tiles.PATH)
+	open_passage(Vector2i(17, 11), Tiles.PATH)
+	open_passage(Vector2i(18, 11), Tiles.PATH)
+	add_warp(Vector2i(18, 10), "belltower1", Vector2i(9, 22), "right", ["trainer_gym_grass"], "Side path sealed for now...")
+	add_warp(Vector2i(18, 11), "belltower1", Vector2i(10, 22), "right", ["trainer_gym_grass"], "Side path sealed for now...")
+	add_interact(Vector2i(16, 10), { "type": "sign", "text": "BELLTOWER - climb after Meadow Sigil." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 6), "heart_salve", 1)
 	add_pickup(Vector2i(16, 14), "echo_capsule", 2)

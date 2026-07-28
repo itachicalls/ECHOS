@@ -78,6 +78,27 @@ func _build_map() -> void:
 	add_heal_station(Vector2i(12, 20), Vector2i(12, 19), "down")
 
 
+
+
+
+	# discovery: aurora_cliff
+	open_passage(Vector2i(1, 10), Tiles.PATH)
+	open_passage(Vector2i(2, 10), Tiles.PATH)
+	open_passage(Vector2i(1, 11), Tiles.PATH)
+	open_passage(Vector2i(2, 11), Tiles.PATH)
+	add_warp(Vector2i(1, 10), "aurora_cliff", Vector2i(9, 22), "left", ["legend_hallowraith"], "Side path sealed for now...")
+	add_warp(Vector2i(1, 11), "aurora_cliff", Vector2i(10, 22), "left", ["legend_hallowraith"], "Side path sealed for now...")
+	add_interact(Vector2i(2, 10), { "type": "sign", "text": "AURORA CLIFF - after HALLOWRAITH." })
+
+	# discovery: glacial_archive
+	open_passage(Vector2i(17, 10), Tiles.PATH)
+	open_passage(Vector2i(18, 10), Tiles.PATH)
+	open_passage(Vector2i(17, 11), Tiles.PATH)
+	open_passage(Vector2i(18, 11), Tiles.PATH)
+	add_warp(Vector2i(18, 10), "glacial_archive", Vector2i(9, 22), "right", ["legend_hallowraith"], "Side path sealed for now...")
+	add_warp(Vector2i(18, 11), "glacial_archive", Vector2i(10, 22), "right", ["legend_hallowraith"], "Side path sealed for now...")
+	add_interact(Vector2i(16, 10), { "type": "sign", "text": "GLACIAL ARCHIVE - after HALLOWRAITH." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 18), "ultra_capsule", 3)
 	add_pickup(Vector2i(16, 4), "max_salve", 2)

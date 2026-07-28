@@ -2116,5 +2116,1955 @@
         "level_max": 63
       }
     ]
+  },
+  "willow_fen": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "mossling",
+        "weight": 18,
+        "level_min": 6,
+        "level_max": 10
+      },
+      {
+        "id": "bramblor",
+        "weight": 14,
+        "level_min": 7,
+        "level_max": 10
+      },
+      {
+        "id": "eldertree",
+        "weight": 12,
+        "level_min": 8,
+        "level_max": 10
+      },
+      {
+        "id": "fernkit",
+        "weight": 10,
+        "level_min": 6,
+        "level_max": 10
+      },
+      {
+        "id": "frondex",
+        "weight": 8,
+        "level_min": 7,
+        "level_max": 10
+      },
+      {
+        "id": "sproutle",
+        "weight": 8,
+        "level_min": 8,
+        "level_max": 10
+      },
+      {
+        "id": "thornvine",
+        "weight": 6,
+        "level_min": 6,
+        "level_max": 10
+      },
+      {
+        "id": "verdantaur",
+        "weight": 6,
+        "level_min": 7,
+        "level_max": 10
+      },
+      {
+        "id": "budkin",
+        "weight": 5,
+        "level_min": 8,
+        "level_max": 10
+      },
+      {
+        "id": "blossaur",
+        "weight": 4,
+        "level_min": 6,
+        "level_max": 10
+      }
+    ]
+  },
+  "scarlet_orchard": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "mossling",
+        "weight": 18,
+        "level_min": 7,
+        "level_max": 11
+      },
+      {
+        "id": "bramblor",
+        "weight": 14,
+        "level_min": 8,
+        "level_max": 11
+      },
+      {
+        "id": "eldertree",
+        "weight": 12,
+        "level_min": 9,
+        "level_max": 11
+      },
+      {
+        "id": "fernkit",
+        "weight": 10,
+        "level_min": 7,
+        "level_max": 11
+      },
+      {
+        "id": "frondex",
+        "weight": 8,
+        "level_min": 8,
+        "level_max": 11
+      },
+      {
+        "id": "sproutle",
+        "weight": 8,
+        "level_min": 9,
+        "level_max": 11
+      },
+      {
+        "id": "thornvine",
+        "weight": 6,
+        "level_min": 7,
+        "level_max": 11
+      },
+      {
+        "id": "verdantaur",
+        "weight": 6,
+        "level_min": 8,
+        "level_max": 11
+      },
+      {
+        "id": "budkin",
+        "weight": 5,
+        "level_min": 9,
+        "level_max": 11
+      },
+      {
+        "id": "blossaur",
+        "weight": 4,
+        "level_min": 7,
+        "level_max": 11
+      }
+    ]
+  },
+  "mushroom_grotto": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "mossling",
+        "weight": 18,
+        "level_min": 8,
+        "level_max": 12
+      },
+      {
+        "id": "bramblor",
+        "weight": 14,
+        "level_min": 9,
+        "level_max": 13
+      },
+      {
+        "id": "eldertree",
+        "weight": 12,
+        "level_min": 10,
+        "level_max": 13
+      },
+      {
+        "id": "fernkit",
+        "weight": 10,
+        "level_min": 8,
+        "level_max": 12
+      },
+      {
+        "id": "frondex",
+        "weight": 8,
+        "level_min": 9,
+        "level_max": 13
+      },
+      {
+        "id": "sproutle",
+        "weight": 8,
+        "level_min": 10,
+        "level_max": 13
+      },
+      {
+        "id": "thornvine",
+        "weight": 6,
+        "level_min": 8,
+        "level_max": 12
+      },
+      {
+        "id": "verdantaur",
+        "weight": 6,
+        "level_min": 9,
+        "level_max": 13
+      },
+      {
+        "id": "budkin",
+        "weight": 5,
+        "level_min": 10,
+        "level_max": 13
+      },
+      {
+        "id": "blossaur",
+        "weight": 4,
+        "level_min": 8,
+        "level_max": 12
+      }
+    ]
+  },
+  "haunted_manor1": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "duskling",
+        "weight": 18,
+        "level_min": 10,
+        "level_max": 14
+      },
+      {
+        "id": "nocturn",
+        "weight": 14,
+        "level_min": 11,
+        "level_max": 15
+      },
+      {
+        "id": "umbrix",
+        "weight": 12,
+        "level_min": 12,
+        "level_max": 15
+      },
+      {
+        "id": "wispurr",
+        "weight": 10,
+        "level_min": 10,
+        "level_max": 14
+      },
+      {
+        "id": "shadelet",
+        "weight": 8,
+        "level_min": 11,
+        "level_max": 15
+      },
+      {
+        "id": "umbrapaw",
+        "weight": 8,
+        "level_min": 12,
+        "level_max": 15
+      },
+      {
+        "id": "nyxeclipse",
+        "weight": 6,
+        "level_min": 10,
+        "level_max": 14
+      },
+      {
+        "id": "gloomkin",
+        "weight": 6,
+        "level_min": 11,
+        "level_max": 15
+      },
+      {
+        "id": "duskmaw",
+        "weight": 5,
+        "level_min": 12,
+        "level_max": 15
+      },
+      {
+        "id": "voidmonarch",
+        "weight": 4,
+        "level_min": 10,
+        "level_max": 14
+      }
+    ]
+  },
+  "haunted_manor2": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "duskling",
+        "weight": 18,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "nocturn",
+        "weight": 14,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "umbrix",
+        "weight": 12,
+        "level_min": 16,
+        "level_max": 19
+      },
+      {
+        "id": "wispurr",
+        "weight": 10,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "shadelet",
+        "weight": 8,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "umbrapaw",
+        "weight": 8,
+        "level_min": 16,
+        "level_max": 19
+      },
+      {
+        "id": "nyxeclipse",
+        "weight": 6,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "gloomkin",
+        "weight": 6,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "duskmaw",
+        "weight": 5,
+        "level_min": 16,
+        "level_max": 19
+      },
+      {
+        "id": "voidmonarch",
+        "weight": 4,
+        "level_min": 14,
+        "level_max": 18
+      }
+    ]
+  },
+  "haunted_manor3": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "duskling",
+        "weight": 18,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "nocturn",
+        "weight": 14,
+        "level_min": 19,
+        "level_max": 23
+      },
+      {
+        "id": "umbrix",
+        "weight": 12,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "wispurr",
+        "weight": 10,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "shadelet",
+        "weight": 8,
+        "level_min": 19,
+        "level_max": 23
+      },
+      {
+        "id": "umbrapaw",
+        "weight": 8,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "nyxeclipse",
+        "weight": 6,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "gloomkin",
+        "weight": 6,
+        "level_min": 19,
+        "level_max": 23
+      },
+      {
+        "id": "duskmaw",
+        "weight": 5,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "voidmonarch",
+        "weight": 4,
+        "level_min": 18,
+        "level_max": 22
+      }
+    ]
+  },
+  "belltower1": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "zephyr",
+        "weight": 18,
+        "level_min": 12,
+        "level_max": 16
+      },
+      {
+        "id": "gustrel",
+        "weight": 14,
+        "level_min": 13,
+        "level_max": 17
+      },
+      {
+        "id": "cyclora",
+        "weight": 12,
+        "level_min": 14,
+        "level_max": 17
+      },
+      {
+        "id": "boltmoth",
+        "weight": 10,
+        "level_min": 12,
+        "level_max": 16
+      },
+      {
+        "id": "breezle",
+        "weight": 8,
+        "level_min": 13,
+        "level_max": 17
+      },
+      {
+        "id": "zephyro",
+        "weight": 8,
+        "level_min": 14,
+        "level_max": 17
+      },
+      {
+        "id": "tempestrix",
+        "weight": 6,
+        "level_min": 12,
+        "level_max": 16
+      },
+      {
+        "id": "fluffet",
+        "weight": 6,
+        "level_min": 13,
+        "level_max": 17
+      },
+      {
+        "id": "cloudris",
+        "weight": 5,
+        "level_min": 14,
+        "level_max": 17
+      },
+      {
+        "id": "stratoson",
+        "weight": 4,
+        "level_min": 12,
+        "level_max": 16
+      }
+    ]
+  },
+  "belltower2": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "zephyr",
+        "weight": 18,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "gustrel",
+        "weight": 14,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "cyclora",
+        "weight": 12,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "boltmoth",
+        "weight": 10,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "breezle",
+        "weight": 8,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "zephyro",
+        "weight": 8,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "tempestrix",
+        "weight": 6,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "fluffet",
+        "weight": 6,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "cloudris",
+        "weight": 5,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "stratoson",
+        "weight": 4,
+        "level_min": 16,
+        "level_max": 20
+      }
+    ]
+  },
+  "belltower3": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "zephyr",
+        "weight": 18,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "gustrel",
+        "weight": 14,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "cyclora",
+        "weight": 12,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "boltmoth",
+        "weight": 10,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "breezle",
+        "weight": 8,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "zephyro",
+        "weight": 8,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "tempestrix",
+        "weight": 6,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "fluffet",
+        "weight": 6,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "cloudris",
+        "weight": 5,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "stratoson",
+        "weight": 4,
+        "level_min": 20,
+        "level_max": 24
+      }
+    ]
+  },
+  "ember_forge": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "emberkit",
+        "weight": 18,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "flarefox",
+        "weight": 14,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "infernix",
+        "weight": 12,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "cindboth",
+        "weight": 10,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "charby",
+        "weight": 8,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "charflare",
+        "weight": 8,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "pyroclast",
+        "weight": 6,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "kindle",
+        "weight": 6,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "blazehound",
+        "weight": 5,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "cerberflame",
+        "weight": 4,
+        "level_min": 14,
+        "level_max": 18
+      }
+    ]
+  },
+  "salt_catacombs": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "pebblit",
+        "weight": 18,
+        "level_min": 13,
+        "level_max": 17
+      },
+      {
+        "id": "craggan",
+        "weight": 14,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "titanag",
+        "weight": 12,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "cobblit",
+        "weight": 10,
+        "level_min": 13,
+        "level_max": 17
+      },
+      {
+        "id": "bouldrake",
+        "weight": 8,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "monolith",
+        "weight": 8,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "shardling",
+        "weight": 6,
+        "level_min": 13,
+        "level_max": 17
+      },
+      {
+        "id": "graniteor",
+        "weight": 6,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "bedrockus",
+        "weight": 5,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "flintling",
+        "weight": 4,
+        "level_min": 13,
+        "level_max": 17
+      }
+    ]
+  },
+  "vine_cathedral": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "mossling",
+        "weight": 18,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "bramblor",
+        "weight": 14,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "eldertree",
+        "weight": 12,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "fernkit",
+        "weight": 10,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "frondex",
+        "weight": 8,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "sproutle",
+        "weight": 8,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "thornvine",
+        "weight": 6,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "verdantaur",
+        "weight": 6,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "budkin",
+        "weight": 5,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "blossaur",
+        "weight": 4,
+        "level_min": 16,
+        "level_max": 20
+      }
+    ]
+  },
+  "crystal_mines1": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "pebblit",
+        "weight": 18,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "craggan",
+        "weight": 14,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "titanag",
+        "weight": 12,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "cobblit",
+        "weight": 10,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "bouldrake",
+        "weight": 8,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "monolith",
+        "weight": 8,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "shardling",
+        "weight": 6,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "graniteor",
+        "weight": 6,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "bedrockus",
+        "weight": 5,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "flintling",
+        "weight": 4,
+        "level_min": 15,
+        "level_max": 19
+      }
+    ]
+  },
+  "crystal_mines2": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "pebblit",
+        "weight": 18,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "craggan",
+        "weight": 14,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "titanag",
+        "weight": 12,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "cobblit",
+        "weight": 10,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "bouldrake",
+        "weight": 8,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "monolith",
+        "weight": 8,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "shardling",
+        "weight": 6,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "graniteor",
+        "weight": 6,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "bedrockus",
+        "weight": 5,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "flintling",
+        "weight": 4,
+        "level_min": 20,
+        "level_max": 24
+      }
+    ]
+  },
+  "whispering_gallery": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "duskling",
+        "weight": 18,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "nocturn",
+        "weight": 14,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "umbrix",
+        "weight": 12,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "wispurr",
+        "weight": 10,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "shadelet",
+        "weight": 8,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "umbrapaw",
+        "weight": 8,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "nyxeclipse",
+        "weight": 6,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "gloomkin",
+        "weight": 6,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "duskmaw",
+        "weight": 5,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "voidmonarch",
+        "weight": 4,
+        "level_min": 22,
+        "level_max": 26
+      }
+    ]
+  },
+  "coral_cathedral": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "tideling",
+        "weight": 18,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "marowl",
+        "weight": 14,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "leviaqua",
+        "weight": 12,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "dewling",
+        "weight": 10,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "naiaqua",
+        "weight": 8,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "aquari",
+        "weight": 8,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "puddlet",
+        "weight": 6,
+        "level_min": 14,
+        "level_max": 18
+      },
+      {
+        "id": "rippletide",
+        "weight": 6,
+        "level_min": 15,
+        "level_max": 19
+      },
+      {
+        "id": "torrentag",
+        "weight": 5,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "brooklet",
+        "weight": 4,
+        "level_min": 14,
+        "level_max": 18
+      }
+    ]
+  },
+  "sunken_ruins": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "tideling",
+        "weight": 18,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "marowl",
+        "weight": 14,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "leviaqua",
+        "weight": 12,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "dewling",
+        "weight": 10,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "naiaqua",
+        "weight": 8,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "aquari",
+        "weight": 8,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "puddlet",
+        "weight": 6,
+        "level_min": 16,
+        "level_max": 20
+      },
+      {
+        "id": "rippletide",
+        "weight": 6,
+        "level_min": 17,
+        "level_max": 21
+      },
+      {
+        "id": "torrentag",
+        "weight": 5,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "brooklet",
+        "weight": 4,
+        "level_min": 16,
+        "level_max": 20
+      }
+    ]
+  },
+  "thunder_spire": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "sparklit",
+        "weight": 18,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "voltwing",
+        "weight": 14,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "stormraptor",
+        "weight": 12,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "buzzfly",
+        "weight": 10,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "zaptenna",
+        "weight": 8,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "tesloom",
+        "weight": 8,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "wattpup",
+        "weight": 6,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "amperewolf",
+        "weight": 6,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "voltcanine",
+        "weight": 5,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "statikit",
+        "weight": 4,
+        "level_min": 22,
+        "level_max": 26
+      }
+    ]
+  },
+  "mirror_marsh": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "psybud",
+        "weight": 18,
+        "level_min": 26,
+        "level_max": 30
+      },
+      {
+        "id": "mesmind",
+        "weight": 14,
+        "level_min": 27,
+        "level_max": 31
+      },
+      {
+        "id": "hypnaura",
+        "weight": 12,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "dreamlet",
+        "weight": 10,
+        "level_min": 26,
+        "level_max": 30
+      },
+      {
+        "id": "lullabye",
+        "weight": 8,
+        "level_min": 27,
+        "level_max": 31
+      },
+      {
+        "id": "somnarch",
+        "weight": 8,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "runelet",
+        "weight": 6,
+        "level_min": 26,
+        "level_max": 30
+      },
+      {
+        "id": "sigilix",
+        "weight": 6,
+        "level_min": 27,
+        "level_max": 31
+      },
+      {
+        "id": "arcanexus",
+        "weight": 5,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "orbitot",
+        "weight": 4,
+        "level_min": 26,
+        "level_max": 30
+      }
+    ]
+  },
+  "forgotten_library": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "psybud",
+        "weight": 18,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "mesmind",
+        "weight": 14,
+        "level_min": 29,
+        "level_max": 33
+      },
+      {
+        "id": "hypnaura",
+        "weight": 12,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "dreamlet",
+        "weight": 10,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "lullabye",
+        "weight": 8,
+        "level_min": 29,
+        "level_max": 33
+      },
+      {
+        "id": "somnarch",
+        "weight": 8,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "runelet",
+        "weight": 6,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "sigilix",
+        "weight": 6,
+        "level_min": 29,
+        "level_max": 33
+      },
+      {
+        "id": "arcanexus",
+        "weight": 5,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "orbitot",
+        "weight": 4,
+        "level_min": 28,
+        "level_max": 32
+      }
+    ]
+  },
+  "windmill_ridge": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "zephyr",
+        "weight": 18,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "gustrel",
+        "weight": 14,
+        "level_min": 19,
+        "level_max": 23
+      },
+      {
+        "id": "cyclora",
+        "weight": 12,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "boltmoth",
+        "weight": 10,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "breezle",
+        "weight": 8,
+        "level_min": 19,
+        "level_max": 23
+      },
+      {
+        "id": "zephyro",
+        "weight": 8,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "tempestrix",
+        "weight": 6,
+        "level_min": 18,
+        "level_max": 22
+      },
+      {
+        "id": "fluffet",
+        "weight": 6,
+        "level_min": 19,
+        "level_max": 23
+      },
+      {
+        "id": "cloudris",
+        "weight": 5,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "stratoson",
+        "weight": 4,
+        "level_min": 18,
+        "level_max": 22
+      }
+    ]
+  },
+  "abandoned_lab": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "psybud",
+        "weight": 18,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "mesmind",
+        "weight": 14,
+        "level_min": 25,
+        "level_max": 29
+      },
+      {
+        "id": "hypnaura",
+        "weight": 12,
+        "level_min": 26,
+        "level_max": 30
+      },
+      {
+        "id": "dreamlet",
+        "weight": 10,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "lullabye",
+        "weight": 8,
+        "level_min": 25,
+        "level_max": 29
+      },
+      {
+        "id": "somnarch",
+        "weight": 8,
+        "level_min": 26,
+        "level_max": 30
+      },
+      {
+        "id": "runelet",
+        "weight": 6,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "sigilix",
+        "weight": 6,
+        "level_min": 25,
+        "level_max": 29
+      },
+      {
+        "id": "arcanexus",
+        "weight": 5,
+        "level_min": 26,
+        "level_max": 30
+      },
+      {
+        "id": "orbitot",
+        "weight": 4,
+        "level_min": 24,
+        "level_max": 28
+      }
+    ]
+  },
+  "clockwork_vault": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "sparklit",
+        "weight": 18,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "voltwing",
+        "weight": 14,
+        "level_min": 29,
+        "level_max": 33
+      },
+      {
+        "id": "stormraptor",
+        "weight": 12,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "buzzfly",
+        "weight": 10,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "zaptenna",
+        "weight": 8,
+        "level_min": 29,
+        "level_max": 33
+      },
+      {
+        "id": "tesloom",
+        "weight": 8,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "wattpup",
+        "weight": 6,
+        "level_min": 28,
+        "level_max": 32
+      },
+      {
+        "id": "amperewolf",
+        "weight": 6,
+        "level_min": 29,
+        "level_max": 33
+      },
+      {
+        "id": "voltcanine",
+        "weight": 5,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "statikit",
+        "weight": 4,
+        "level_min": 28,
+        "level_max": 32
+      }
+    ]
+  },
+  "moonlit_lake": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "tideling",
+        "weight": 18,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "marowl",
+        "weight": 14,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "leviaqua",
+        "weight": 12,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "dewling",
+        "weight": 10,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "naiaqua",
+        "weight": 8,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "aquari",
+        "weight": 8,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "puddlet",
+        "weight": 6,
+        "level_min": 20,
+        "level_max": 24
+      },
+      {
+        "id": "rippletide",
+        "weight": 6,
+        "level_min": 21,
+        "level_max": 25
+      },
+      {
+        "id": "torrentag",
+        "weight": 5,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "brooklet",
+        "weight": 4,
+        "level_min": 20,
+        "level_max": 24
+      }
+    ]
+  },
+  "starfall_crater": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "psybud",
+        "weight": 18,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "mesmind",
+        "weight": 14,
+        "level_min": 31,
+        "level_max": 35
+      },
+      {
+        "id": "hypnaura",
+        "weight": 12,
+        "level_min": 32,
+        "level_max": 36
+      },
+      {
+        "id": "dreamlet",
+        "weight": 10,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "lullabye",
+        "weight": 8,
+        "level_min": 31,
+        "level_max": 35
+      },
+      {
+        "id": "somnarch",
+        "weight": 8,
+        "level_min": 32,
+        "level_max": 36
+      },
+      {
+        "id": "runelet",
+        "weight": 6,
+        "level_min": 30,
+        "level_max": 34
+      },
+      {
+        "id": "sigilix",
+        "weight": 6,
+        "level_min": 31,
+        "level_max": 35
+      },
+      {
+        "id": "arcanexus",
+        "weight": 5,
+        "level_min": 32,
+        "level_max": 36
+      },
+      {
+        "id": "orbitot",
+        "weight": 4,
+        "level_min": 30,
+        "level_max": 34
+      }
+    ]
+  },
+  "thornwall_keep": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "mossling",
+        "weight": 18,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "bramblor",
+        "weight": 14,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "eldertree",
+        "weight": 12,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "fernkit",
+        "weight": 10,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "frondex",
+        "weight": 8,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "sproutle",
+        "weight": 8,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "thornvine",
+        "weight": 6,
+        "level_min": 22,
+        "level_max": 26
+      },
+      {
+        "id": "verdantaur",
+        "weight": 6,
+        "level_min": 23,
+        "level_max": 27
+      },
+      {
+        "id": "budkin",
+        "weight": 5,
+        "level_min": 24,
+        "level_max": 28
+      },
+      {
+        "id": "blossaur",
+        "weight": 4,
+        "level_min": 22,
+        "level_max": 26
+      }
+    ]
+  },
+  "cloud_garden": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "zephyr",
+        "weight": 18,
+        "level_min": 32,
+        "level_max": 36
+      },
+      {
+        "id": "gustrel",
+        "weight": 14,
+        "level_min": 33,
+        "level_max": 37
+      },
+      {
+        "id": "cyclora",
+        "weight": 12,
+        "level_min": 34,
+        "level_max": 38
+      },
+      {
+        "id": "boltmoth",
+        "weight": 10,
+        "level_min": 32,
+        "level_max": 36
+      },
+      {
+        "id": "breezle",
+        "weight": 8,
+        "level_min": 33,
+        "level_max": 37
+      },
+      {
+        "id": "zephyro",
+        "weight": 8,
+        "level_min": 34,
+        "level_max": 38
+      },
+      {
+        "id": "tempestrix",
+        "weight": 6,
+        "level_min": 32,
+        "level_max": 36
+      },
+      {
+        "id": "fluffet",
+        "weight": 6,
+        "level_min": 33,
+        "level_max": 37
+      },
+      {
+        "id": "cloudris",
+        "weight": 5,
+        "level_min": 34,
+        "level_max": 38
+      },
+      {
+        "id": "stratoson",
+        "weight": 4,
+        "level_min": 32,
+        "level_max": 36
+      }
+    ]
+  },
+  "bonebridge": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "duskling",
+        "weight": 18,
+        "level_min": 34,
+        "level_max": 38
+      },
+      {
+        "id": "nocturn",
+        "weight": 14,
+        "level_min": 35,
+        "level_max": 39
+      },
+      {
+        "id": "umbrix",
+        "weight": 12,
+        "level_min": 36,
+        "level_max": 40
+      },
+      {
+        "id": "wispurr",
+        "weight": 10,
+        "level_min": 34,
+        "level_max": 38
+      },
+      {
+        "id": "shadelet",
+        "weight": 8,
+        "level_min": 35,
+        "level_max": 39
+      },
+      {
+        "id": "umbrapaw",
+        "weight": 8,
+        "level_min": 36,
+        "level_max": 40
+      },
+      {
+        "id": "nyxeclipse",
+        "weight": 6,
+        "level_min": 34,
+        "level_max": 38
+      },
+      {
+        "id": "gloomkin",
+        "weight": 6,
+        "level_min": 35,
+        "level_max": 39
+      },
+      {
+        "id": "duskmaw",
+        "weight": 5,
+        "level_min": 36,
+        "level_max": 40
+      },
+      {
+        "id": "voidmonarch",
+        "weight": 4,
+        "level_min": 34,
+        "level_max": 38
+      }
+    ]
+  },
+  "aurora_cliff": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "zephyr",
+        "weight": 18,
+        "level_min": 40,
+        "level_max": 44
+      },
+      {
+        "id": "gustrel",
+        "weight": 14,
+        "level_min": 41,
+        "level_max": 45
+      },
+      {
+        "id": "cyclora",
+        "weight": 12,
+        "level_min": 42,
+        "level_max": 46
+      },
+      {
+        "id": "boltmoth",
+        "weight": 10,
+        "level_min": 40,
+        "level_max": 44
+      },
+      {
+        "id": "breezle",
+        "weight": 8,
+        "level_min": 41,
+        "level_max": 45
+      },
+      {
+        "id": "zephyro",
+        "weight": 8,
+        "level_min": 42,
+        "level_max": 46
+      },
+      {
+        "id": "tempestrix",
+        "weight": 6,
+        "level_min": 40,
+        "level_max": 44
+      },
+      {
+        "id": "fluffet",
+        "weight": 6,
+        "level_min": 41,
+        "level_max": 45
+      },
+      {
+        "id": "cloudris",
+        "weight": 5,
+        "level_min": 42,
+        "level_max": 46
+      },
+      {
+        "id": "stratoson",
+        "weight": 4,
+        "level_min": 40,
+        "level_max": 44
+      }
+    ]
+  },
+  "glacial_archive": {
+    "chance_per_step": 0.13,
+    "encounters": [
+      {
+        "id": "tideling",
+        "weight": 18,
+        "level_min": 48,
+        "level_max": 52
+      },
+      {
+        "id": "marowl",
+        "weight": 14,
+        "level_min": 49,
+        "level_max": 53
+      },
+      {
+        "id": "leviaqua",
+        "weight": 12,
+        "level_min": 50,
+        "level_max": 54
+      },
+      {
+        "id": "dewling",
+        "weight": 10,
+        "level_min": 48,
+        "level_max": 52
+      },
+      {
+        "id": "naiaqua",
+        "weight": 8,
+        "level_min": 49,
+        "level_max": 53
+      },
+      {
+        "id": "aquari",
+        "weight": 8,
+        "level_min": 50,
+        "level_max": 54
+      },
+      {
+        "id": "puddlet",
+        "weight": 6,
+        "level_min": 48,
+        "level_max": 52
+      },
+      {
+        "id": "rippletide",
+        "weight": 6,
+        "level_min": 49,
+        "level_max": 53
+      },
+      {
+        "id": "torrentag",
+        "weight": 5,
+        "level_min": 50,
+        "level_max": 54
+      },
+      {
+        "id": "brooklet",
+        "weight": 4,
+        "level_min": 48,
+        "level_max": 52
+      }
+    ]
   }
 }

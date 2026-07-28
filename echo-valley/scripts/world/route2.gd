@@ -69,6 +69,10 @@ func _build_map() -> void:
 		"reward": 5,
 		"intro": ["So YOU'RE the trainer everyone's talking about.", "Let's find out if the hype is real!"],
 		"win_line": "...Not bad. This won't be our last battle.",
+		"after_lines": [
+			"Fine — a tip. West thicket hides Hollowbrook Manor now that you've beaten me.",
+			"East of the pond: Mushroom Grotto. After the Champion, Harmona's west gate opens the coast.",
+		],
 	})
 	add_trainer(Vector2i(14, 17), "left", {
 		"id": "r2_brook", "name": "Angler Brook", "look": 10,
@@ -95,18 +99,45 @@ func _build_map() -> void:
 		"id": "gym_grass", "name": "Ranger Fern", "look": 1,
 		"party": [{ "id": "fernkit", "level": 12 }, { "id": "thornvine", "level": 13 }, { "id": "bramblor", "level": 14 }],
 		"reward": 4,
-		"reward_items": { "fishing_rod": 1 },
+		"reward_items": { "fishing_rod": 1, "running_shoes": 1 },
 		"gym": true,
 		"intro": ["I am Fern, Meadow Route Ranger.", "None cross to the desert without proving your resonance!"],
-		"win_line": "The meadow yields to you. Take this rod — the desert oasis rewards patient fishers.",
+		"win_line": "The meadow yields. Take this rod — and these Running Shoes. The valley is wide!",
+		"after_lines": [
+			"Shoes laced? You'll cover routes much faster now.",
+			"West thicket: Hollowbrook Manor after Rival Sabo. East: Mushroom Grotto.",
+		],
 	}, Vector2i(3, 1), "down", [Vector2i(3, 0), Vector2i(4, 0)], Vector2i(2, 2), [Vector2i(4, 1)])
 
+
+
+	# discovery: mushroom_grotto (east of pond path)
+	for y in range(10, 12):
+		open_passage(Vector2i(16, y), Tiles.PATH)
+		open_passage(Vector2i(17, y), Tiles.PATH)
+	add_warp(Vector2i(17, 10), "mushroom_grotto", Vector2i(9, 22), "right")
+	add_warp(Vector2i(17, 11), "mushroom_grotto", Vector2i(10, 22), "right")
+	add_interact(Vector2i(15, 10), { "type": "sign", "text": "MUSHROOM GROTTO - damp hollow east of the wood." })
+
+	# discovery: haunted_manor1 (west thicket)
+	for y in range(14, 16):
+		open_passage(Vector2i(1, y), Tiles.PATH)
+		open_passage(Vector2i(2, y), Tiles.PATH)
+	add_warp(Vector2i(1, 14), "haunted_manor1", Vector2i(9, 22), "left",
+		["trainer_r2_rival"],
+		"Hollowbrook Manor stays shuttered until you beat Rival Sabo here.")
+	add_warp(Vector2i(1, 15), "haunted_manor1", Vector2i(10, 22), "left",
+		["trainer_r2_rival"],
+		"Hollowbrook Manor stays shuttered until you beat Rival Sabo here.")
+	add_interact(Vector2i(2, 13), { "type": "sign", "text": "HOLLOWBROOK MANOR - haunted estate. Opens after Rival Sabo." })
 
 func _place_pickups() -> void:
 	add_pickup(Vector2i(15, 14), "echo_capsule", 2)
 	add_pickup(Vector2i(6, 4), "heart_salve", 2)
 	add_pickup(Vector2i(12, 19), "great_capsule", 1)
 	add_pickup(Vector2i(5, 14), "repel_charm", 1)
+	# Fallback if Meadow Sigil was earned before shoes existed.
+	add_pickup(Vector2i(2, 3), "running_shoes", 1)
 
 
 func _on_map_step(cell: Vector2i) -> void:

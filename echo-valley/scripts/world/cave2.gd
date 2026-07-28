@@ -89,7 +89,14 @@ func _build_map() -> void:
 			"I am Vael, Champion of Echo Valley.",
 			"Show me the bond you forged on this journey!",
 		],
-		"win_line": "...Magnificent. Echo Valley has a new legend. The title is yours. West of town, the Fracture coast now listens.",
+		"win_line": "...Magnificent. The title is yours.",
+		"after_lines": [
+			"Champion. Listen well — the valley is not finished with you.",
+			"Return to Harmona Rest and leave through the WEST gate: Tidecross Shore, Saltwind Cove, Voltmarsh, then the Hollow Barrows.",
+			"Side paths hide a haunted manor, belltower, mines, and more — beaten trainers share rumors if you talk again.",
+			"After you face Primordius and choose a fate, the SOUTH gate opens to Ashpeak and the true endgame.",
+		],
+		"hint": "West from Harmona Rest after this fight. South after Primordius.",
 	})
 
 

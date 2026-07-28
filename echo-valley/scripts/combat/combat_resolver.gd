@@ -213,11 +213,18 @@ static func _chime(s: Dictionary, side: String, chime_id: String) -> Array:
 		return [{ "type": "miss", "side": side, "actor": atk.name, "chime": chime.name }]
 	var atk_st: Dictionary = atk.get("stages", {})
 	var def_st: Dictionary = def.get("stages", {})
-	var mult := EchoTypes.type_multiplier(int(chime.resonance) as EchoTypes.Resonance, int(def.resonance) as EchoTypes.Resonance)
+	var type_mult := EchoTypes.type_multiplier(int(chime.resonance) as EchoTypes.Resonance, int(def.resonance) as EchoTypes.Resonance)
+	# Same-type attack bonus when the Harmon shares its chime's resonance.
+	var stab := 1.0
+	if int(chime.resonance) == int(atk.get("resonance", -1)) and int(chime.resonance) != 0:
+		stab = 1.25
+	# Critical hits — ~1/16, independent of type matchup.
+	var critical := randf() < (1.0 / 16.0)
+	var crit_mult := 1.75 if critical else 1.0
 	var atk_pow := float(atk.power) * _stage_mult(int(atk_st.get("power", 0)))
 	var def_grd := float(def.guard) * _stage_mult(int(def_st.get("guard", 0)))
 	var raw := (atk_pow * float(chime.power)) / maxf(1.0, def_grd * 1.8)
-	var dmg := maxi(1, int(round(raw * mult * randf_range(0.9, 1.1))))
+	var dmg := maxi(1, int(round(raw * type_mult * stab * crit_mult * randf_range(0.9, 1.1))))
 	var target_idx := int(s[foe_side].active)
 	var target_hp_before := int(def.current_hp)
 	var actor_hp_before := int(atk.current_hp)
@@ -226,9 +233,12 @@ static func _chime(s: Dictionary, side: String, chime_id: String) -> Array:
 		"type": "damage", "side": side, "target_side": foe_side, "target_index": target_idx,
 		"actor_index": int(s[side].active),
 		"actor": atk.name, "target": def.name,
-		"chime": chime.name, "resonance": int(chime.resonance), "damage": dmg, "multiplier": mult,
+		"chime": chime.name, "resonance": int(chime.resonance), "damage": dmg,
+		"multiplier": type_mult, "stab": stab > 1.01, "critical": critical,
 		"target_hp_before": target_hp_before, "target_hp": def.current_hp, "target_max_hp": def.max_hp,
 		"actor_hp_before": actor_hp_before, "actor_max_hp": atk.max_hp,
+		"lifesteal": float(chime.get("lifesteal", 0.0)),
+		"power": int(chime.get("power", 0)),
 	}]
 	var steal := float(chime.get("lifesteal", 0.0))
 	if steal > 0.0 and int(atk.current_hp) > 0:

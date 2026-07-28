@@ -62,6 +62,20 @@ func _build_map() -> void:
 			"If they corner you in the marsh... stand your ground.",
 		],
 	}, Tiles.TRAINER_PATHS[18], 2)
+	# Resonance Bike — coast courier gifts it once you're this far west.
+	add_greeter(Vector2i(11, 16), "left", {
+		"id": "cove_bike", "look": 14,
+		"gifts": { "resonance_bike": 1 },
+		"lines": [
+			"Courier from Harmona! You've earned open-road gear.",
+			"This Resonance Bike eats distance — open Bag and Use it outdoors.",
+			"Cave halls and manor corridors are too tight. Stick to routes!",
+		],
+		"repeat": [
+			"Bag → Resonance Bike to mount or hop off.",
+			"Windmill Ridge has a spare rack if you lose the trail.",
+		],
+	}, 3)
 	add_interact(Vector2i(9, 20), { "type": "sign", "text": "SALTWIND COVE - last safe rest before the Voltmarsh. Stock up!" })
 
 	add_npc(Vector2i(13, 13), "left", Color(1, 1, 1), {
@@ -88,6 +102,27 @@ func _build_map() -> void:
 	for p in [Vector2i(6, 9), Vector2i(13, 15), Vector2i(5, 17)]:
 		set_ground(p, Tiles.FLOWERS)
 
+
+
+
+
+	# discovery: sunken_ruins
+	open_passage(Vector2i(1, 10), Tiles.PATH)
+	open_passage(Vector2i(2, 10), Tiles.PATH)
+	open_passage(Vector2i(1, 11), Tiles.PATH)
+	open_passage(Vector2i(2, 11), Tiles.PATH)
+	add_warp(Vector2i(1, 10), "sunken_ruins", Vector2i(9, 22), "left")
+	add_warp(Vector2i(1, 11), "sunken_ruins", Vector2i(10, 22), "left")
+	add_interact(Vector2i(2, 10), { "type": "sign", "text": "SUNKEN RUINS - drowned plaza." })
+
+	# discovery: moonlit_lake
+	open_passage(Vector2i(17, 10), Tiles.PATH)
+	open_passage(Vector2i(18, 10), Tiles.PATH)
+	open_passage(Vector2i(17, 11), Tiles.PATH)
+	open_passage(Vector2i(18, 11), Tiles.PATH)
+	add_warp(Vector2i(18, 10), "moonlit_lake", Vector2i(9, 22), "right")
+	add_warp(Vector2i(18, 11), "moonlit_lake", Vector2i(10, 22), "right")
+	add_interact(Vector2i(16, 10), { "type": "sign", "text": "MOONLIT LAKE - silver water." })
 
 func _place_pickups() -> void:
 	add_pickup(Vector2i(12, 15), "echo_capsule", 3)

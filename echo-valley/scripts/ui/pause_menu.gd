@@ -169,10 +169,13 @@ func _list_frame_style() -> StyleBoxFlat:
 
 func _style() -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color("1d2b3a")
-	sb.border_color = Color("cfe8ff")
+	sb.bg_color = Color("152433")
+	sb.border_color = Color("d7ecff")
 	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(4)
+	sb.set_corner_radius_all(5)
+	sb.shadow_color = Color(0, 0, 0, 0.35)
+	sb.shadow_size = 4
+	sb.shadow_offset = Vector2(0, 2)
 	sb.content_margin_left = 4; sb.content_margin_right = 4
 	sb.content_margin_top = 3; sb.content_margin_bottom = 3
 	return sb
@@ -533,6 +536,12 @@ func _use_bag_item(item_id: String) -> void:
 			_use_revive_bag()
 		"evo_capsule":
 			_use_evo_bag()
+		"running_shoes":
+			EventBus.toast.emit("Running Shoes are laced — you dash automatically!")
+		"resonance_bike":
+			var PlayerScript := load("res://scripts/player/player.gd")
+			EventBus.toast.emit(PlayerScript.toggle_bike())
+			_hide_menu()
 
 
 func _use_revive_bag() -> void:
@@ -678,10 +687,10 @@ func _fixed_label(text: String, width: int, size: int, color: Color = Color("fff
 
 func _card_style() -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color("24384a")
-	sb.border_color = Color("3a556b")
+	sb.bg_color = Color("1e3346")
+	sb.border_color = Color("5a7f9c")
 	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(3)
+	sb.set_corner_radius_all(4)
 	return sb
 
 

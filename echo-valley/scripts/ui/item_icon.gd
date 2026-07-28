@@ -29,6 +29,10 @@ func _draw() -> void:
 	match item_id:
 		"fishing_rod":
 			_draw_rod(s)
+		"resonance_bike":
+			_draw_bike(s)
+		"running_shoes":
+			_draw_shoes(s)
 		"heart_salve", "super_salve", "max_salve":
 			_draw_salve(s, item_id)
 		"repel_charm", "power_band", "thunder_sigil", "mind_sigil", "chorus_shard":
@@ -229,3 +233,22 @@ func _draw_rod(s: float) -> void:
 	draw_line(Vector2(cx - s * 0.34, s * 0.82), Vector2(cx + s * 0.3, s * 0.18), Color("8b5a2b"), 1.5)
 	draw_line(Vector2(cx + s * 0.3, s * 0.18), Vector2(cx + s * 0.34, s * 0.08), Color("cfe8ff", 0.8), 1.0)
 	draw_circle(Vector2(cx - s * 0.34, s * 0.82), s * 0.06, Color("c49bff"))
+
+
+func _draw_bike(s: float) -> void:
+	var c := Color("6ec8ff")
+	draw_circle(Vector2(s * 0.28, s * 0.68), s * 0.16, c.darkened(0.35))
+	draw_circle(Vector2(s * 0.72, s * 0.68), s * 0.16, c.darkened(0.35))
+	draw_circle(Vector2(s * 0.28, s * 0.68), s * 0.09, c)
+	draw_circle(Vector2(s * 0.72, s * 0.68), s * 0.09, c)
+	draw_line(Vector2(s * 0.28, s * 0.68), Vector2(s * 0.5, s * 0.38), Color("d7ecff"), 1.4)
+	draw_line(Vector2(s * 0.72, s * 0.68), Vector2(s * 0.5, s * 0.38), Color("d7ecff"), 1.4)
+	draw_line(Vector2(s * 0.42, s * 0.42), Vector2(s * 0.62, s * 0.32), Color("ffe08a"), 1.2)
+
+
+func _draw_shoes(s: float) -> void:
+	var body := Color("e07040")
+	draw_rect(Rect2(s * 0.18, s * 0.48, s * 0.54, s * 0.22), body.darkened(0.2))
+	draw_rect(Rect2(s * 0.22, s * 0.42, s * 0.4, s * 0.14), body)
+	draw_rect(Rect2(s * 0.55, s * 0.52, s * 0.22, s * 0.14), Color("f2f7ff"))
+	draw_circle(Vector2(s * 0.3, s * 0.48), s * 0.04, Color("ffe08a"))

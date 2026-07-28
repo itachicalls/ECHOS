@@ -491,10 +491,13 @@ func _paint_terrain(base: Control, resonance: int, sz: Vector2) -> void:
 
 func _box_style() -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color("1d2b3a")
-	sb.border_color = Color("cfe8ff")
+	sb.shadow_color = Color(0, 0, 0, 0.4)
+	sb.shadow_size = 3
+	sb.shadow_offset = Vector2(0, 1)
+	sb.bg_color = Color("121f2c")
+	sb.border_color = Color("d7ecff")
 	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(3)
+	sb.set_corner_radius_all(4)
 	return sb
 
 
@@ -1267,7 +1270,8 @@ func _animate_attack(
 	resonance: int, dmg: int, mult: float,
 	target_hp_before: int, target_hp: int, target_max: int,
 	actor_hp_before: int, actor_max: int,
-	chime_name: String = "", lifesteal: float = 0.0, power: int = 0
+	chime_name: String = "", lifesteal: float = 0.0, power: int = 0,
+	critical: bool = false
 ) -> void:
 	_pin_stage(actor_side, actor_index, actor_hp_before)
 	_pin_stage(target_side, target_index, target_hp_before)
@@ -1334,19 +1338,28 @@ func _animate_attack(
 	back_tw.tween_property(attacker, "position", home_a, 0.10).set_trans(Tween.TRANS_SINE)
 
 	# Step 3: impact — flash target, burst, HP drain, damage number
-	_impact_burst(_sprite_center(target), col, mult)
-	target.modulate = Color(1, 0.45, 0.45)
+	var hit_center := _sprite_center(target)
+	_impact_burst(hit_center, col, mult, critical)
+	if critical:
+		_crit_flash(hit_center)
+		_effectiveness_banner("CRITICAL!", Color("ffd166"))
+	elif mult > 1.1:
+		_effectiveness_banner("SUPER EFFECTIVE!", Color("7dffb8"))
+	elif mult < 0.9:
+		_effectiveness_banner("Not very effective...", Color("9ab0c4"))
+	target.modulate = Color(1, 0.35, 0.35) if critical else Color(1, 0.45, 0.45)
 	_tween_hp_bar(target_info, target_hp, target_max)
-	_damage_popup(_sprite_center(target), dmg, mult)
-	if mult > 1.1:
-		_stage_shake()
+	_damage_popup(hit_center, dmg, mult, critical)
+	if critical or mult > 1.1:
+		_stage_shake(2.6 if critical else 1.6)
 
 	# Step 4: recoil shake on target
+	var kick := 6.0 if critical else (4.0 if mult > 1.1 else 3.0)
 	var shake := create_tween()
-	shake.tween_property(target, "position", home_t + Vector2(4, -1), 0.04)
-	shake.tween_property(target, "position", home_t + Vector2(-4, 1), 0.05)
-	shake.tween_property(target, "position", home_t + Vector2(2, 0), 0.04)
-	shake.tween_property(target, "position", home_t, 0.04)
+	shake.tween_property(target, "position", home_t + Vector2(kick, -1), 0.04)
+	shake.tween_property(target, "position", home_t + Vector2(-kick, 1), 0.05)
+	shake.tween_property(target, "position", home_t + Vector2(kick * 0.5, 0), 0.04)
+	shake.tween_property(target, "position", home_t, 0.05)
 	await shake.finished
 	target.modulate = Color.WHITE
 	_start_idle_bob(attacker)
@@ -1918,24 +1931,25 @@ func _spawn_trail(pos: Vector2, col: Color) -> void:
 	t.chain().tween_callback(s.queue_free)
 
 
-func _impact_burst(center: Vector2, col: Color, mult: float) -> void:
-	_flash_ring(center, col)
-	var n := 10 if mult > 1.1 else 7
+func _impact_burst(center: Vector2, col: Color, mult: float, critical: bool = false) -> void:
+	_flash_ring(center, Color("ffd166") if critical else col)
+	var n := 16 if critical else (12 if mult > 1.1 else 7)
+	var scale_m := 1.7 if critical else (1.35 if mult > 1.1 else 1.0)
 	for i in n:
 		var s := ColorRect.new()
-		s.color = col
-		s.size = Vector2(3, 3)
-		s.position = center - Vector2(1.5, 1.5)
+		s.color = Color("ffe08a") if critical and i % 2 == 0 else col
+		s.size = Vector2(3, 3) if not critical else Vector2(4, 4)
+		s.position = center - s.size * 0.5
 		s.z_index = 25
 		_stage.add_child(s)
 		var ang := i * TAU / float(n) + randf() * 0.5
-		var dist := randf_range(10.0, 20.0) * (1.3 if mult > 1.1 else 1.0)
+		var dist := randf_range(10.0, 22.0) * scale_m
 		var dest := center + Vector2(cos(ang), sin(ang)) * dist
 		var t := create_tween()
 		t.set_parallel(true)
-		t.tween_property(s, "position", dest - Vector2(1.5, 1.5), 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		t.tween_property(s, "color", Color(col.r, col.g, col.b, 0.0), 0.26)
-		t.tween_property(s, "scale", Vector2(0.4, 0.4), 0.26)
+		t.tween_property(s, "position", dest - s.size * 0.5, 0.28).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		t.tween_property(s, "color", Color(s.color.r, s.color.g, s.color.b, 0.0), 0.28)
+		t.tween_property(s, "scale", Vector2(0.35, 0.35), 0.28)
 		t.chain().tween_callback(s.queue_free)
 
 
@@ -1954,12 +1968,57 @@ func _flash_ring(center: Vector2, col: Color) -> void:
 	t.chain().tween_callback(ring.queue_free)
 
 
-func _stage_shake() -> void:
+func _stage_shake(intensity: float = 1.0) -> void:
 	var orig := _stage.position
+	var amp := 2.0 * intensity
 	var tw := create_tween()
-	for i in 3:
-		tw.tween_property(_stage, "position", orig + Vector2(randf_range(-2, 2), randf_range(-2, 2)), 0.03)
-	tw.tween_property(_stage, "position", orig, 0.03)
+	for i in (5 if intensity > 2.0 else 3):
+		tw.tween_property(_stage, "position", orig + Vector2(randf_range(-amp, amp), randf_range(-amp, amp)), 0.03)
+	tw.tween_property(_stage, "position", orig, 0.04)
+
+
+func _crit_flash(center: Vector2) -> void:
+	var flash := ColorRect.new()
+	flash.color = Color("ffd166", 0.55)
+	flash.size = Vector2(240, 160)
+	flash.position = Vector2.ZERO
+	flash.z_index = 30
+	_stage.add_child(flash)
+	var star := Label.new()
+	star.text = "★"
+	star.add_theme_font_size_override("font_size", 18)
+	star.add_theme_color_override("font_color", Color("ffe08a"))
+	star.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+	star.add_theme_constant_override("outline_size", 3)
+	star.position = center + Vector2(-8, -18)
+	star.z_index = 31
+	_stage.add_child(star)
+	var t := create_tween()
+	t.set_parallel(true)
+	t.tween_property(flash, "modulate:a", 0.0, 0.22)
+	t.tween_property(star, "position:y", star.position.y - 14.0, 0.28)
+	t.tween_property(star, "modulate:a", 0.0, 0.28)
+	t.chain().tween_callback(func():
+		flash.queue_free()
+		star.queue_free()
+	)
+
+
+func _effectiveness_banner(text: String, col: Color) -> void:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.add_theme_font_size_override("font_size", 8)
+	lbl.add_theme_color_override("font_color", col)
+	lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+	lbl.add_theme_constant_override("outline_size", 3)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.position = Vector2(20, 62)
+	lbl.size = Vector2(200, 14)
+	lbl.z_index = 32
+	_stage.add_child(lbl)
+	var t := create_tween()
+	t.tween_property(lbl, "modulate:a", 0.0, 0.55).set_delay(0.18)
+	t.tween_callback(lbl.queue_free)
 
 
 func _impact_spark(center: Vector2, col: Color) -> void:
@@ -1979,19 +2038,27 @@ func _impact_spark(center: Vector2, col: Color) -> void:
 		t.chain().tween_callback(s.queue_free)
 
 
-func _damage_popup(center: Vector2, dmg: int, mult: float) -> void:
+func _damage_popup(center: Vector2, dmg: int, mult: float, critical: bool = false) -> void:
 	var lbl := Label.new()
 	lbl.text = str(dmg)
-	lbl.add_theme_font_size_override("font_size", 9 if mult > 1.1 else 8)
-	lbl.add_theme_color_override("font_color", Color("ffd166") if mult > 1.1 else Color("ffffff"))
+	var big := critical or mult > 1.1
+	lbl.add_theme_font_size_override("font_size", 12 if critical else (9 if big else 8))
+	var col := Color("ff6b4a") if critical else (Color("ffd166") if mult > 1.1 else Color("ffffff"))
+	if mult < 0.9 and not critical:
+		col = Color("b8c8d8")
+	lbl.add_theme_color_override("font_color", col)
 	lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0))
-	lbl.add_theme_constant_override("outline_size", 2)
-	lbl.position = center + Vector2(-6, -10)
+	lbl.add_theme_constant_override("outline_size", 3 if critical else 2)
+	lbl.position = center + Vector2(-8, -12)
 	lbl.z_index = 26
 	_stage.add_child(lbl)
+	var rise := 18.0 if critical else 12.0
 	var t := create_tween()
-	t.tween_property(lbl, "position:y", lbl.position.y - 12.0, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	t.parallel().tween_property(lbl, "modulate:a", 0.0, 0.35)
+	t.set_parallel(true)
+	t.tween_property(lbl, "position:y", lbl.position.y - rise, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(lbl, "modulate:a", 0.0, 0.4)
+	if critical:
+		t.tween_property(lbl, "scale", Vector2(1.35, 1.35), 0.12)
 	t.chain().tween_callback(lbl.queue_free)
 
 
@@ -2328,14 +2395,17 @@ func _play_log(log: Array) -> void:
 				await _say(line)
 			"damage":
 				var m := float(ev.get("multiplier", 1.0))
+				var crit := bool(ev.get("critical", false))
 				var extra := ""
-				if m > 1.1: extra = " It resonates hard!"
-				elif m < 0.9: extra = " It fizzles a little."
+				if m > 1.1:
+					extra = " It's super effective!"
+				elif m < 0.9:
+					extra = " It's not very effective..."
 				msg.text = "%s used %s!%s" % [ev.actor, ev.chime, extra]
 				menu_root.visible = false
 				msg.visible = true
 				msg.size = Vector2(226, 42)
-				await get_tree().create_timer(0.35).timeout
+				await get_tree().create_timer(0.28).timeout
 				await _animate_attack(
 					String(ev.side), int(ev.get("actor_index", _visual_index(String(ev.side)))),
 					String(ev.get("target_side", "enemy" if ev.side == "player" else "player")),
@@ -2345,9 +2415,13 @@ func _play_log(log: Array) -> void:
 					int(ev.get("target_hp", 0)), int(ev.get("target_max_hp", 1)),
 					int(ev.get("actor_hp_before", int(ev.get("actor_hp", 0)))),
 					int(ev.get("actor_max_hp", 1)),
-					String(ev.get("chime", "")), float(ev.get("lifesteal", 0.0)), int(ev.get("power", 0))
+					String(ev.get("chime", "")), float(ev.get("lifesteal", 0.0)), int(ev.get("power", 0)),
+					crit
 				)
-				await _say("%s took %d damage!" % [String(ev.get("target", "Foe")), int(ev.get("damage", 0))])
+				var dmg_line := "%s took %d damage!" % [String(ev.get("target", "Foe")), int(ev.get("damage", 0))]
+				if crit:
+					dmg_line = "A critical hit! " + dmg_line
+				await _say(dmg_line)
 			"heal":
 				var heal_info := _side_info(String(ev.side))
 				_set_hp_bar(

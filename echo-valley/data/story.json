@@ -35,8 +35,8 @@
     },
     {
       "id": "s3_desert", "title": "Scorch Route Trial",
-      "objective": "Cross the desert and defeat Ranger Sol to earn a Resonance Sigil.",
-      "hint": "Ranger Sol guards the scorched route — only the worthy restore its resonance.",
+      "objective": "Cross the desert and defeat Ranger Sol to earn a Resonance Sigil. Running Shoes from Ranger Fern make the trek faster.",
+      "hint": "Fern's Running Shoes are always on. Side paths hide a Belltower after the Meadow Sigil.",
       "flag": "trainer_gym_desert"
     },
     {
@@ -59,8 +59,8 @@
     },
     {
       "id": "s7_coast", "title": "Salt on the Wind",
-      "objective": "A new trail has opened west of town. Follow the Tidecross Shore to Saltwind Cove.",
-      "hint": "Leave Harmona Rest through the western gate onto the beach route.",
+      "objective": "Follow Tidecross Shore to Saltwind Cove. Claim the Resonance Bike from the cove courier — Use it in Bag to race outdoor routes.",
+      "hint": "WEST gate from Harmona Rest. Cove courier gifts the bike. SIDE PATH signs mark manor, tower, mines, and more.",
       "flag": "greeter_beach_marisol"
     },
     {

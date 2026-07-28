@@ -95,6 +95,22 @@
     "field": false,
     "key_item": true
   },
+  "running_shoes": {
+    "name": "Running Shoes",
+    "desc": "Light boots that let you dash across routes. Always active once found.",
+    "category": "key",
+    "battle": false,
+    "field": true,
+    "key_item": true
+  },
+  "resonance_bike": {
+    "name": "Resonance Bike",
+    "desc": "A sleek bike tuned to valley winds. Use to mount/dismount outdoors.",
+    "category": "key",
+    "battle": false,
+    "field": true,
+    "key_item": true
+  },
   "revive_capsule": {
     "name": "Revive Capsule",
     "desc": "Revives a fainted Harmon with half its HP.",

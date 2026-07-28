@@ -75,6 +75,18 @@ func _build_map() -> void:
 	}, Tiles.TRAINER_PATHS[4])
 
 
+
+
+
+	# discovery: ember_forge
+	open_passage(Vector2i(1, 10), Tiles.PATH)
+	open_passage(Vector2i(2, 10), Tiles.PATH)
+	open_passage(Vector2i(1, 11), Tiles.PATH)
+	open_passage(Vector2i(2, 11), Tiles.PATH)
+	add_warp(Vector2i(1, 10), "ember_forge", Vector2i(9, 22), "left")
+	add_warp(Vector2i(1, 11), "ember_forge", Vector2i(10, 22), "left")
+	add_interact(Vector2i(2, 10), { "type": "sign", "text": "EMBER FORGE - abandoned smithy." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(4, 6), "echo_capsule", 2)
 	add_pickup(Vector2i(17, 15), "heart_salve", 2)

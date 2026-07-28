@@ -15,6 +15,11 @@ Write-Host "Exporting Web build..."
 
 if (Test-Path (Join-Path $outDir "index.html")) {
   Write-Host "Export complete -> $outDir"
+  # Vercel serves repo-root build/web
+  $deployDir = Join-Path (Split-Path -Parent $proj) "build\web"
+  New-Item -ItemType Directory -Force -Path $deployDir | Out-Null
+  Copy-Item -Path (Join-Path $outDir "*") -Destination $deployDir -Recurse -Force
+  Write-Host "Synced deploy copy -> $deployDir"
 } else {
   Write-Error "Export failed: index.html not produced."
 }

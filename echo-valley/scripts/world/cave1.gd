@@ -83,6 +83,18 @@ func _build_map() -> void:
 	}, 3)
 
 
+
+
+
+	# discovery: whispering_gallery
+	open_passage(Vector2i(17, 10), Tiles.PATH)
+	open_passage(Vector2i(18, 10), Tiles.PATH)
+	open_passage(Vector2i(17, 11), Tiles.PATH)
+	open_passage(Vector2i(18, 11), Tiles.PATH)
+	add_warp(Vector2i(18, 10), "whispering_gallery", Vector2i(9, 22), "right")
+	add_warp(Vector2i(18, 11), "whispering_gallery", Vector2i(10, 22), "right")
+	add_interact(Vector2i(16, 10), { "type": "sign", "text": "WHISPERING GALLERY - echoing side hall." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(16, 4), "echo_capsule", 3)
 	add_pickup(Vector2i(4, 18), "heart_salve", 2)

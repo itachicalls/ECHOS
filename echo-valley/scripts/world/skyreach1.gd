@@ -66,6 +66,18 @@ func _build_map() -> void:
 	add_heal_station(Vector2i(12, 20), Vector2i(12, 19), "down")
 
 
+
+
+
+	# discovery: cloud_garden
+	open_passage(Vector2i(1, 10), Tiles.PATH)
+	open_passage(Vector2i(2, 10), Tiles.PATH)
+	open_passage(Vector2i(1, 11), Tiles.PATH)
+	open_passage(Vector2i(2, 11), Tiles.PATH)
+	add_warp(Vector2i(1, 10), "cloud_garden", Vector2i(9, 22), "left", ["legend_skysovereign"], "Side path sealed for now...")
+	add_warp(Vector2i(1, 11), "cloud_garden", Vector2i(10, 22), "left", ["legend_skysovereign"], "Side path sealed for now...")
+	add_interact(Vector2i(2, 10), { "type": "sign", "text": "CLOUD GARDEN - after SKYSOVEREIGN." })
+
 func _place_pickups() -> void:
 	add_pickup(Vector2i(3, 18), "ultra_capsule", 3)
 	add_pickup(Vector2i(16, 4), "max_salve", 2)
